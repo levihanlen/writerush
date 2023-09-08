@@ -1,0 +1,517 @@
+
+* {
+    font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;   
+    color: rgba(var(--fontColor), 1); 
+    
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    max-width: 100%;
+    position: relative;
+    left: 0;
+    top: 0;
+}
+body, html {
+    height: 100%;
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+.container, .content {
+    display: flex;
+    flex-grow: 1; 
+}
+
+.content, .sidebar {
+    padding: 0px;
+}
+#notesSidebar {
+    width: 30%;
+    border-right: var(--borderSize) solid var(--outline);
+    /*
+    background-color: rgba(var(--secondary));
+    */
+}
+
+#quickAccessSidebar {
+    display: flex;
+    flex-direction: column;
+    border-left: var(--borderSize) solid var(--outline);
+    background-color: var(--bgColor);
+    padding: 10px;
+}
+
+.divs, .divs1 {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.divs, .normalDiv {
+    padding: 20px;
+}
+.divs1 {
+    padding: 0px;
+}
+textarea {
+    /* box-sizing: border-box; WOULD make it much easier,
+    but it conflicts with the confetti's positioning */
+    resize: none;
+    background: none;
+    width: calc(100% - 43px);
+    padding: 20px;
+    height: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    border: var(--borderSize) solid var(--outline);
+    
+    border-radius: 5px;
+    
+    
+    background-color: var(--bgColor);
+    
+    
+}
+
+textarea, #quickAccessSidebar, #upperNavbar, #lowerNavbar{
+    
+    background-color: rgba(var(--darkOrLight), 0.8) !important;
+    -webkit-backdrop-filter: blur(var(--blurAmount)); 
+    backdrop-filter: blur(var(--blurAmount));
+}
+
+#typeArea {
+    max-width: var(--typeAreaWidth);
+}
+#notesTextarea {
+    font-size: 15px;
+}
+#typeAreaDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*
+    transition: left 0.03s, top 0.03s;
+    */
+}
+  
+
+
+/* OTHER */
+
+*:focus {
+    outline: none;
+}
+
+:root {
+    --borderSize: 1.5px;
+    --typeAreaWidth: 600px;
+    --typeAreaHeight: 100%;
+    --fullHeight: 70vh;
+    /* from game */
+    --bgColor: rgb(1, 1, 1); 
+    --secondary: 27, 32, 34; 
+    --secondaryHover: #313639;
+    --secondaryOpacity: 1; /* 0.5 */
+    --fontColor: 255, 255, 255;
+    --buttonFontSize: 15px;
+    --fontSize: 16px;
+    --modalShadowColor: #ffffff75;
+    --outline: #2f3539;
+    --outlineHover: #454d53;
+    --backgroundImage: url("../assets/images/1.jpg");
+    --bgDarkness: 0.8;
+    --darkOrLight: 1, 1, 1;
+    --blurAmount: 10px;
+}
+/*
+html, body {
+    min-height: 100vh; 
+}
+*/
+body {
+    /*
+    background: 
+        linear-gradient(rgba(var(--darkOrLight), var(--bgDarkness)), rgba(var(--darkOrLight), var(--bgDarkness))), 
+        var(--backgroundImage);
+    */
+    
+    background: rgba(var(--secondary));
+    /*
+    background: url("../assets/images/oldCar.jpg") no-repeat center;
+    */
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center;
+    
+
+}
+
+input[type="file"], input[type="color"] {
+    display: none;
+    margin: 0;
+}
+/*
+#typeArea {
+    font-size: 15px;
+    padding: 20px;
+    flex-grow: 1;
+    max-width: 600px;
+
+    width: var(--typeAreaWidth);
+}
+*/
+
+/* SIDEBAR */
+/*
+.sidebar {
+    box-sizing: border-box;
+    height: 100%;
+    width: 0px;
+    position: fixed;
+    z-index: 1;
+    padding: 82px 0px 60px 0px;
+    background-color: rgba(var(--secondary));
+    overflow-x: hidden;
+    transition: width 0.5s;
+    flex-grow: 1;
+    display: flex;
+    align-items: center; 
+    flex-direction: column;
+    justify-content: center; 
+}
+*/
+
+
+.numberInput, select, .colorInput {
+    width: 200px;
+    cursor: pointer;
+    background-color: rgba(var(--secondary), var(--secondaryOpacity));
+}
+
+.colorInput {
+    margin-bottom: 1px; /* Override any default margins */
+    display: inline-block; /* Optional: Align with other inline elements */
+    vertical-align: middle; /* Optional: Align vertically with text */
+    
+}
+
+#full {
+    flex-direction: column;
+    flex-grow: 1;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    padding: 0px 0px 80px 0px;
+}
+
+
+/* BUTTONS */
+
+button {
+    border-radius: 5px;
+    background: none;
+    border: none;
+    margin: 0px; 
+    padding: 3px 6px;
+    font-size: var(--buttonFontSize);
+}
+
+button:hover {
+    background-color: var(--secondaryHover);
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color:rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
+
+.outlineButton, .numberInput, select, .colorInput {
+    border-radius: 5px;
+    background-color: rgba(var(--secondary), var(--secondaryOpacity));
+    border: var(--borderSize) solid var(--outline);
+    padding: 3px 6px;
+    font-size: var(--buttonFontSize);
+}
+
+.navbarButton, .outlineButton {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+.navbar {
+    z-index: 2;
+}
+#upperNavbar, #lowerNavbar {
+    background-color: var(--bgColor);
+    margin: 0px;
+    border: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+}
+
+#upperNavbar {
+    justify-content: space-between;
+    border-bottom: var(--borderSize) solid var(--outline);
+}
+#lowerNavbar {
+    /*
+    padding: 5px 7px 5px 7px;
+    */
+
+    border-top: var(--borderSize) solid var(--outline);
+}
+/*
+#lowerNavbarDiv {
+    background: rgba(var(--secondary));
+    border-radius: 5px;
+}
+*/
+#quickAccess {
+    right: 0;
+    padding: 10px;
+    margin: 0px;
+    border: 0px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#quickAccessContain {
+    padding: 5px;
+    background: var(--bgColor);
+    border: var(--borderSize) solid var(--outline);
+    border-radius: 5px;
+    display: flex;
+    
+}
+
+
+
+.unselectable, button, .navbar, #lowerNavbar {
+    -webkit-user-select: none; /* Chrome, Safari, and Opera */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+/* Modal  */
+
+.modal, #alertModal {
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    padding-top: 100px;
+    overflow: auto;
+    background-color: rgba(var(--darkOrLight), 0.5);
+    -webkit-backdrop-filter: blur(var(--blurAmount)); 
+    backdrop-filter: blur(var(--blurAmount));
+}
+
+
+#alertModal {
+    position: fixed;
+    padding-top: 10px;
+    overflow: auto;
+    cursor: not-allowed;
+}
+
+.modalContent, .alertModalContent {
+    padding: 20px;
+    margin: auto;
+    border: var(--borderSize) solid var(--outline);
+}
+
+.modalContent {
+    margin: auto;
+    width: 80%; 
+    max-width: 600px; 
+    height: auto;
+    max-height: 60%;
+    border-radius: 5px;
+    overflow-y: auto;
+    background-color: rgba(var(--darkOrLight), 0.9);
+}
+
+.alertModalContent {
+    cursor: pointer;
+    width: 80%; 
+    max-width: 200px; 
+    height: auto;
+    max-height: 60%;
+    border-radius: 5px;
+    overflow-y: auto;
+    background-color: var(--bgColor);
+    box-shadow: 0px 10px 20px 0px #0000007d;
+}
+
+/* PROGRESS BAR */
+
+.progressBarContainer {
+    position: relative;
+    margin-bottom: 10px;
+    max-width: calc(var(--typeAreaWidth) + 40px);
+    width: 100%;
+    height: 10px;
+    border: var(--borderSize) solid var(--outline);
+    border-radius: 10px;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.progressBar {
+    height: 100%;
+    background-color: var(--outline);
+    width: 0%;
+    transition: width 0.5s ease-out;
+    position: relative;
+    z-index: 1;
+}
+
+.tickMark {
+    position: absolute;
+    height: 10px;
+    width: var(--borderSize);
+    background-color: var(--outline);
+}
+
+.vLine {
+    height: 100%;
+    width: 0;
+    border-left: 1.5px dotted var(--outline); /* This makes the vertical line dotted */
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.hLine {
+    height: 0;
+    width: 100%;
+    border-top: 1.5px dotted var(--outline); /* This makes the vertical line dotted */
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+hr {
+    border: calc(var(--borderSize) / 2) solid var(--outline);
+}
+
+/* FONTS */
+
+@font-face {
+    font-family: "Redacted";
+    src: url("../assets/fonts/redacted.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: "Redacted2";
+    src: url("../assets/fonts/redacted2.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: "Runes1";
+    src: url("../assets/fonts/runes1.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: "Runes2";
+    src: url("../assets/fonts/runes2.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: "Runes3";
+    src: url("../assets/fonts/runes3.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: "Scribble";
+    src: url("../assets/fonts/scribble.ttf") format('truetype');
+}
+
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: none;
+}
+ 
+::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--secondary));
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondaryHover); 
+}
+
+
+/* SLIDER */
+
+.slider {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 200px;
+    height: 10px;
+    background: rgba(var(--secondary));
+    border: 0px;
+    /* This is added in Javascript!
+    border: var(--borderSize) solid var(--outline);
+    */
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.slider:hover {
+    background: var(--secondaryHover);
+}
+  
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 10px;
+    background: var(--outline);
+    border-radius: 5px;
+}
+  
+.slider::-moz-range-thumb {
+    width: 30px;
+    height: 10px;
+    background: var(--outline);
+    border-radius: 5px;
+}
+
+
+kbd {
+    border-radius: 2px;
+    padding: 2px;
+    border: 1px solid rgba(var(--fontColor), 1);
+}
+
+
+.innerDetails {
+    margin-left: 20px; /* or use padding-left if you prefer */
+}
+

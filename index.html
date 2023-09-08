@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="CSS/style4.css">
+    
+    <title>WriteRush</title>
+    
+    <audio id="clickSound1" src="assets/audio/click1.mp3" preload="auto"></audio>
+    <audio id="clickSound2" src="assets/audio/click2.mp3" preload="auto"></audio>
+    <audio id="dingSound" src="assets/audio/ding1.mp3" preload="auto"></audio>
+    <audio id="punchSound" src="assets/audio/punch1.mp3" preload="auto"></audio>
+    <audio id="noSound" src="assets/audio/silent.mp3" preload="auto"></audio> 
+    <audio id="celebrate" src="assets/audio/celebrate.mp3" preload="auto"></audio> 
+    <!--
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    -->
+    <noscript>Enable JavaScript for this to work correctly.</noscript>
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="navbar">
+            <div id="upperNavbar">
+                <div class="leftNavbar">
+                    <button class="navbarButton" onclick="openFileModal(), openModal('fileModal')">File</button>
+                    <button class="navbarButton" onclick="openSettings(), openModal('settingsModal')">Settings</button>
+                    <button class="navbarButton" onclick="openData(), openModal('dataModal')">Data</button>
+                </div>
+                <div class="rightNavbar">
+                    <button class="outlineButton" onclick="openModal('aboutModal')">WriteRush</button>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div id="quickAccess">
+            <div id="quickAccessContain">
+                <button class="navbarButton" id="hideButton"><strong>↑↑</strong></button>
+                <button class="navbarButton" id="sideBarButton" onclick="notesClick()">☰</button> 
+                <button class="navbarButton" id="fullscreenButton"><strong>⛶</strong></button>
+                <div class="line"></div>
+                <button id="addToGoalButton" class="outlineButton" onclick="add500toGoal()">Goal +100</button>
+                <div class="line"></div>
+                <button class="navbarButton"id="pauseButton">▶</button>
+                <button class="navbarButton"id="stopButton">■</button>
+                <div class="line"></div>
+            </div>
+        </div>
+        -->
+        <div class="container">
+            <div class="sidebar" id="notesSidebar">
+                <div class="divs" id="notesDiv">
+                    <textarea id="notesTextarea" spellcheck="false"></textarea>
+                </div>
+            </div>
+            <div class="content">
+                <div class="divs1">
+                    <div class="divs" id="typeAreaDiv">
+                        <div class="progressBarContainer">
+                            <div id="progressBar" class="progressBar"></div>
+                        </div>
+                        <div class="progressBarContainer">
+                            <div id="timeBar" class="progressBar"></div>
+                        </div>
+                        <textarea id="typeArea" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar" id="quickAccessSidebar">
+                <button class="navbarButton" id="hideButton" title="Hide/show the lower and upper navbars."><strong>↑↑</strong></button>
+                <button class="navbarButton" id="sideBarButton" title="Open/close the notes sidebar." onclick="notesClick()">☰</button> 
+                <button class="navbarButton" id="fullscreenButton" title="Toggle fullscreen."><strong>⛶</strong></button>
+                <div class="hLine"></div>
+                <button id="addToGoalButton" class="outlineButton" title="Add to the word goal." onclick="add500toGoal()"><strong>+</strong></button>
+                <div class="hLine"></div>
+                <button class="navbarButton"id="pauseButton" title="Pause/unpause the timer.">▶</button>
+                <button class="navbarButton"id="stopButton" title="Stop the timer.">■</button>
+            </div>
+        </div>
+        
+        <div id="lowerNavbar">
+            <div id="lowerNavbarDiv">
+                <button onclick="newFile()" class="outlineButton" id="newFileButton">+</button>
+                <button class="navbarButton">Error</button>
+                <button class="navbarButton">Error</button>
+                <button class="navbarButton">Error</button>
+            </div>
+        </div>
+    </div>
+    
+    <!--Modals-->
+    <div id="settingsModal" class="modal">
+        <div class="modalContent">
+            <details>
+                <summary><strong>Appearance</strong></summary>
+                <br>
+                Font Size: <input class="numberInput" type="number" id="fontSize" min="1" step="1" value="14">
+                <br><br>
+                Font:
+                    <select id="fontFamily">
+                        <optgroup label="Serif">
+                            <option value="Times New Roman, serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Palatino Linotype', 'Book Antiqua', serif">Palatino Linotype</option>
+                            <option value="Garamond, serif">Garamond</option>
+                            <option value="'Bookman Old Style', Bookman, serif">Bookman</option>
+                        </optgroup>
+                        <optgroup label="Sans-Serif">
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="Helvetica, sans-serif">Helvetica</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="Geneva, sans-serif">Geneva</option>
+                        </optgroup>
+                        <optgroup label="Monospace">
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="'Lucida Console', monospace">Lucida Console</option>
+                            <option value="Monaco, monospace">Monaco</option>
+                            <option value="Consolas, monospace">Consolas</option>
+                            <option value="'Andale Mono', monospace">Andale Mono</option>
+                        </optgroup>
+                        <optgroup label="Illegible">
+                            <option value="Redacted">Redacted</option>
+                            <option value="Redacted2">Redacted2</option>
+                            <option value="Runes1">Runes1</option>
+                            <option value="Runes2">Runes2</option>
+                            <option value="Runes3">Runes3</option>
+                            <option value="Scribble">Scribble</option>
+                        </optgroup>
+                    </select>
+                <br><br>
+                Night Mode: <input type="checkbox" class="checkbox" id="nightModeCheckbox">
+                <br><br>
+                Background Image from Folder: <input id="backgroundImageFromFolderCheckbox" type="checkbox">
+                <br><br>
+                <p id="bgFromFile">
+                Background Image: 
+                    <label id="imageInputLabel" for="imageInput" class="numberInput">
+                    None Selected</label>
+                    <input type="file" class="numberInput" id="imageInput" accept="image/*"><button class="outlineButton" onclick="clearImages()">Clear</button>
+                
+                    <span id="sizeError" style="color: red;"></span>
+                </p>
+                <br>
+                <!--
+                <p id="bgFromFolder">
+                Background Image (File Folder): <input id="imageFolderInput" type="text" class="numberInput">
+                </p>
+                -->
+            </details> 
+            <br>
+            <hr>
+            <br>
+            <details>
+                <summary><strong>Effects</strong></summary>
+                <br>
+                Typing Confetti Count: <input class="slider" type="range" id="typingConfettiCountInput" min="0" max="10" value="2">
+                <br><br>
+                Screen Shake Intensity: <input class="slider" type="range" id="screenShakeIntensityInput" min="0" max="5" value="1" step="0.5">
+                <br><br>
+                Rainbow Text Streak: <input type="checkbox" class="checkbox" id="rainbowStreakCheckbox">
+                <br><br>
+                Rainbow Progress Bar: <input type="checkbox" class="checkbox" id="rainbowProgressBarCheckbox">
+                <br><br>
+                
+                Progress Bar Color: 
+                <label id="progressBarColorInputLabel" for="progressBarColorInput" class="numberInput">
+                    Select Color</label>
+                <input type="color" class="colorInput" id="progressBarColorInput">
+                <button id="resetProgressBarColorButton" class="outlineButton">Reset</button>
+                <br><br>
+                Typing Sounds: 
+                    <select id="typingSounds">
+                        <option value="clickSound1">Typewriter1</option>
+                        <option value="clickSound1">Typewriter2</option>
+                        <!--
+                        <option value="gongSound">Gong</option>
+                        -->
+                        <option value="dingSound">Ding</option>
+                        <option value="punchSound">Punch</option>
+                        <option value="noSound">None</option>
+                    </select>
+                    <br><br>
+                Fast Sounds (Better performance, less quality): <input type="checkbox" class="checkbox" id="fastSoundsCheckbox">
+            </details>  
+            <br>
+            <hr>
+            <br>
+            <details>
+                <summary><strong>Other</strong></summary>
+                <br>
+                Exclude by Default: <input type="checkbox" class="checkbox" id="excludeDefaultCheckbox">
+                <br><br>
+                Quick Add Word Goal: <input class="numberInput" type="number" id="addToGoalInput" min="1" step="1">
+                <br><br>
+                Daily Streak Override: <input class="numberInput" type="number" id="dailyStreakInput" min="0" step="1">
+                <br><br>
+                Required Time for Streak Completion (in seconds): <input class="numberInput" type="number" id="streakCompletionTimeInput" min="0" step="1">
+                <br><br>
+                <button class="outlineButton" onclick="localStorage.clear(), location.reload()">Reset Data</button>
+                Note: It's recommended to Reset Data after you download a new update. (Warning: This also deletes any work you have, so save it first!)
+            </details>
+        </div>
+    </div>
+    <div id="dataModal" class="modal">
+        <div class="modalContent">
+            <p>Word Goal: <input class="numberInput" type="number" id="wordGoalInput" min="0" step="1"></p>
+            <br>
+            <p>Remaining Word Goal: <input class="numberInput" type="number" id="remainingWordGoalInput" min="0" step="1"></p>
+            <br>
+            <p>Excluded Words: <input class="numberInput" type="number" id="excludeInput" min="1" step="1"> <button class="outlineButton" id="autoExcludeButton">Auto</button></p>
+            <br>
+            <p>Time Goal (in minutes): <input class="numberInput" type="number" id="timeGoalInput" min="0" step="1"></p>
+            
+            <br>
+            <p id="wphDisplay">WPH: </p>
+            <p id="belowWph"></p>
+            <br>
+            <hr>
+            <br>
+            <p id="wordCountDisplay">Word Count: </p>
+            <p id="pageCountDisplay">Page Count: </p>
+            <p id="readablityDisplay">Readability: </p>
+            <p id="readingTimeDisplay">Reading Time: </p>
+            <p id="charCountDisplay">Character Count (spaces): </p>
+            <p id="charCountNoSpacesDisplay">Character Count (no spaces): </p>
+            <p id="sentenceCountDisplay">Sentence Count: </p>
+            <br>
+            <hr>
+            <br>
+            <p id="dailyStreakDataDisplay">Daily Streak: </p>
+            <p id="longestStreakDisplay">Longest Continual Streak: </p>
+            <p id="sessionWritingTimeDisplay">Session Writing Time: </p>
+            <p id="dailyWritingTimeDisplay">Today's Writing Time: </p>
+        </div>
+    </div>
+    
+    <div id="aboutModal" class="modal">
+        <div class="modalContent">
+            <details>
+                <summary><strong>What is WriteRush?</strong></summary>
+                <br>
+                <p class="innerDetails">
+                    WriteRush is an interactive writing software that motivates you to write. It's especially capable at writing first drafts!
+                    <br><br>
+                    The goal is to turn WriteRush into a software that can do anything you need writing-wise (except taking over the world). 
+                </p>
+            </details>
+            <br>
+            <hr>
+            <br>
+            <details>
+                <summary><strong>Tips</strong></summary>
+                <br>
+                <details class="innerDetails">
+                    <summary><strong>How to Set Background Images</strong></summary>
+                    <br>
+                    <p class="innerDetails">
+                        You have two options for setting a background image:
+                        <br><br>
+                        1. Set the image from your device (2MB limit): Make sure "Background Image from Folder" is unchecked. Click the "None Selected" button (to the left of the "clear" button). Select the image you want as the background. Done!
+                        <br><br>
+                        2. Set the image from the folder (No limit!): Make sure "Background Image from Folder" is checked. Type the name of the file (without the extension) in the input field (to the left of the "clear" button). For example, if your image is "image.jpg", type "image". Done!
+                        <br><br>
+                        To see the folder where the images are stored for option 2, go to the folder that WriteRush is stored in. Then click "assets", then "images". Place images in here, and rename them to be something easy to type.
+                    </p>
+                </details>
+                <br>
+                <details class="innerDetails">
+                    <summary><strong>Dictation</strong></summary>
+                    <br>
+                    <p class="innerDetails">
+                        You can write much faster with dictation! And guess what, WriteRush supports it! If you are on windows, press <kbd>Win</kbd>+<kbd>H</kbd> to turn on dictation. On Mac, press <kbd>Fn</kbd> twice.
+                        <br><br>
+                        Try it out!
+                    </p>
+                </details>
+                <br>
+                <details class="innerDetails">
+                    <summary><strong>Keyboard Shortcuts</strong></summary>
+                    <br>
+                    <p class="innerDetails">
+                        Speed up your writing even more with keyboard shortcuts! By learning a few simple combinations, you can navigate through WriteRush like a pro. Press <kbd>Ctrl</kbd>+<kbd>S</kbd> to export your work, <kbd>Ctrl</kbd>+<kbd>Z</kbd> to undo, <kbd>Ctrl</kbd>+<kbd>Y</kbd> to redo. Master these and more to become the superhero of typing!
+                        <br><br>
+                        Also, don't worry about saving! WriteRush does that instantly! You can have peace of mind, knowing that your work is always safe!
+                    </p>
+                </details>
+                <br>
+                <details class="innerDetails">
+                    <summary><strong>Notes Section</strong></summary>
+                    <br>
+                    <p class="innerDetails">
+                        Use the notes section by clicking the notes icon "☰". In this, you can write helpful notes about what your'e going to write -- like a chapter summary, essay outline, research, motivational words, and more! The possibilites are endless!
+                    </p>
+                </details>
+            </details>
+            <br>
+            <hr>
+            <br>
+            <details>
+                <summary><strong>About Me</strong></summary>
+                <br>
+                <p class="innerDetails">
+                    Hey there! I'm Kurtis Kumar, the creator of WriteRush. I love writing, coding, and making things! I made WriteRush because I wanted to gamify writing and make it all around more enjoyable.
+                    <br><br>
+                    As an indie developer, I've spent countless hours building a tool that I hope enriches your writing journey.
+                    <br><br>
+                    WriteRush is more than a project; it's a labor of love. But love doesn't pay the bills, sadly! 😅 If WriteRush has inspired you, helped you beat writer's block, or even just made your days a little brighter, I'd be honored if you'd consider supporting my work.
+                    <br><br>
+                    A small contribution helps me continue to improve WriteRush, fix bugs, and add exciting new features. And it will keep WriteRush free and accessible to everyone.
+                    <br><br>
+                    Click here to support WriteRush:
+                    <a href="https://www.buymeacoffee.com/kurtiskumar" target="_blank" rel="noopener noreferrer">
+                        <button class="outlineButton" id="buyMeACoffeeButton">buymeacoffee.com/kurtiskumar</button>
+                    </a>
+                    <br><br>
+                    <strong>
+                    Thank you from the bottom of my heart. Happy writing! 😄
+                    </strong>
+                    <br><br>
+                    Also, feel free to check me out on other sites:
+                    <a href="https://www.kurtiskumar.com" target="_blank" rel="noopener noreferrer"><button class="outlineButton" id="buyMeACoffeeButton">My Website</button></a>
+                    <a href="https://kurtiskumar.itch.io" target="_blank" rel="noopener noreferrer"><button class="outlineButton" id="buyMeACoffeeButton">Itch.io</button></a>
+                    <a href="https://www.patreon.com/kurtiskumar" target="_blank" rel="noopener noreferrer"><button class="outlineButton" id="buyMeACoffeeButton">Patreon</button></a>
+                    <a href="https://www.instagram.com/kurtiskumarofficial" target="_blank" rel="noopener noreferrer"><button class="outlineButton" id="buyMeACoffeeButton">My Instagram</button></a>
+                    <br><br>
+                    ©2023 Kurtis Kumar
+                </p>
+            </details>
+        </div>
+    </div>
+    
+    <div id="fileModal" class="modal">
+        <div class="modalContent">
+            <p id="fileNameDisplay">File Name: 
+                <input spellcheck="false" type="text" class="numberInput" id="fileNameInput">
+                <button class="outlineButton" id="saveFileNameButton">Save</button>
+            </p>
+            <br>
+            <hr>
+            <br>
+            <button class="outlineButton" onclick="exportFile()">Export to .txt</button>
+            <br><br>
+            <button class="outlineButton" id="deleteFileButton" onclick="deleteFile(v.currentFileIndex)">Delete</button>
+        </div>
+    </div>
+    
+    <div id="startModal" class="modal">
+        <div class="modalContent">
+            <div style="text-align:center;">
+                <h1 id="dailyStreakDisplay">There was an error in displaying this line!</h1>
+                <br>
+                <p id="doneStreakDisplay">There was an error in displaying this line!</p>
+                <br>
+                <h3>
+                <p id="startModalText">
+                    There was an error in displaying this line!
+                </p>
+                </h3>
+                <br>
+                <p>
+                    <p id="writeForSeconds">Write for seconds to increase your streak!</p>
+                    <br><br>
+                    WriteRush Version 3.1
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="alertModal">
+        <div class="alertModalContent">
+            <div style="text-align: center;">
+            <strong>
+            <p id="alertModalText">There was an error in showing the correct text</p>
+            </strong>
+            <br>
+            <p style="font-size: 14px;">Click to hide</p>
+            </div>
+        </div>
+    </div>
+    <script src="JS/store.legacy.min.js"></script>
+    <script src="JS/load.js"></script>
+    <script src="JS/settings.js"></script>
+    <script src="JS/getCaretCoordinates.js"></script>
+    <script src="JS/confetti.browser.js"></script>
+    <script src="JS/base.js"></script>
+    <script src="JS/data.js"></script>
+</body>
+</html>
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>WriteRush</title>
+    </head>
+    <body>
+
+    
+    </body>
+</html>
+
+
+
+
+
