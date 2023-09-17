@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <link rel="stylesheet" type="text/css" href="CSS/style4.css">
-    
+    <link rel="stylesheet" type="text/css" href="CSS/dragula.min.css">
+
     <title>WriteRush</title>
     
     <audio id="clickSound1" src="assets/audio/click1.mp3" preload="auto"></audio>
@@ -13,10 +16,20 @@
     <audio id="punchSound" src="assets/audio/punch1.mp3" preload="auto"></audio>
     <audio id="noSound" src="assets/audio/silent.mp3" preload="auto"></audio> 
     <audio id="celebrate" src="assets/audio/celebrate.mp3" preload="auto"></audio> 
-    <!--
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-    -->
-    <noscript>Enable JavaScript for this to work correctly.</noscript>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <noscript>
+        <h1>
+        <strong>Enable JavaScript for this to work correctly.</strong>
+        </h1>
+    </noscript>
 </head>
 <body>
     <div class="mainContainer">
@@ -32,58 +45,79 @@
                 </div>
             </div>
         </div>
-        <!--
-        <div id="quickAccess">
-            <div id="quickAccessContain">
-                <button class="navbarButton" id="hideButton"><strong>↑↑</strong></button>
-                <button class="navbarButton" id="sideBarButton" onclick="notesClick()">☰</button> 
-                <button class="navbarButton" id="fullscreenButton"><strong>⛶</strong></button>
-                <div class="line"></div>
-                <button id="addToGoalButton" class="outlineButton" onclick="add500toGoal()">Goal +100</button>
-                <div class="line"></div>
-                <button class="navbarButton"id="pauseButton">▶</button>
-                <button class="navbarButton"id="stopButton">■</button>
-                <div class="line"></div>
-            </div>
-        </div>
-        -->
         <div class="container">
+            <div class="sidebar" id="chapterSidebar">
+                <div class="divs" id="chapterDiv">
+                    <div id="chapterSection">
+                        
+                        <button id="newChapterButton" class="outlineButton chapterNewButton">New Chp.</button>
+                        <div id="chapterSectionDiv" class="chapterSectionDiv">
+                            <!--
+                            <div class="chapter">
+                                <p><strong>#</strong> Chapter 1: The Beginning</p>
+                                <button class="chapterDeleteButton"><strong>🗑</strong></button>
+                            </div>
+                            -->
+                        </div>
+                        <div class="hLine"></div>
+                        
+                        <button id="newNoteButton" class="outlineButton chapterNewButton">New Note</button>
+                        <div id="notesSectionDiv" class="chapterSectionDiv">
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="sidebar" id="notesSidebar">
                 <div class="divs" id="notesDiv">
+                    <div id="imageNoteDisplay" class="imageNoteDisplay">
+                        <img id="imageNote" draggable="false">
+                    </div>
+                    
                     <textarea id="notesTextarea" spellcheck="false"></textarea>
+                    
                 </div>
             </div>
             <div class="content">
                 <div class="divs1">
                     <div class="divs" id="typeAreaDiv">
-                        <div class="progressBarContainer">
+                        
+                        <textarea id="typeArea" spellcheck="false"></textarea>
+                        
+                        <div class="progressBarContainer" class="noStretch">
                             <div id="progressBar" class="progressBar"></div>
                         </div>
                         <div class="progressBarContainer">
                             <div id="timeBar" class="progressBar"></div>
                         </div>
-                        <textarea id="typeArea" spellcheck="false"></textarea>
+                        <div id="progressBarData">
+                            <p id="progressBarText">Error in Displaying</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="sidebar" id="quickAccessSidebar">
                 <button class="navbarButton" id="hideButton" title="Hide/show the lower and upper navbars."><strong>↑↑</strong></button>
-                <button class="navbarButton" id="sideBarButton" title="Open/close the notes sidebar." onclick="notesClick()">☰</button> 
+                <button class="navbarButton" id="sideBarButton" title="Open/close the notes sidebar." onclick="notesClick()">☰</button>
+                <button class="navbarButton" id="chapterSidebarButton" title="Open/close the chapter sidebar.">§</button>
                 <button class="navbarButton" id="fullscreenButton" title="Toggle fullscreen."><strong>⛶</strong></button>
                 <div class="hLine"></div>
                 <button id="addToGoalButton" class="outlineButton" title="Add to the word goal." onclick="add500toGoal()"><strong>+</strong></button>
                 <div class="hLine"></div>
                 <button class="navbarButton"id="pauseButton" title="Pause/unpause the timer.">▶</button>
                 <button class="navbarButton"id="stopButton" title="Stop the timer.">■</button>
+                <div class="hLine"></div>
+                <button class="navbarButton" id="redactButton" title="Redact the text."><strong>R</strong></button>
             </div>
         </div>
         
         <div id="lowerNavbar">
             <div id="lowerNavbarDiv">
                 <button onclick="newFile()" class="outlineButton" id="newFileButton">+</button>
-                <button class="navbarButton">Error</button>
-                <button class="navbarButton">Error</button>
-                <button class="navbarButton">Error</button>
+                <div id="fileDiv">
+                    <button class="navbarButton">Error</button>
+                    <button class="navbarButton">Error</button>
+                    <button class="navbarButton">Error</button>
+                </div>
             </div>
         </div>
     </div>
@@ -119,6 +153,7 @@
                             <option value="Consolas, monospace">Consolas</option>
                             <option value="'Andale Mono', monospace">Andale Mono</option>
                         </optgroup>
+                        <!--
                         <optgroup label="Illegible">
                             <option value="Redacted">Redacted</option>
                             <option value="Redacted2">Redacted2</option>
@@ -127,26 +162,19 @@
                             <option value="Runes3">Runes3</option>
                             <option value="Scribble">Scribble</option>
                         </optgroup>
+                        -->
                     </select>
                 <br><br>
                 Night Mode: <input type="checkbox" class="checkbox" id="nightModeCheckbox">
                 <br><br>
-                Background Image from Folder: <input id="backgroundImageFromFolderCheckbox" type="checkbox">
-                <br><br>
                 <p id="bgFromFile">
-                Background Image: 
+                Background Image:
                     <label id="imageInputLabel" for="imageInput" class="numberInput">
                     None Selected</label>
                     <input type="file" class="numberInput" id="imageInput" accept="image/*"><button class="outlineButton" onclick="clearImages()">Clear</button>
                 
                     <span id="sizeError" style="color: red;"></span>
                 </p>
-                <br>
-                <!--
-                <p id="bgFromFolder">
-                Background Image (File Folder): <input id="imageFolderInput" type="text" class="numberInput">
-                </p>
-                -->
             </details> 
             <br>
             <hr>
@@ -197,7 +225,16 @@
                 <br><br>
                 Required Time for Streak Completion (in seconds): <input class="numberInput" type="number" id="streakCompletionTimeInput" min="0" step="1">
                 <br><br>
-                <button class="outlineButton" onclick="localStorage.clear(), location.reload()">Reset Data</button>
+                <button id="resetAllButton"class="outlineButton" onclick='
+                if(confirm("Are you sure you want to reset all data?")) {
+                    if(confirm("This will delete all data. Are you sure you want to do this?")) {
+                        preventSave = true;
+                        v = null;
+                        clearAllData();
+                        location.reload();
+                        
+                    }
+                }'>Reset Data</button>
                 Note: It's recommended to Reset Data after you download a new update. (Warning: This also deletes any work you have, so save it first!)
             </details>
         </div>
@@ -253,16 +290,10 @@
                 <summary><strong>Tips</strong></summary>
                 <br>
                 <details class="innerDetails">
-                    <summary><strong>How to Set Background Images</strong></summary>
+                    <summary><strong>Image Notes</strong></summary>
                     <br>
                     <p class="innerDetails">
-                        You have two options for setting a background image:
-                        <br><br>
-                        1. Set the image from your device (2MB limit): Make sure "Background Image from Folder" is unchecked. Click the "None Selected" button (to the left of the "clear" button). Select the image you want as the background. Done!
-                        <br><br>
-                        2. Set the image from the folder (No limit!): Make sure "Background Image from Folder" is checked. Type the name of the file (without the extension) in the input field (to the left of the "clear" button). For example, if your image is "image.jpg", type "image". Done!
-                        <br><br>
-                        To see the folder where the images are stored for option 2, go to the folder that WriteRush is stored in. Then click "assets", then "images". Place images in here, and rename them to be something easy to type.
+                        You should limit the number of image notes you have. Otherwise, WriteRush will start to get laggy.
                     </p>
                 </details>
                 <br>
@@ -337,11 +368,37 @@
                 <button class="outlineButton" id="saveFileNameButton">Save</button>
             </p>
             <br>
+            <p id="chapterNameDisplay">Chapter Name: 
+                <input spellcheck="false" type="text" class="numberInput" id="chapterNameInput">
+                <button class="outlineButton" id="saveChapterNameButton">Save</button>
+            </p>
+            <br>
+            <p id="noteNameDisplay">Note Name: 
+                <input spellcheck="false" type="text" class="numberInput" id="noteNameInput">
+                <button class="outlineButton" id="saveNoteNameButton">Save</button>
+            </p>
+            <br>
             <hr>
             <br>
-            <button class="outlineButton" onclick="exportFile()">Export to .txt</button>
+            <button class="outlineButton" onclick="exportChapter()">Export Chapter</button>
+            <br><br>
+            <button class="outlineButton" onclick="exportFile()">Export File</button>
             <br><br>
             <button class="outlineButton" id="deleteFileButton" onclick="deleteFile(v.currentFileIndex)">Delete</button>
+        </div>
+    </div>
+
+    
+    <div id="newNoteModal" class="modal">
+        <div class="modalContent">
+            <p id="textNoteText">Text Note: 
+                <button class="outlineButton" id="textNoteButton">Create</button>
+            </p>
+            <br>
+            <p id="imageNoteText">Image Note:
+                <label id="imageNoteLabel" for="imageNoteInput" class="numberInput">Create</label>
+                <input type="file" class="numberInput" id="imageNoteInput" accept="image/*">
+            </p>
         </div>
     </div>
     
@@ -361,9 +418,11 @@
                 <p>
                     <p id="writeForSeconds">Write for seconds to increase your streak!</p>
                     <br><br>
-                    WriteRush Version 3.1
+                    WriteRush
                 </p>
             </div>
+            
+
         </div>
     </div>
 
@@ -379,31 +438,52 @@
             </div>
         </div>
     </div>
-    <script src="JS/store.legacy.min.js"></script>
+    <script src="JS/dragula.min.js"></script>
+    <script>
+        
+        function loadScript(url) {
+            const script = document.createElement('script');
+            script.src = url;
+            document.body.appendChild(script);
+        }
+        window.onload = (() => {
+            loadScript('JS/load.js');
+        })
+        
+    </script>
+    <!--
     <script src="JS/load.js"></script>
     <script src="JS/settings.js"></script>
     <script src="JS/getCaretCoordinates.js"></script>
     <script src="JS/confetti.browser.js"></script>
     <script src="JS/base.js"></script>
     <script src="JS/data.js"></script>
+    -->
+    <!--
+        <script>
+            
+        const ctx = document.getElementById('writingChart').getContext('2d');
+        const writingChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: v.writeTimeArrayLabels,
+            datasets: [{
+                label: 'Minutes Written',
+                data: v.writeTimeArray,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true,
+            }
+            }
+        }
+        });
+    </script>
+    -->
 </body>
 </html>
-
-
-
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>WriteRush</title>
-    </head>
-    <body>
-
-    
-    </body>
-</html>
-
-
-
-
-

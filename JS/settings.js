@@ -6,7 +6,7 @@ function openSettings() {
 }
 
 const fontSizeInput = document.getElementById('fontSize');
-const textArea = document.getElementById('typeArea');
+const textArea = document.querySelector('#typeArea');
 fontSizeInput.value = v.fontSize;
 textArea.style.fontSize = v.fontSize + 'px';
 
@@ -16,7 +16,8 @@ fontFamilyInput.value = v.fontFamily;
 textArea.style.fontFamily = v.fontFamily;
 
 
-fontFamilyInput.addEventListener('change', function () {
+fontFamilyInput.addEventListener('change', () => {
+    textRedacted = false;
     v.fontFamily = fontFamilyInput.value;
     textArea.style.fontFamily = v.fontFamily;
 });
@@ -65,14 +66,41 @@ progressBarColorInput.addEventListener('click',() => {
 });
 progressBarColorInput.addEventListener('change', () => {
     v.progressBarColor = progressBarColorInput.value;
-    /*
-    root.style.setProperty('--outline', progressBarColorInput.value);
-    */
+    
+    
     console.log(v.progressBarColor);
     progressBarColorInput.textContent = v.progressBarColor;
     progressBarColorInputLabel.textContent = v.progressBarColor;
     openModal("settingsModal");
 });
+
+function adjustColor(hex, amount=90) {
+    // Convert hex to RGB
+    let r = parseInt(hex.substring(1, 3), 16);
+    let g = parseInt(hex.substring(3, 5), 16);
+    let b = parseInt(hex.substring(5, 7), 16);
+
+    // Calculate brightness
+    let brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    
+    // Decide whether to lighten or darken
+    let factor = brightness > 127 ? -1 : 1;
+
+    // Adjust and clamp each RGB value
+    r = Math.max(Math.min(r + (amount * factor), 255), 0);
+    g = Math.max(Math.min(g + (amount * factor), 255), 0);
+    b = Math.max(Math.min(b + (amount * factor), 255), 0);
+
+    // Convert RGB back to hex
+    let adjustedHex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+    
+    return adjustedHex;
+}
+
+
+
+
+
 
 /*
 const hideBlurButton = document.querySelector('#hideBlurButton');
@@ -226,148 +254,63 @@ const typingSounds = document.querySelector('#typingSounds');
 typingSounds.value = v.typingSound;
 typingSounds.addEventListener('change', () => {
     v.typingSound = typingSounds.value;
-    v.typingSoundPath = document.getElementById(v.typingSound);
-    fastSound = new Audio(v.typingSoundPath.src);
+    v.typingSoundPath = document.getElementById(v.typingSound).src;
+    fastSound = new Audio(v.typingSoundPath);
 });
 
 
 v.typingSound = typingSounds.value;
-v.typingSoundPath = document.getElementById(v.typingSound);
+v.typingSoundPath = document.getElementById(v.typingSound).src;
 
-
-
-
-/*
-function bgDarkButton(a) {
-    let root = document.documentElement;
-    let currentSize = parseFloat(getComputedStyle(root).getPropertyValue('--bgDarkness'),10);
-    console.log(currentSize);
-    root.style.setProperty('--bgDarkness', (currentSize + a));
-    root.style.setProperty('--secondaryOpacity', '0.5');
-    if ((currentSize + a) <= 0) {
-        root.style.setProperty('--bgDarkness', '0');
-    } else if ((currentSize + a) >= 1) {
-        root.style.setProperty('--bgDarkness', '1');
-        root.style.setProperty('--secondaryOpacity', '1');
-    }
-}
-*/
 
 let isBgImage = false;
-let isBgImageFolder = false;
-const maxFileSize = 2 * 1024 * 1024; // 2 MB
-const backgroundImageFromFolderCheckbox = document.querySelector('#backgroundImageFromFolderCheckbox');
-backgroundImageFromFolderCheckbox.checked = v.backgroundImageFromFolder;
-checkIfBackgroundImageFromFolder();
-backgroundImageFromFolderCheckbox.addEventListener('change', () => {
-    checkIfBackgroundImageFromFolder();
-});
-function checkIfBackgroundImageFromFolder() {
-    v.backgroundImageFromFolder = backgroundImageFromFolderCheckbox.checked;
-    if (v.backgroundImageFromFolder) {
-        document.querySelector('#bgFromFile').innerHTML = `
-            <p id="bgFromFile">
-                Background Image (File Folder): 
-                <input id="imageFolderInput" type="text" class="numberInput">
-                <button class="outlineButton" onclick="clearImages1()">Clear</button>
-            </p>`;
-        
-        const imageFolderInput = document.querySelector('#imageFolderInput');
-        function setBgFromFolder() {
-            const extensions = ['jpg', 'png', 'gif', 'jpeg', 'bmp', 'webp']; // Add or remove extensions as needed
-            let imageLoaded = false; // Flag to know if an image was successfully loaded
-            v.folderImage = imageFolderInput.value;
-            extensions.forEach((ext) => {
-                if (imageLoaded) return; // Skip if an image has already been loaded
-                
-                let imagePath = `assets/images/${imageFolderInput.value}.${ext}`;
-                const image = new Image();
-                image.src = imagePath;
 
-                image.onload = () => {
-                    if (!imageLoaded) { // Double check the flag
-                        isBgImageFolder = true;
-                        document.body.style.backgroundImage = `url("${imagePath}")`;
-                        console.log(`Image loaded successfully with extension .${ext}! 😎`);
-                        imageLoaded = true; // Set flag to true
-                    }
-                };
-                /*
-                image.onerror = () => {
-                };
-                */
-            });
-        }
-        imageFolderInput.value = v.folderImage;
-        imageFolderInput.addEventListener('change', () => {
-            setBgFromFolder();
-        });
-        setBgFromFolder();
-    } else {
-        document.querySelector('#bgFromFile').innerHTML = `
-            <p id="bgFromFile">
-                Background Image (2MB Limit): 
-                <label id="imageInputLabel" for="imageInput" class="numberInput">
-                None Selected</label>
-                <input type="file" class="numberInput" id="imageInput" accept="image/*"><button class="outlineButton" onclick="clearImages()">Clear</button>
-                <br>
-                <span id="sizeError" style="color: red;"></span>
-            </p>`;
-        
-
-        const imageInput = document.querySelector('#imageInput');
-        
-        if (v.bgImage) {
-            document.body.style.backgroundImage = 'url(' + v.bgImage + ')';
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundRepeat = 'no-repeat';
-            document.body.style.backgroundPosition = 'center';
-            document.querySelector("#imageInputLabel").textContent = v.bgImageName;
-            isBgImage = true;
-        }
-        imageInput.addEventListener('change', function() {
-            
-            const file = this.files[0];
-
-            if (file && file.size > maxFileSize) {
-                document.querySelector('#sizeError').textContent = 'File size exceeds 2MB. Please choose a smaller file or switch to folder mode.';
-                // Clear the file input
-                this.value = '';
-            } else {
-                document.querySelector('#sizeError').textContent = '';
-            }
-            
-        });
+const imageInput = document.querySelector('#imageInput');
 
 
-        imageInput.addEventListener('change', function() {
-            const file = this.files[0];
-            // Make sure a file was selected
-            
-            if (file) {
-                // Create a FileReader to read the file
-                const reader = new FileReader();
-        
-                // Set the onload function to update the background when the file is read
-                reader.onload = function(e) {
-                    const imageUrl = e.target.result;
-                    document.body.style.backgroundImage = 'url(' + imageUrl + ')';
-                    document.body.style.backgroundSize = 'cover';
-                    document.body.style.backgroundRepeat = 'no-repeat';
-                    document.body.style.backgroundPosition = 'center';
-                    v.bgImage = imageUrl;
-                    
-                };
-                isBgImage = true;
-                // Read the file as a data URL so it can be used as an image source
-                reader.readAsDataURL(file);
-                v.bgImageName = file.name;
-                document.querySelector("#imageInputLabel").textContent = file.name;
-            }
-        });
-    }
+
+
+
+
+if (window.indexedDB) {
+    document.querySelector('#sizeError').textContent = '';
+} else {
+    document.querySelector('#sizeError').textContent = 'Your browser does not support indexedDB. Background images will not persist between sessions.';
 }
 
+const imageInputLabel = document.querySelector("#imageInputLabel");
+
+imageInput.addEventListener('change', function() {
+    if (this.files.length === 0) {
+        return;  // Exit the function if no file is selected
+    }
+    
+    const selectedFile = this.files[0];
+    let fileName = selectedFile.name; 
+    fileName = fileName.substring(0, 10) + "...";
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.body.style.backgroundImage = `url(${e.target.result})`;
+        
+        imageInputLabel.textContent = fileName;
+        
+        isBgImage = true;
+        v.backgroundImage = e.target.result;
+    };
+    reader.readAsDataURL(this.files[0]);
+});
+
+
+const loadImage = () => {
+    const result = v.backgroundImage;
+    if (result) {
+        document.body.style.backgroundImage = `url(${result})`;
+        imageInputLabel.textContent = "Selected";  
+        isBgImage = true;  
+    }
+};
+loadImage();
 
 
 
@@ -380,76 +323,28 @@ function clearImages() {
         document.querySelector('#sizeError').textContent = '';
         v.bgImage = null;
         v.bgImageName = null;
+        v.backgroundImage = null;
     }
     
 }
 
 
-function clearImages1() {
-    if (isBgImageFolder) {
-        document.querySelector("#imageFolderInput").value = "";
-        document.body.style.backgroundImage = 'none';
-        isBgImageFolder = false;
-        v.folderImage = null;
-        v.bgImage = null;
-        v.bgImageName = null;
+/*
+document.querySelector("#progressBarData").style.display = "block";
+*//*
+const resetAllButton = document.querySelector("#resetAllButton");
+resetAllButton.addEventListener("click", () => {
+
+    if(confirm("Are you sure you want to reset all data?")) {
+        if(confirm("This will delete all data. Are you sure you want to do this?")) {
+            preventSave = true;
+            v = null;
+            localStorage.clear();
+
+            location.reload();
+            location.reload();
+        }
     }
-}
-/*
-if (v.bgImage && !v.backgroundImageFromFolder) {
-    document.body.style.backgroundImage = 'url(' + v.bgImage + ')';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundPosition = 'center';
-    document.querySelector("#imageInputLabel").textContent = v.bgImageName;
-    isBgImage = true;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-function checkForProgressBarColor() {
-    
-    if (v.bgImage) {
-        console.log("YES");
-        document.querySelectorAll('.progressBarContainer').forEach( (element) => {
-            element.style.borderColor = 'var(--bgColor)'
-        });
-        document.querySelectorAll('.progressBar').forEach( (element) => {
-            element.style.backgroundColor = 'white';
-        });
-        console.log(document.querySelectorAll('.progressBar'));
-        document.querySelector('#progressBar').style.backgroundColor = 'white';
-        
-
-    } else {
-        console.log("NONE");
-        document.querySelector('.progressBarContainer').style.borderColor = 'var(--outline)';
-        /*
-        document.querySelector('.progressBar').style.backgroundColor = 'var(--outline)';
-        
-    }
-    
-}
-*/
-
-/*
-background-color: rgba(var(--darkOrLight), 0.5);
--webkit-backdrop-filter: blur(var(--blurAmount)); 
-backdrop-filter: blur(var(--blurAmount));
+});
 
 */

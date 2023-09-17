@@ -1,6 +1,7 @@
 
 
 
+
 let isModalOpen = false;
 // Modal 
 function openModal(modalId) {
@@ -38,7 +39,7 @@ function alertModal(text) {
     isModalOpen = true;
     let modal = document.querySelector("#alertModal");
     modal.style.display = "block";
-    document.querySelector("#alertModalText").textContent = text;
+    document.querySelector("#alertModalText").innerHTML = text;
 }
 
 
@@ -87,14 +88,24 @@ hideButton.addEventListener("click", function () {
 });
 */
 
+const notesTextarea = document.querySelector("#notesTextarea");
+notesTextarea.addEventListener("input", () => {
+    v.notesText = notesTextarea.value;
+    v.notes[v.currentNoteIndex].text = notesTextarea.value;
+});
 generateTickMarks();
 let wordCount = 0;
 document.querySelector('#typeArea').value = v.text;
 document.querySelector('#notesTextarea').value = v.notesText;
 wordCount = countWords(v.text);
+
+v.goalReached = true;
 let firstLoad = true;
 updateProgressBar();
 
+
+v.text = typeArea.value;
+console.log(v.text);
 const clickSound = document.getElementById("clickSound");
 const noSound = document.getElementById("noSound");
 typeArea.addEventListener("input", () => { 
@@ -104,7 +115,7 @@ typeArea.addEventListener("input", () => {
     }
     function inTypeAreaInput() {
         v.text = typeArea.value;
-        v.files[v.currentFileIndex].text = v.text;
+        v.files[v.currentFileIndex].chapters[v.currentChapterIndex].text = v.text;
         wordCount = countWords(v.text);
         // save();
         if (v.exclude > wordCount) {
@@ -116,7 +127,6 @@ typeArea.addEventListener("input", () => {
         checkIfStreak();
     }
     inTypeAreaInput();
-
     playSound();
     updateCaretPos();
     typingConfetti();
@@ -127,14 +137,9 @@ function checkIfStreak() {
     if (v.dailyWritingSessionTime > v.streakCompletionTime && v.doneTodaysStreak == false) {
         v.dailyStreak += 1;
         v.doneTodaysStreak = true;
-        alertModal("Your streak increased! 🎉 Your streak is now: " + v.dailyStreak + "!");
+        alertModal("Your streak increased!<br>🎉<br>Your streak is now: " + v.dailyStreak + "!");
     }
 }
-const notesTextArea = document.querySelector("#notesTextarea");
-notesTextArea.addEventListener("input", () => {
-    v.notesText = notesTextArea.value;
-    v.files[v.currentFileIndex].notesText = notesTextArea.value;
-});
 /*
 let fastSound = new Audio(v.typingSoundPath.src);
 
@@ -161,19 +166,27 @@ function playSlowSound() {
     sound.play();
 }
 */
-let fastSound = new Audio(v.typingSoundPath.src);
+
+
+
+// THIS IS THE ONE THAT IS THE OFFICIAL
+let fastSound = new Audio(v.typingSoundPath);
 
 function playSound() {
     let sound;
     if (v.fastSounds) {
         sound = fastSound; 
     } else {
-        sound = new Audio(v.typingSoundPath.src); 
+        sound = new Audio(v.typingSoundPath); 
     }
     sound.currentTime = 0;
     sound.playbackRate = Math.random() * 2 + 0.4;
     sound.play();
 }
+
+
+
+
 /*
 let xAccum = 0;
 let yAccum = 0;
@@ -252,13 +265,38 @@ function shakeScreen(intensity) {
     body.style.top = `${intensity * directionY}px`;
 
     setTimeout(() => {
-        clearInterval(interval);
+        // clearInterval(interval);
         body.style.top = 0;
         body.style.left = 0;
     }, 100);
 }
 
+/*
+function countWords(str) {
+    if (str.length !== 0) {
+        // Remove all special characters but keep whitespaces and alphanumeric characters
+        const cleanedStr = str.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
+        return cleanedStr.trim().split(' ').filter(Boolean).length;
+    } else {
+        return 0;
+    }
+}
+*/
+function countWords(str) {
+    if (str.length !== 0) {
+        // Remove all special characters but keep whitespaces, alphanumeric characters, and digits
+        // \p{L} matches any kind of letter from any language
+        // \d matches any digit from 0 to 9
+        const cleanedStr = str.replace(/[^\p{L}\d\s]/gu, '').replace(/\s+/g, ' ');
+        return cleanedStr.trim().split(' ').filter(Boolean).length;
+    } else {
+        return 0;
+    }
+}
 
+
+
+/*
 function countWords(str) {
     if (str.length !== 0) {
         const cleanedStr = str.replace(/[^\w\s]|_/g, ' ').replace(/\s+/g, ' ');
@@ -277,17 +315,67 @@ function countWords(str) {
 }
 */
 
-function exportFile() {
+function exportChapter() {
     let pageCount = Math.round(v.text.length / 15) / 100;
     let textToSave = `==============================================
-    ${v.files[v.currentFileIndex].name}
+    ${v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name}
 ==============================================
 
 ----------------------------------------------
 ${countWords(v.text)} words, ${pageCount} pages.
 ----------------------------------------------
 
-${v.text}`;
+${v.text}
+
+----------------------------------------------
+Thanks for using WriteRush!`;
+    let textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+    let textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+    let fileNameToSaveAs = v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name;
+
+    let downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.href = textToSaveAsURL;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+
+
+
+
+
+
+
+
+function exportFile() {
+    let fullWordCount = 0;
+    let fullPageCount;
+    for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
+        fullWordCount += countWords(v.files[v.currentFileIndex].chapters[i].text);
+        fullPageCount = Math.round(v.files[v.currentFileIndex].chapters[i].text.length / 15) / 100;
+    }
+    let textToSave = `==============================================
+${v.files[v.currentFileIndex].name}
+==============================================
+
+----------------------------------------------
+${fullWordCount} words, ${fullPageCount} pages.
+----------------------------------------------`
+
+    for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
+        textToSave += `\n\n==============================================
+${v.files[v.currentFileIndex].chapters[i].name}
+==============================================`
+        textToSave += `\n\n${v.files[v.currentFileIndex].chapters[i].text}` 
+    }
+    textToSave +=`\n\n
+----------------------------------------------
+Thanks for using WriteRush!
+
+`;
     let textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
     let textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
     let fileNameToSaveAs = v.files[v.currentFileIndex].name;
@@ -334,14 +422,15 @@ document.querySelector('#typeArea').addEventListener('input', function () {
 
 let xC;
 let yC;
-document.querySelector('.sidebar').style.width = '0px';
+const chapterSidebar = document.querySelector("#chapterSidebar");
+document.querySelector('#notesSidebar').style.width = '0px';
 function updateCaretPos() {
     const navbarHeight = document.querySelector('.navbar').offsetHeight;
     const coordinates = getCaretCoordinates(element, element.selectionEnd, { debug: false });
     let notesOffset = ((parseInt(notesSidebar.style.width) / 100) * window.innerWidth);
-    // console.log('(top, left, height) = (%s, %s, %s)', coordinates.top, coordinates.left, coordinates.height);
+    chapterOffset = parseFloat(getComputedStyle(chapterSidebar).width);
     yC = element.offsetTop - element.scrollTop + coordinates.top + navbarHeight;
-    xC = element.offsetLeft - element.scrollLeft + coordinates.left + notesOffset;
+    xC = element.offsetLeft - element.scrollLeft + coordinates.left + notesOffset + chapterOffset;
 
     /*
     rect.style.top = yC + 'px';
@@ -362,10 +451,16 @@ function typingConfetti() {
     });
 }
 
+
 function updateProgressBar() {
-    let progress = ((wordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
+    if (preventSave) {return};
+    const progressBarText = document.querySelector("#progressBarText");
     const progressBar = document.querySelector("#progressBar");
     const timeBar = document.querySelector("#timeBar");
+
+    let progress = ((wordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
+    if (v.exclude > wordCount) { v.exclude = wordCount; }
+    progressBarText.innerHTML = `${Math.round(progress)}% <div class="vLine"></div> ${wordCount}/${v.wordGoal} <div class="vLine"></div> ${wordCount - v.wordGoal}`;
 
     progressBar.style.width = progress + "%";
     let progressBarColor;
@@ -464,7 +559,12 @@ function add500toGoal() {
     v.wordGoal = parseInt(v.wordGoal)
     v.exclude = parseInt(v.exclude);
     v.addToGoal = parseInt(v.addToGoal);
-    v.wordGoal += v.addToGoal;
+    wordCount = countWords(v.text);
+    if (v.wordGoal - wordCount <= 0) {
+        v.wordGoal = wordCount + v.addToGoal;
+    } else {
+        v.wordGoal += v.addToGoal;
+    }
     if (v.excludeDefault) {
         v.exclude = wordCount;
     }
@@ -486,9 +586,46 @@ window.addEventListener("keydown", e => {
 });
 
 
+let chapterSidebarOpen = false;
+chapterSidebar.style.border = "0px";
+chapterSidebar.style.display = "none";
+const chapterSidebarButton = document.querySelector("#chapterSidebarButton");
+chapterSidebarButton.addEventListener("click", () => {
+    chapterSidebarOpen = !chapterSidebarOpen;
+    if (parseInt(chapterSidebar.style.width)) {
+        chapterSidebar.style.width = "0";
+        chapterSidebar.style.display = "none";
+    } else {
+        chapterSidebar.style.width = "20%";
+        chapterSidebar.style.display = "flex";
+    }
+})
 
 
-let fullscreenButton = document.querySelector('#fullscreenButton');
+
+
+
+let textRedacted = false;
+const redactButton = document.querySelector("#redactButton");
+redactButton.addEventListener("click", () => {
+    textRedacted = !textRedacted;
+    if (textRedacted) {
+        typeArea.style.fontFamily = "Redacted";
+    } else {
+        typeArea.style.fontFamily = v.fontFamily;
+    }
+})
+
+quickAccessSidebar.addEventListener("click", () => {
+    
+    const caretLoc = typeArea.selectionStart;
+    typeArea.focus();
+    typeArea.selectionStart = caretLoc;
+    typeArea.selectionEnd = caretLoc;
+})
+
+
+const fullscreenButton = document.querySelector('#fullscreenButton');
 const requestFullscreen = document.documentElement.requestFullscreen 
     || document.documentElement.mozRequestFullScreen
     || document.documentElement.webkitRequestFullscreen
@@ -518,7 +655,6 @@ let timeElapsed = 0;
 let timeLeft = v.timeGoal * 1000 * 60;
 
 let pauseButton = document.querySelector('#pauseButton');
-let timeBar = document.querySelector("#timeBar");
 
 pauseButton.addEventListener('click', togglePause);
 document.querySelector('#stopButton').addEventListener('click', stopTimer);
@@ -528,15 +664,18 @@ setInterval(alwaysRun, msRefresh);
 
 // ALWAYS RUN (IMPORTANT)
 function alwaysRun() {
-    save();
-    hue += 3;
-    updateProgressBar();
-    updateTimeBar();
-    rainbowStreak();
-    checkIfNewDay();
-    if (!isModalOpen) {
-        v.exclude = Math.min(v.exclude, wordCount);
-    }
+        /*
+        save();
+        */
+        hue += 3;
+        updateProgressBar();
+        updateTimeBar();
+        rainbowStreak();
+        checkIfNewDay();
+        if (!isModalOpen) {
+            v.exclude = Math.min(v.exclude, wordCount);
+        }
+    
 
 }
 function togglePause() {
@@ -618,6 +757,7 @@ function checkIfNewDay() {
         }
         v.doneTodaysStreak = false;
     } else if (differenceInDays > 1) {
+
         console.log("Different day.");
         resetDailyThings();
         v.dailyStreak = 0;
@@ -715,10 +855,11 @@ document.querySelector("#startModalText").innerHTML = motivationalMessages[Math.
 document.querySelector("#doneStreakDisplay").textContent = v.doneTodaysStreak ? "(Today's streak done! 😄)" : "(Finish today's streak! ⌨️)"
 
 let notesOpen = false;
-const notesSidebar = document.querySelector(".sidebar")
-const notesTextarea = document.querySelector("#notesTextarea");
+const imageNoteDisplay = document.querySelector("#imageNoteDisplay");
+const notesSidebar = document.querySelector("#notesSidebar")
 notesSidebar.style.border = "0px";
 notesTextarea.style.display = "none";
+imageNoteDisplay.style.display = "none";
 function notesClick() {
     notesOpen = !notesOpen;
     if (parseInt(notesSidebar.style.width)) {
@@ -726,14 +867,48 @@ function notesClick() {
         notesSidebar.style.width = "0";
         notesSidebar.style.border = "0";
         notesTextarea.style.display = "none";
-
-
+        imageNoteDisplay.style.display = "none";
     } else {
         notesSidebar.style.width = "30%";
         notesSidebar.style.borderRight = "var(--borderSize) solid var(--outline)";
-        notesTextarea.style.display = "block";
+        
+        switch (v.notes[v.currentNoteIndex].type) {
+            case "text":
+                notesTextarea.style.display = "flex";
+                imageNoteDisplay.style.display = "none";
+                break;
+            case "image":
+                notesTextarea.style.display = "none";
+                imageNoteDisplay.style.display = "flex";
+                imageNote.src = v.notes[v.currentNoteIndex].image;
+                break;
+            default:
+                notesTextarea.style.display = "flex";
+                imageNoteDisplay.style.display = "none";
+                break;
+        }
     }
 }
+
+/*
+switch (v.notes[v.currentnoteIndex].type) {
+    case "text":
+        notesTextarea.style.display = "flex";
+        imageNoteDisplay.style.display = "none";
+        break;
+    case "image":
+        notesTextarea.style.display = "none";
+        imageNoteDisplay.style.display = "flex";
+        imageNote.src = v.notes[v.currentNoteIndex].image;
+        break;
+    default:
+        notesTextarea.style.display = "flex";
+        imageNoteDisplay.style.display = "none";
+        break;
+}
+*/
+
+
 
 function closeNav() {
     document.getElementById("mySidebar").style.width = "0";
@@ -836,11 +1011,551 @@ function readability(input) {
     return Math.max(((fkra(input) + cli(input) + ari(input)) / 3), 0);
 }
 
-function updateFileButtons() {
-    const lowerNavbarDiv = document.querySelector("#lowerNavbarDiv");
-    const newFileButton = document.createElement("button");
 
+/*
+START OF NOTES
+*/
+/*
+imageInput.addEventListener('change', function() {
+    if (this.files.length === 0) {
+        return;  // Exit the function if no file is selected
+    }
     
+    const selectedFile = this.files[0];
+    let fileName = selectedFile.name; 
+    fileName = fileName.substring(0, 10) + "...";
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.body.style.backgroundImage = `url(${e.target.result})`;
+        
+        imageInputLabel.textContent = fileName;
+        
+        isBgImage = true;
+        v.backgroundImage = e.target.result;
+    };
+    reader.readAsDataURL(this.files[0]);
+});
+
+
+const loadImage = () => {
+    const result = v.backgroundImage;
+    if (result) {
+        document.body.style.backgroundImage = `url(${result})`;
+        imageInputLabel.textContent = "Selected";  
+        isBgImage = true;  
+    }
+};
+loadImage();
+
+
+
+function clearImages() {
+    if (isBgImage) {
+        document.querySelector("#imageInputLabel").textContent = "None Selected";
+        document.body.style.backgroundImage = 'none';
+        document.querySelector('#imageInput').value = null;
+        isBgImage = false;
+        document.querySelector('#sizeError').textContent = '';
+        v.bgImage = null;
+        v.bgImageName = null;
+        v.backgroundImage = null;
+    }
+    
+}
+*/
+
+let isDragging = false;
+let lastX, lastY;  // Last position of the cursor
+
+const noteImage = document.querySelector('.imageNoteDisplay img');
+
+imageNoteDisplay.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    isDragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    
+    const dx = e.clientX - lastX;  // change in X
+    const dy = e.clientY - lastY;  // change in Y
+    
+    // Adjust image position based on how much mouse has moved
+    noteImage.style.left = (noteImage.offsetLeft + dx) + "px";
+    noteImage.style.top = (noteImage.offsetTop + dy) + "px";
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+});
+
+// Zoom on wheel
+imageNoteDisplay.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    
+    // Determine zoom level based on wheel direction
+    let scale = 1;
+    if (e.deltaY > 0) {
+        scale -= 0.1;
+    } else {
+        scale += 0.1;
+    }
+    
+    const currentScale = getComputedStyle(noteImage).transform.match(/matrix\((.*)\)/); 
+    const newScale = currentScale ? parseFloat(currentScale[1].split(', ')[3]) * scale : scale;
+    noteImage.style.transform = `scale(${newScale})`;
+});
+
+
+
+
+
+window.addEventListener('wheel', (e) => {
+    // If the ctrlKey is pressed, we're likely trying to zoom.
+    if (e.ctrlKey) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+const imageNote = document.querySelector("#imageNote");
+const imageNoteInput = document.querySelector("#imageNoteInput");
+imageNoteInput.addEventListener("change", (e) => {
+    if (imageNoteInput.files.length === 0) {
+        console.log("NONNONONONONONON");
+        return;
+    }
+    
+    const selectedFile = imageNoteInput.files[0];
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        const newNoteTemp = {
+            id: Date.now().toString(),
+            name: "Image Note",
+            text: "You should not be able to see this text",
+            type: "image",
+            image: e.target.result,
+        }
+        v.notes.push(newNoteTemp);
+        v.currentNoteIndex = v.notes.length - 1;
+        updateNotesList();
+        openNote(v.currentNoteIndex);
+        // imageNote.src = newNoteTemp.image;
+        imageNote.src = e.target.result;
+        
+    };
+    reader.readAsDataURL(imageNoteInput.files[0]);
+    closeModal("newNoteModal");
+})
+
+
+const textNoteButton = document.querySelector("#textNoteButton");
+textNoteButton.addEventListener("click", () => {
+    closeModal("newNoteModal");
+    newNote();
+})
+
+
+
+const newNoteButton = document.querySelector("#newNoteButton");
+newNoteButton.addEventListener("click", () => {
+    openModal("newNoteModal");
+});
+
+
+
+const notesSectionDiv = document.querySelector('#notesSectionDiv');
+function updateNotesList() {
+    notesSectionDiv.innerHTML = "";
+
+    for (let i = 0; i < v.notes.length; i++) {
+        const chapter = document.createElement("div");
+        chapter.classList.add("chapter");
+        
+        chapter.setAttribute('data-id', v.notes[i].id.toString());
+
+        const leftChapterDiv = document.createElement("div");
+        const chapterHashtag = document.createElement("p");
+        let symbol;
+        switch (v.notes[i].type) {
+            case "text": 
+                symbol = "T";
+                break;
+            case "image":
+                symbol = "I";
+                break;
+            default:
+                symbol = "?";
+                break;
+        }
+        chapterHashtag.innerHTML = `<p><strong>${symbol}</strong> `;
+        leftChapterDiv.appendChild(chapterHashtag);
+        const chapterP = document.createElement("p");
+        chapterP.innerHTML = v.notes[i].name;
+        leftChapterDiv.appendChild(chapterP);
+        chapter.appendChild(leftChapterDiv);
+        const chapterDeleteButton = document.createElement("button");
+        chapterDeleteButton.classList.add("chapterDeleteButton");
+        chapterDeleteButton.innerHTML = "<strong>🗑</strong>";
+        chapter.appendChild(chapterDeleteButton);
+
+
+        chapter.addEventListener("click", () => {
+            if (v.currentNoteIndex == i) {
+                return;
+            }
+            v.currentNoteIndex = i;
+            openNote(v.currentNoteIndex)
+            
+        })
+
+        chapterDeleteButton.addEventListener("click", (e) => {
+            e.stopPropagation();  // This stops the event from bubbling up
+            deleteNote(i);
+            
+        })
+        
+        if (i == v.currentNoteIndex) {
+            chapterP.style.textDecoration = "underline";
+            chapter.style.backgroundColor = "rgb(var(--secondary))"
+        } else {
+            chapterP.style.textDecoration = "none";
+            chapter.style.backgroundColor = "none"
+        }
+        
+        notesSectionDiv.appendChild(chapter);
+    }
+}
+
+openNote(v.currentNoteIndex);
+
+function openNote(noteIndex) {
+    v.notesText = v.notes[noteIndex].text;
+    if (notesOpen) {
+
+        switch (v.notes[noteIndex].type) {
+            case "text":
+                notesTextarea.style.display = "flex";
+                imageNoteDisplay.style.display = "none";
+                break;
+            case "image":
+                notesTextarea.style.display = "none";
+                imageNoteDisplay.style.display = "flex";
+                imageNote.src = v.notes[v.currentNoteIndex].image;
+                break;
+            default:
+                notesTextarea.style.display = "flex";
+                imageNoteDisplay.style.display = "none";
+                break;
+        }
+    }
+    notesTextarea.value = v.notesText;
+    updateNotesList();
+}
+
+function deleteNote(i) {
+    if (confirm("Are you sure you want to delete this note?: " + v.notes[i].name)) {
+        v.notes.splice(i, 1);
+        v.currentNoteIndex = 0;
+        if (v.notes.length == 0) {
+            newNote();
+        }
+        openNote(0);
+        updateNotesList();
+    }
+}
+
+function newNote() {
+    const newNoteTemp = {
+        id: Date.now().toString(),
+        name: "Text Note",
+        text: "This is a text note! Type here ...",
+        type: "text",
+    }
+    v.notes.push(newNoteTemp);
+    v.currentNoteIndex = v.notes.length - 1;
+    updateNotesList();
+    openNote(v.currentNoteIndex);
+}
+
+
+const noteDragula = dragula([document.querySelector("#notesSectionDiv")]);
+
+noteDragula.on('drop', () => {
+    reorderNotes();
+});
+
+function reorderNotes() {
+    const newOrderNotes = [];
+
+    const currentNoteID = v.notes[v.currentNoteIndex].id.toString();
+
+
+    const children = notesSectionDiv.children;
+    for (let i = 0; i < children.length; i++) {
+        const noteID = children[i].getAttribute('data-id');
+
+        const matchedNote = v.notes.find(note => note.id.toString() === noteID);
+        if (matchedNote) {
+            newOrderNotes.push(matchedNote);
+        }
+    }
+    v.notes = newOrderNotes;
+    v.currentNoteIndex = newOrderNotes.findIndex(note => note.id.toString() === currentNoteID);
+
+    updateNotesList();
+}
+
+
+
+
+
+/*
+END OF NOTES
+*/
+
+
+
+
+
+
+
+
+
+const newChapterButton = document.querySelector("#newChapterButton");
+newChapterButton.addEventListener("click", () => {
+    newChapter();
+});
+
+
+
+const chapterSectionDiv = document.querySelector('#chapterSectionDiv');
+function updateChapterList() {
+    chapterSectionDiv.innerHTML = "";
+
+    for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
+        const chapter = document.createElement("div");
+        chapter.classList.add("chapter");
+        chapter.setAttribute('data-id', v.files[v.currentFileIndex].chapters[i].id.toString());
+
+        const leftChapterDiv = document.createElement("div");
+        const chapterHashtag = document.createElement("p");
+        chapterHashtag.innerHTML = "<p><strong>#</strong> ";
+        leftChapterDiv.appendChild(chapterHashtag);
+        const chapterP = document.createElement("p");
+        chapterP.innerHTML = v.files[v.currentFileIndex].chapters[i].name;
+        leftChapterDiv.appendChild(chapterP);
+        chapter.appendChild(leftChapterDiv);
+        const chapterDeleteButton = document.createElement("button");
+        chapterDeleteButton.classList.add("chapterDeleteButton");
+        chapterDeleteButton.innerHTML = "<strong>🗑</strong>";
+        chapter.appendChild(chapterDeleteButton);
+
+
+        chapter.addEventListener("click", () => {
+            if (v.currentChapterIndex == i) {
+                return;
+            }
+            v.currentChapterIndex = i;
+            openChapter(v.currentChapterIndex)
+            
+        })
+
+        chapterDeleteButton.addEventListener("click", (e) => {
+            e.stopPropagation();  // This stops the event from bubbling up
+            deleteChapter(i);
+            
+        })
+        
+        if (i == v.currentChapterIndex) {
+            chapterP.style.textDecoration = "underline";
+            chapter.style.backgroundColor = "rgb(var(--secondary))"
+        } else {
+            chapterP.style.textDecoration = "none";
+            chapter.style.backgroundColor = "none"
+        }
+        
+        chapterSectionDiv.appendChild(chapter);
+    }
+}
+
+openChapter(v.currentChapterIndex);
+
+function openChapter(chpIndex) {
+    v.text = v.files[v.currentFileIndex].chapters[chpIndex].text;
+    const textArea = document.querySelector("#typeArea");
+    textArea.value = v.text;
+    updateChapterList();
+}
+
+function deleteChapter(i) {
+    if (confirm("Are you sure you want to delete this chapter?: " + v.files[v.currentFileIndex].chapters[i].name)) {
+        v.files[v.currentFileIndex].chapters.splice(i, 1);
+        v.currentChapterIndex = 0;
+        if (v.files[v.currentFileIndex].chapters.length == 0) {
+            newChapter();
+        }
+        openChapter(0);
+        updateChapterList();
+    }
+}
+
+function newChapter() {
+    const newChapTemp = {
+        id: Date.now().toString(),
+        name: "New Chapter",
+        text: "This is a new chapter! Type here ..."
+    }
+    v.files[v.currentFileIndex].chapters.push(newChapTemp);
+    v.currentChapterIndex = v.files[v.currentFileIndex].chapters.length - 1;
+    updateChapterList();
+    openChapter(v.currentChapterIndex);
+}
+
+
+const chapterDragula = dragula([document.querySelector("#chapterSectionDiv")]);
+
+chapterDragula.on('drop', () => {
+    reorderChapters();
+});
+
+function reorderChapters() {
+    const newOrderChapters = [];
+
+    const currentChapterID = v.files[v.currentFileIndex].chapters[v.currentChapterIndex].id.toString();
+
+
+    const children = chapterSectionDiv.children;
+    for (let i = 0; i < children.length; i++) {
+        const chapterID = children[i].getAttribute('data-id');
+
+        const matchedChapter = v.files[v.currentFileIndex].chapters.find(chap => chap.id.toString() === chapterID);
+        if (matchedChapter) {
+            newOrderChapters.push(matchedChapter);
+        }
+    }
+    v.files[v.currentFileIndex].chapters = newOrderChapters;
+    v.currentChapterIndex = newOrderChapters.findIndex(chap => chap.id.toString() === currentChapterID);
+
+    updateChapterList();
+}
+
+
+const fileDragula = dragula([document.querySelector("#fileDiv")], {
+    direction: 'horizontal'
+});
+  
+fileDragula.on("drop", () => {
+    reorderFiles();
+})
+
+/*
+
+
+<div class="chapter">
+    <p><strong>#</strong> Chapter 1: The Beginning</p>
+    <button class="chapterDeleteButton"><strong>🗑</strong></button>
+</div>
+
+*/
+
+const lowerNavbarDiv = document.querySelector("#lowerNavbarDiv");
+const fileDiv = document.querySelector("#fileDiv");
+function reorderFiles() {
+    
+    const newOrderFiles = [];
+
+    const currentFileID = v.files[v.currentFileIndex].id.toString();
+
+
+    const children = fileDiv.children;
+    for (let i = 0; i < children.length; i++) {
+        const fileID = children[i].getAttribute('data-id');
+
+        const matchedFile = v.files.find(file => file.id.toString() === fileID);
+        if (matchedFile) {
+            newOrderFiles.push(matchedFile);
+        }
+    }
+    v.files = newOrderFiles;
+    v.currentFileIndex = newOrderFiles.findIndex(file => file.id.toString() === currentFileID);
+    updateFileButtons();
+
+}
+
+
+
+
+const newFileButton = document.createElement("button");
+function updateFileButtons() {
+    updateChapterList();
+    lowerNavbarDiv.innerHTML = "";
+    fileDiv.innerHTML = "";
+
+    newFileButton.classList.add("outlineButton");
+    newFileButton.id = "newFileButton";
+    newFileButton.textContent = "New File";
+    newFileButton.addEventListener("click", newFile);
+    lowerNavbarDiv.appendChild(newFileButton);
+
+
+    for (let i = 0; i < v.files.length; i++) {
+        const button = document.createElement("button");
+        button.classList.add("navbarButton");
+        button.classList.add("file");
+        button.setAttribute('data-id', v.files[i].id.toString());
+        button.textContent = v.files[i].name;
+        fileDiv.appendChild(button);
+        lowerNavbarDiv.appendChild(fileDiv);
+        button.addEventListener("click", () => {
+            v.currentFileIndex = i;
+            openFile(i);
+        });
+        
+        if (i == v.currentFileIndex) {
+            button.style.textDecoration = "underline";
+            button.style.backgroundColor = "rgb(var(--secondary))"
+            //button.style.color = "var(--fontColor)";
+        } else {
+            button.style.textDecoration = "none";
+            button.style.backgroundColor = "none";
+            //button.style.color = "gray";
+        }
+    }
+
+    /*
+    // Create new file buttons
+    v.files.forEach((file, i) => {
+        const button = document.createElement("button");
+        button.classList.add("navbarButton");
+        button.textContent = file.name;
+        lowerNavbarDiv.appendChild(button);
+        button.addEventListener("click", () => {
+            v.currentFileIndex = i;
+            openFile(i);
+        });
+
+        // Append a space if needed
+        if (i < v.files.length - 1) {
+            addSpace();
+        }
+    });
+
+    */
+}
+
+
+/*
+
+
+function updateFileButtons() {
+    updateChapterList();
     lowerNavbarDiv.innerHTML = "";
 
     newFileButton.classList.add("outlineButton");
@@ -871,48 +1586,31 @@ function updateFileButtons() {
         }
     }
 
-    /*
-    // Create new file buttons
-    v.files.forEach((file, i) => {
-        const button = document.createElement("button");
-        button.classList.add("navbarButton");
-        button.textContent = file.name;
-        lowerNavbarDiv.appendChild(button);
-        button.addEventListener("click", () => {
-            v.currentFileIndex = i;
-            openFile(i);
-        });
-
-        // Append a space if needed
-        if (i < v.files.length - 1) {
-            addSpace();
-        }
-    });
-
-    */
 }
+*/
 
 
 
 function refreshFileButtons() {
-    console.log("Refreshing file buttons");
     updateFileButtons();
 }
 refreshFileButtons();
-function addSpace() {
-    let space = document.createTextNode(" ");
-    lowerNavbarDiv.appendChild(space);
-}
 
 
 
 
 function newFile() {
     const newFile = {
+        id: Date.now().toString(),
         name: 'Untitled',
         exclude: 0,
         wordGoal: 50,
-        text: 'New file!\n\n(Note: If you are updating WriteRush, please go into Settings > Other > Reset Settings. This will ensure the new update functions correctly!) \n\nType here ...',
+        chapters: [{
+            id: Date.now().toString(),
+            name: "Untitled",
+            text: 'New file!\n\n(Note: If you are updating WriteRush, please go into Settings > Other > Reset Settings. This will ensure the new update functions correctly!) \n\nType here ...',
+        }],
+        
         notesText: 'New file!\n\nType here ...',
     };
     v.files.push(newFile);
@@ -924,15 +1622,13 @@ function openFile(i) {
     if (v.files.length == 0) {
         newFile();
     }
-    console.log("Opening file...");
-    console.log(v.files[i]);
-    v.text = v.files[i].text;
-    v.notesText = v.files[i].notesText;
+    v.currentChapterIndex = 0;
+    v.text = v.files[i].chapters[v.currentChapterIndex].text;
+    // v.notesText = v.files[i].notesText;
     v.exclude = v.files[i].exclude;
     v.wordGoal = v.files[i].wordGoal;
     const textArea = document.querySelector("#typeArea");
     textArea.value = v.text;
-    const notesTextarea = document.querySelector("#notesTextarea");
     notesTextarea.value = v.notesText;
     v.currentFileIndex = i;
     refreshFileButtons();
@@ -942,11 +1638,40 @@ function openFile(i) {
     updateProgressBar();
 }
 
+
+const noteNameInput = document.querySelector('#noteNameInput');
+const saveNoteNameButton = document.querySelector('#saveNoteNameButton');
+
+saveNoteNameButton.addEventListener('click', () => {
+    if (noteNameInput.value.length > 0) {
+        v.notes[v.currentNoteIndex].name = noteNameInput.value;
+        updateNotesList();
+    } else {
+        alert("Please enter a note name.");
+    }
+});
+
+
+const chapterNameInput = document.querySelector('#chapterNameInput');
+const saveChapterNameButton = document.querySelector('#saveChapterNameButton');
+
+saveChapterNameButton.addEventListener('click', () => {
+    if (chapterNameInput.value.length > 0) {
+        v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name = chapterNameInput.value;
+        updateChapterList();
+    } else {
+        alert("Please enter a chapter name.");
+    }
+});
+
+
 const fileNameInput = document.querySelector('#fileNameInput');
 const saveFileNameButton = document.querySelector('#saveFileNameButton');
 function openFileModal() {
     fileNameInput.value = v.files[v.currentFileIndex].name;
-    console.log(fileNameInput.value);
+    chapterNameInput.value = v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name;
+    noteNameInput.value = v.notes[v.currentNoteIndex].name;
+
 }
 
 saveFileNameButton.addEventListener('click', () => {
@@ -967,3 +1692,5 @@ function deleteFile(i) {
     openFileModal();
 }
 
+
+openFile(v.currentFileIndex);
