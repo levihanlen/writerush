@@ -1,1 +1,3 @@
 To use WriteRush, double-click 'index.html'. This will open it in a browser tab. Enjoy, and happy writing!
+
+MIT license
