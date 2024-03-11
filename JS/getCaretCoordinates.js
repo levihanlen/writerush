@@ -52,6 +52,8 @@ var isBrowser = (typeof window !== 'undefined');
 var isFirefox = (isBrowser && window.mozInnerScreenX != null);
 
 function getCaretCoordinates(element, position, options) {
+    
+  var scrollbarWidth = getScrollbarWidth(element);
   if (!isBrowser) {
     throw new Error('textarea-caret-position#getCaretCoordinates should only be called in a browser');
   }
@@ -103,6 +105,10 @@ function getCaretCoordinates(element, position, options) {
       } else {
         style.lineHeight = computed.height;
       }
+    } else if (prop === 'width') {
+      // Adjust width for scrollbar
+      var actualWidth = parseInt(computed.width) - scrollbarWidth;
+      style.width = actualWidth + 'px';
     } else {
       style[prop] = computed[prop];
     }
@@ -129,6 +135,11 @@ function getCaretCoordinates(element, position, options) {
   // textarea's content into the <span> created at the caret position.
   // For inputs, just '.' would be enough, but no need to bother.
   span.textContent = element.value.substring(position) || '.';  // || because a completely empty faux span doesn't render at all
+  // I ADDED THIS below
+  
+  span.style.fontSize = computed.fontSize;
+  span.style.fontFamily = computed.fontFamily;
+  
   div.appendChild(span);
 
   var coordinates = {
@@ -146,6 +157,10 @@ function getCaretCoordinates(element, position, options) {
   return coordinates;
 }
 
+
+function getScrollbarWidth(element) {
+  return element.offsetWidth - element.clientWidth;
+}
 if (typeof module != 'undefined' && typeof module.exports != 'undefined') {
   module.exports = getCaretCoordinates;
 } else if(isBrowser) {

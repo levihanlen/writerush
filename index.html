@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" type="text/css" href="CSS/style4.css">
     <link rel="stylesheet" type="text/css" href="CSS/dragula.min.css">
+    <!--That DRAGULA is CSS, not JS ^^^-->
 
     <title>WriteRush</title>
     
@@ -15,7 +16,27 @@
     <audio id="dingSound" src="assets/audio/ding1.mp3" preload="auto"></audio>
     <audio id="punchSound" src="assets/audio/punch1.mp3" preload="auto"></audio>
     <audio id="noSound" src="assets/audio/silent.mp3" preload="auto"></audio> 
-    <audio id="celebrate" src="assets/audio/celebrate.mp3" preload="auto"></audio> 
+    <audio id="celebrate" src="assets/audio/celebrate.mp3" preload="auto"></audio>
+
+    <audio id="clickSound5" src="assets/audio/click5.mp3" preload="auto"></audio>
+    <audio id="clickSound3" src="assets/audio/click3.mp3" preload="auto"></audio>
+    <audio id="clickSound4" src="assets/audio/click4.mp3" preload="auto"></audio>
+    <audio id="ballSound" src="assets/audio/ball.mp3" preload="auto"></audio>
+    <!--
+    <audio id="bubbleSound1" src="assets/audio/bubble.mp3" preload="auto"></audio>
+    <audio id="bubbleSound2" src="assets/audio/bubble2.mp3" preload="auto"></audio>
+    <audio id="bubbleSound3" src="assets/audio/bubble3.mp3" preload="auto"></audio>
+    -->
+    <audio id="bubbleSound" src="assets/audio/raygun.mp3" preload="auto"></audio>
+    <audio id="interfaceSound" src="assets/audio/interface.mp3" preload="auto"></audio>
+    <audio id="snowSound" src="assets/audio/snow.mp3" preload="auto"></audio>
+    <audio id="whooshSound" src="assets/audio/whoosh.mp3" preload="auto"></audio>
+    <audio id="scribbleSound" src="assets/audio/scribble.mp3" preload="auto"></audio>
+
+
+
+
+
     
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -32,13 +53,20 @@
     </noscript>
 </head>
 <body>
+    <canvas id="particleCanvas"></canvas>
     <div class="mainContainer">
-        <div class="navbar">
-            <div id="upperNavbar">
+        <div class="navbar" id="upperNavbar">
+            <div id="upperNavbarDiv">
                 <div class="leftNavbar">
-                    <button class="navbarButton" onclick="openFileModal(), openModal('fileModal')">File</button>
-                    <button class="navbarButton" onclick="openSettings(), openModal('settingsModal')">Settings</button>
-                    <button class="navbarButton" onclick="openData(), openModal('dataModal')">Data</button>
+                    <button class="navbarButton" onclick="openFileModal(), openModal('fileModal')">
+                        File
+                    </button>
+                    <button class="navbarButton" onclick="openSettings(), openModal('settingsModal')">
+                        Settings
+                    </button>
+                    <button class="navbarButton" onclick="openData(), openModal('dataModal')">
+                        Data
+                    </button>
                 </div>
                 <div class="rightNavbar">
                     <button class="outlineButton" onclick="openModal('aboutModal')">WriteRush</button>
@@ -49,20 +77,30 @@
             <div class="sidebar" id="chapterSidebar">
                 <div class="divs" id="chapterDiv">
                     <div id="chapterSection">
-                        
-                        <button id="newChapterButton" class="outlineButton chapterNewButton">New Chp.</button>
+                        <!--
+                        <button id="newChapterButton" class="outlineButton chapterNewButton">
+                            <span class="material-icons quickAccess">add</span>
+                        </button>
+                        -->
+                        <div id="newNoteDiv">
+                            <button id="newChapterButton" class="chapterNewButton">
+                                <span class="material-icons small">menu_book</span>
+                            </button>
+                            <button id="textNoteButton" class="chapterNewButton">
+                                <span class="material-icons small">text_snippet</span>
+                            </button>
+                            <button id="imageNoteButton" class="chapterNewButton">
+                                <span class="material-icons small">image</span>
+                                <input type="file" class="numberInput" id="imageNoteInput" accept="image/*">
+                            </button>
+                            
+                        </div>
                         <div id="chapterSectionDiv" class="chapterSectionDiv">
-                            <!--
-                            <div class="chapter">
-                                <p><strong>#</strong> Chapter 1: The Beginning</p>
-                                <button class="chapterDeleteButton"><strong>🗑</strong></button>
-                            </div>
-                            -->
+                            <!--CHAPTERS-->
                         </div>
                         <div class="hLine"></div>
-                        
-                        <button id="newNoteButton" class="outlineButton chapterNewButton">New Note</button>
                         <div id="notesSectionDiv" class="chapterSectionDiv">
+                            <!--CHAPTERS-->
                         </div>
                     </div>
                 </div>
@@ -80,39 +118,54 @@
             <div class="content">
                 <div class="divs1">
                     <div class="divs" id="typeAreaDiv">
+                        <div id="typeAreaVisuals">
+
+                            <textarea id="typeArea" spellcheck="false"></textarea>
                         
-                        <textarea id="typeArea" spellcheck="false"></textarea>
+                            <div class="progressBarContainer">
+                                <div id="timeBar" class="progressBar"></div>
+                            </div>
+                            
+                            <div id="progressBarContainer" class="progressBarContainer">
+                                <div id="progressBar" class="progressBar"></div>
+                            </div>
+                            <div id="progressBarData">
+                                <p id="progressBarText">Error in Displaying</p>
+                            </div>
+                        </div>
                         
-                        <div class="progressBarContainer" class="noStretch">
-                            <div id="progressBar" class="progressBar"></div>
-                        </div>
-                        <div class="progressBarContainer">
-                            <div id="timeBar" class="progressBar"></div>
-                        </div>
-                        <div id="progressBarData">
-                            <p id="progressBarText">Error in Displaying</p>
-                        </div>
                     </div>
                 </div>
             </div>
             <div class="sidebar" id="quickAccessSidebar">
-                <button class="navbarButton" id="hideButton" title="Hide/show the lower and upper navbars."><strong>↑↑</strong></button>
-                <button class="navbarButton" id="sideBarButton" title="Open/close the notes sidebar." onclick="notesClick()">☰</button>
-                <button class="navbarButton" id="chapterSidebarButton" title="Open/close the chapter sidebar.">§</button>
-                <button class="navbarButton" id="fullscreenButton" title="Toggle fullscreen."><strong>⛶</strong></button>
-                <div class="hLine"></div>
-                <button id="addToGoalButton" class="outlineButton" title="Add to the word goal." onclick="add500toGoal()"><strong>+</strong></button>
-                <div class="hLine"></div>
-                <button class="navbarButton"id="pauseButton" title="Pause/unpause the timer.">▶</button>
-                <button class="navbarButton"id="stopButton" title="Stop the timer.">■</button>
-                <div class="hLine"></div>
-                <button class="navbarButton" id="redactButton" title="Redact the text."><strong>R</strong></button>
+                <div id="quickAccessDiv">
+                    <button class="verticalButton" id="fullscreenButton" title="Toggle fullscreen.">
+                        <span class="material-icons quickAccess">fullscreen</span>
+                    </button>
+                    <div class="hLine"></div>
+                    <button id="addToGoalButton" class="verticalButton" title="Add to the word goal." onclick="add500toGoal()">
+                        <span class="material-icons quickAccess">add</span>
+                    </button>
+                    <div class="hLine"></div>
+                    <button class="verticalButton"id="pauseButton" title="Pause/unpause the timer.">
+                        <span class="material-icons quickAccess">play_circle</span>
+                    </button>
+                    <button class="verticalButton"id="stopButton" title="Stop the timer.">
+                        <span class="material-icons quickAccess">stop_circle</span>
+                    </button>
+                    <div class="hLine"></div>
+                    <button class="verticalButton" id="redactButton" title="Redact the text.">
+                        <span class="material-icons quickAccess">format_ink_highlighter</span>
+                    </button>
+                
+                </div>
             </div>
         </div>
         
-        <div id="lowerNavbar">
+        <div class="navbar" id="lowerNavbar">
             <div id="lowerNavbarDiv">
-                <button onclick="newFile()" class="outlineButton" id="newFileButton">+</button>
+                <!--These are added in JS-->
+                <button onclick="newFile()" class="outlineButton" id="newFileButton">HI</button>
                 <div id="fileDiv">
                     <button class="navbarButton">Error</button>
                     <button class="navbarButton">Error</button>
@@ -130,6 +183,8 @@
                 <br>
                 Font Size: <input class="numberInput" type="number" id="fontSize" min="1" step="1" value="14">
                 <br><br>
+                Line Height: <input class="numberInput" type="number" id="lineHeightInput" min="1" step="0.1" value="1">
+                <br><br>
                 Font:
                     <select id="fontFamily">
                         <optgroup label="Serif">
@@ -138,10 +193,10 @@
                             <option value="'Palatino Linotype', 'Book Antiqua', serif">Palatino Linotype</option>
                             <option value="Garamond, serif">Garamond</option>
                             <option value="'Bookman Old Style', Bookman, serif">Bookman</option>
+                            <option value="Merriweather">Merriweather</option>
                         </optgroup>
                         <optgroup label="Sans-Serif">
                             <option value="Arial, sans-serif">Arial</option>
-                            <option value="Helvetica, sans-serif">Helvetica</option>
                             <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
                             <option value="Verdana, sans-serif">Verdana</option>
                             <option value="Geneva, sans-serif">Geneva</option>
@@ -150,8 +205,9 @@
                             <option value="'Courier New', monospace">Courier New</option>
                             <option value="'Lucida Console', monospace">Lucida Console</option>
                             <option value="Monaco, monospace">Monaco</option>
-                            <option value="Consolas, monospace">Consolas</option>
-                            <option value="'Andale Mono', monospace">Andale Mono</option>
+                        </optgroup>
+                        <optgroup label="Other">
+                            <option value="Dyslexic">Dyslexic</option>
                         </optgroup>
                         <!--
                         <optgroup label="Illegible">
@@ -177,11 +233,18 @@
                 </p>
             </details> 
             <br>
-            <hr>
             <br>
             <details>
                 <summary><strong>Effects</strong></summary>
                 <br>
+                Typing Confetti Type: 
+                    <select id="typingConfettiTypeInput">
+                        <option value="0">Balls</option>
+                        <option value="1">Confetti</option>
+                        <option value="2">Stars</option>
+                        <option value="3">Emojis</option>
+                    </select>
+                <br><br>
                 Typing Confetti Count: <input class="slider" type="range" id="typingConfettiCountInput" min="0" max="10" value="2">
                 <br><br>
                 Screen Shake Intensity: <input class="slider" type="range" id="screenShakeIntensityInput" min="0" max="5" value="1" step="0.5">
@@ -199,20 +262,25 @@
                 <br><br>
                 Typing Sounds: 
                     <select id="typingSounds">
+                        <option value="noSound">None</option>
                         <option value="clickSound1">Typewriter1</option>
-                        <option value="clickSound1">Typewriter2</option>
-                        <!--
-                        <option value="gongSound">Gong</option>
-                        -->
+                        <option value="clickSound2">Typewriter2</option>
+                        <option value="clickSound3">Typewriter3</option>
+                        <option value="clickSound4">Typewriter4</option>
                         <option value="dingSound">Ding</option>
                         <option value="punchSound">Punch</option>
-                        <option value="noSound">None</option>
+                        <option value="ballSound">Ball</option>
+                        <option value="bubbleSound">Bubble</option>
+                        <option value="interfaceSound">Interface</option>
+                        <option value="snowSound">Snow</option>
+                        <option value="whooshSound">Whoosh</option>
+                        <option value="scribbleSound">Scribble</option>
+
                     </select>
                     <br><br>
                 Fast Sounds (Better performance, less quality): <input type="checkbox" class="checkbox" id="fastSoundsCheckbox">
             </details>  
             <br>
-            <hr>
             <br>
             <details>
                 <summary><strong>Other</strong></summary>
@@ -223,9 +291,12 @@
                 <br><br>
                 Daily Streak Override: <input class="numberInput" type="number" id="dailyStreakInput" min="0" step="1">
                 <br><br>
-                Required Time for Streak Completion (in seconds): <input class="numberInput" type="number" id="streakCompletionTimeInput" min="0" step="1">
+                Required Time for Streak (sec): <input class="numberInput" type="number" id="streakCompletionTimeInput" min="0" step="1">
                 <br><br>
                 <button id="resetAllButton"class="outlineButton" onclick='
+                if (!dbAllowed) {
+                    return;
+                }
                 if(confirm("Are you sure you want to reset all data?")) {
                     if(confirm("This will delete all data. Are you sure you want to do this?")) {
                         preventSave = true;
@@ -235,7 +306,7 @@
                         
                     }
                 }'>Reset Data</button>
-                Note: It's recommended to Reset Data after you download a new update. (Warning: This also deletes any work you have, so save it first!)
+                (WARNING: This also deletes any work you have, so save it first!)
             </details>
         </div>
     </div>
@@ -253,7 +324,6 @@
             <p id="wphDisplay">WPH: </p>
             <p id="belowWph"></p>
             <br>
-            <hr>
             <br>
             <p id="wordCountDisplay">Word Count: </p>
             <p id="pageCountDisplay">Page Count: </p>
@@ -263,7 +333,6 @@
             <p id="charCountNoSpacesDisplay">Character Count (no spaces): </p>
             <p id="sentenceCountDisplay">Sentence Count: </p>
             <br>
-            <hr>
             <br>
             <p id="dailyStreakDataDisplay">Daily Streak: </p>
             <p id="longestStreakDisplay">Longest Continual Streak: </p>
@@ -284,7 +353,6 @@
                 </p>
             </details>
             <br>
-            <hr>
             <br>
             <details>
                 <summary><strong>Tips</strong></summary>
@@ -316,17 +384,8 @@
                         Also, don't worry about saving! WriteRush does that instantly! You can have peace of mind, knowing that your work is always safe!
                     </p>
                 </details>
-                <br>
-                <details class="innerDetails">
-                    <summary><strong>Notes Section</strong></summary>
-                    <br>
-                    <p class="innerDetails">
-                        Use the notes section by clicking the notes icon "☰". In this, you can write helpful notes about what your'e going to write -- like a chapter summary, essay outline, research, motivational words, and more! The possibilites are endless!
-                    </p>
-                </details>
             </details>
             <br>
-            <hr>
             <br>
             <details>
                 <summary><strong>About Me</strong></summary>
@@ -355,7 +414,7 @@
                     <a href="https://www.patreon.com/kurtiskumar" target="_blank" rel="noopener noreferrer"><button class="outlineButton" id="buyMeACoffeeButton">Patreon</button></a>
                     <a href="https://www.instagram.com/kurtiskumarofficial" target="_blank" rel="noopener noreferrer"><button class="outlineButton" id="buyMeACoffeeButton">My Instagram</button></a>
                     <br><br>
-                    ©2023 Kurtis Kumar
+                    Kurtis Kumar
                 </p>
             </details>
         </div>
@@ -368,17 +427,6 @@
                 <button class="outlineButton" id="saveFileNameButton">Save</button>
             </p>
             <br>
-            <p id="chapterNameDisplay">Chapter Name: 
-                <input spellcheck="false" type="text" class="numberInput" id="chapterNameInput">
-                <button class="outlineButton" id="saveChapterNameButton">Save</button>
-            </p>
-            <br>
-            <p id="noteNameDisplay">Note Name: 
-                <input spellcheck="false" type="text" class="numberInput" id="noteNameInput">
-                <button class="outlineButton" id="saveNoteNameButton">Save</button>
-            </p>
-            <br>
-            <hr>
             <br>
             <button class="outlineButton" onclick="exportChapter()">Export Chapter</button>
             <br><br>
@@ -389,19 +437,6 @@
     </div>
 
     
-    <div id="newNoteModal" class="modal">
-        <div class="modalContent">
-            <p id="textNoteText">Text Note: 
-                <button class="outlineButton" id="textNoteButton">Create</button>
-            </p>
-            <br>
-            <p id="imageNoteText">Image Note:
-                <label id="imageNoteLabel" for="imageNoteInput" class="numberInput">Create</label>
-                <input type="file" class="numberInput" id="imageNoteInput" accept="image/*">
-            </p>
-        </div>
-    </div>
-    
     <div id="startModal" class="modal">
         <div class="modalContent">
             <div style="text-align:center;">
@@ -409,10 +444,8 @@
                 <br>
                 <p id="doneStreakDisplay">There was an error in displaying this line!</p>
                 <br>
-                <h3>
-                <p id="startModalText">
+                <h3 id="startModalText">
                     There was an error in displaying this line!
-                </p>
                 </h3>
                 <br>
                 <p>
@@ -438,6 +471,8 @@
             </div>
         </div>
     </div>
+    <script src="JS/getCaretCoordinates.js"></script>
+    <script src="JS/confetti.browser.js"></script>
     <script src="JS/dragula.min.js"></script>
     <script>
         
@@ -449,41 +484,7 @@
         window.onload = (() => {
             loadScript('JS/load.js');
         })
-        
+
     </script>
-    <!--
-    <script src="JS/load.js"></script>
-    <script src="JS/settings.js"></script>
-    <script src="JS/getCaretCoordinates.js"></script>
-    <script src="JS/confetti.browser.js"></script>
-    <script src="JS/base.js"></script>
-    <script src="JS/data.js"></script>
-    -->
-    <!--
-        <script>
-            
-        const ctx = document.getElementById('writingChart').getContext('2d');
-        const writingChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: v.writeTimeArrayLabels,
-            datasets: [{
-                label: 'Minutes Written',
-                data: v.writeTimeArray,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-            y: {
-                beginAtZero: true,
-            }
-            }
-        }
-        });
-    </script>
-    -->
 </body>
 </html>

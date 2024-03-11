@@ -1,28 +1,68 @@
 
 * {
-    font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;   
+    font-family: Gabarito, Segoe UI, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-weight: 10;
+    font-size: var(--fontSize);
     color: rgba(var(--fontColor), 1); 
-    
     margin: 0;
     padding: 0;
-    max-width: 100%;
+    user-select: none;
+    box-sizing: border-box;
+    outline: none;
     position: relative;
     left: 0;
     top: 0;
-    user-select: none;
-    box-sizing: border-box;
 }
+
+:root {
+    --borderSize: 1px;
+    --fontSize: 14px;
+    --blurAmount: 24px;
+
+    --bgColor: rgb(27, 32, 34); 
+    --fontColor: 255, 255, 255;
+    --darkOrLight: 0, 0, 0;
+
+    /* reactive vars */
+    --secondaryHover: rgba(var(--fontColor), 0.05);
+    --secondary: rgba(var(--fontColor), 0.1);
+    --outline: rgba(var(--fontColor), 0.15);
+    --dark: rgb(var(--darkOrLight));
+
+    --elBg: rgba(var(--darkOrLight), 0.75);
+
+}
+
 body, html {
     height: 100%;
+    overflow: hidden;
+}
+
+body {
+    /*
+    background: rgb(
+    calc((var(--darkBase) * 0.9) + (var(--rBase) * 0.2)),
+    calc((var(--darkBase) * 0.9) + (var(--gBase) * 0.2)),
+    calc((var(--darkBase) * 0.9) + (var(--bBase) * 0.2)));
+    */
+    background: var(--bgColor);
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center;
+}
+
+h1 {
+    font-size: 2em;
+}
+h3 {
+    font-size: 1.5em;
 }
 
 .mainContainer {
     display: flex;
     flex-direction: column;
     max-height: 100vh;
-    height: 100%;
 }
-
 
 .container, .content {
     display: flex;
@@ -31,50 +71,43 @@ body, html {
 }
 
 .container {
-    
-    height: 0px;
+    height: 0;
 }
-.content, .sidebar {
-    padding: 0px;
-}
+
 #notesSidebar {
     width: 30%;
-    border-right: var(--borderSize) solid var(--outline);
-    /*
-    background-color: rgba(var(--secondary));
-    */
 }
 
 .chapterNewButton {
-    align-self: flex-start;
-    display: flex;
-    overflow: visible;
+    width: 30px;
+    height: 30px;
+    padding: 0 !important;
+}
+
+#newNoteDiv {
+    display: inline-flex;
+    flex-direction: row;
+    background-color: var(--secondary);
+    border-radius: 5px;
+    width: auto;
+    align-items: flex-start;
+    max-width: 90px;
     margin-bottom: 5px;
+    
 }
 
 .chapterDeleteButton {
     width: 20px;
+    min-width: 20px;
     height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 5px;
-}
-.chapterDeleteButton:hover {
-    background-color: var(--bgColor);
+    margin-right: 2.5px;
 }
 
-#chapterSidebar {
-    height: 100% !important;
-}
-#chapterDiv {
-    height: 100%;
-}
+
+
 
 #chapterSidebar {
-    height: 100%;
     width: 20%;
-    border-right: var(--borderSize) solid var(--outline);
 }
 
 .chapterSectionDiv {
@@ -83,12 +116,7 @@ body, html {
     max-height: 50%;
 }
 #chapterSection {
-    width: 100%;
-    background-color: var(--outline);
-    height: 100%;
     max-height: 100%;
-    border: var(--borderSize) solid var(--outline);
-    border-radius: 5px;
     display: flex;
     flex-direction: column;
     align-items:normal;
@@ -96,51 +124,77 @@ body, html {
 }
 
 .chapter {
-    width: 100%;
-    background-color: var(--bgColor);
-    height: 30px;
-    margin-bottom: 5px;
-    border-radius: 5px;
+    background-color: none;
+    height: 25px;
     display: flex;
     flex-direction: row;
     justify-content:space-between;
     align-items: center;
-    border: var(--borderSize) solid var(--outline);
-
 }
 
-.chapter:hover {
-    background-color: var(--secondaryHover);
-    cursor: pointer;
+
+.chapterP {
+    display: inline-block;
+    width: calc(100% - 25px); 
+}
+
+.leftChapterDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
 }
 
 .chapter p {
-    display: inline;
-    width: 100%;
+    display: inline-block;
     font-size: 14px;
     margin-left: 5px;
+    
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    user-select: text;
+    
+}
+.chapter p.editable, .chapter div.editable {
+    white-space: nowrap;
+    overflow-x: none;
+    text-overflow: clip;
+    
+}
+
+.chapter p:focus {
+    text-decoration: underline;
 }
 
 .chapter div {
+    
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
+    
+}
+
+
+#quickAccessSidebar {
+    width: 50px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quickAccessDiv {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
 }
 
 #quickAccessSidebar {
-    display: flex;
-    flex-direction: column;
     border-left: var(--borderSize) solid var(--outline);
-    background-color: var(--bgColor);
-    padding: 10px;
 }
 
 .divs, .divs1 {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -151,6 +205,13 @@ body, html {
 #typeAreaDiv {
     padding: 20px;
 }
+
+#typeAreaVisuals {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
 .divs1 {
     padding: 0px;
 }
@@ -158,240 +219,167 @@ textarea, .imageNoteDisplay {
     resize: none;
     background: none;
     padding: 20px;
-    height: 100%;
     flex-grow: 1;
     overflow-y: auto;
-    border: var(--borderSize) solid var(--outline);
-    
-    border-radius: 5px;
-    
-    background-color: var(--bgColor);
-    
     
 }
 
 .imageNoteDisplay {
     overflow: hidden;
-    
-    position: relative;
+    cursor: move; 
 }
-
 
 .imageNoteDisplay img {
     position: absolute;
-    cursor: move; 
     transform-origin: top left;
 }
 
 #progressBarData {
     width: calc(100%);
-    border: var(--borderSize) solid var(--outline);
-    border-radius: 5px;
-    padding: 5px 20px;
-    margin-top: 10px;
-    max-width: calc(var(--typeAreaWidth));
-    text-align: center;
-}
-
-textarea, #quickAccessSidebar, #upperNavbar, #lowerNavbar, #progressBarData, .progressBarContainer, #chapterSection, #imageNoteDisplay{
-    
-    background-color: rgba(var(--darkOrLight), 0.8) !important;
-    -webkit-backdrop-filter: blur(var(--blurAmount)); 
-    backdrop-filter: blur(var(--blurAmount));
+    padding: 5px 0;
 }
 
 #typeArea {
-    
-    width: calc(100% - 42.67px);
-    max-width: calc(var(--typeAreaWidth) - 42.67px);
-    box-sizing: content-box;
+    overflow-y: scroll;
+    border: none !important;
+    background: none !important;
+    background-color: none !important;
+    line-height: 1.5em;
 }
+
 #notesTextarea {
-    
-    width: calc(100%);
     font-size: 15px;
-}
-#typeAreaDiv {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /*
-    transition: left 0.03s, top 0.03s;
-    */
-}
-  
-
-
-/* OTHER */
-
-*:focus {
-    outline: none;
-}
-
-:root {
-    --borderSize: 0px;
-    --typeAreaWidth: 600px;
-    --typeAreaHeight: 100%;
-    --fullHeight: 70vh;
-    /* from game */
-    --bgColor: rgb(1, 1, 1); 
-    --secondary: 27, 32, 34; 
-    --secondaryHover: #313639;
-    --secondaryOpacity: 1; /* 0.5 */
-    --fontColor: 255, 255, 255;
-    --buttonFontSize: 15px;
-    --fontSize: 16px;
-    --modalShadowColor: #ffffff75;
-    --outline: #2f3539;
-    --outlineHover: #454d53;
-    --backgroundImage: url("../assets/images/1.jpg");
-    --bgDarkness: 0.8;
-    --darkOrLight: 1, 1, 1;
-    --blurAmount: 10px;
-    --secondary2: #313639;
-}
-/*
-html, body {
-    min-height: 100vh; 
-}
-*/
-body {
-    
-    background: rgba(var(--secondary));
-    background-size: cover; 
-    background-repeat: no-repeat; 
-    background-position: center;
-    
-
 }
 
 input[type="file"], input[type="color"] {
     display: none;
-    margin: 0;
 }
-/*
-#typeArea {
-    font-size: 15px;
-    padding: 20px;
-    flex-grow: 1;
-    max-width: 600px;
-
-    width: var(--typeAreaWidth);
-}
-*/
-
-/* SIDEBAR */
-/*
-.sidebar {
-    height: 100%;
-    width: 0px;
-    position: fixed;
-    z-index: 1;
-    padding: 82px 0px 60px 0px;
-    background-color: rgba(var(--secondary));
-    overflow-x: hidden;
-    transition: width 0.5s;
-    flex-grow: 1;
-    display: flex;
-    align-items: center; 
-    flex-direction: column;
-    justify-content: center; 
-}
-*/
-
 
 .numberInput, select, .colorInput {
     width: 200px;
+}
+
+.divs, .divs1, textarea, .imageNoteDisplay, #typeAreaVisuals, #chapterSection,
+#chapterSidebar, #chapterDiv, .mainContainer, #upperNavbarDiv, .modal,
+#alertModal, .progressBar, #chapterSidebar {
+    height: 100%;
+}
+
+#typeAreaVisuals, #notesTextarea, #quickAccessSidebar, #upperNavbar, 
+#lowerNavbar, #chapterSection, #imageNoteDisplay, .modal{
+    background-color: var(--elBg) !important;
+    -webkit-backdrop-filter: blur(var(--blurAmount)); 
+    backdrop-filter: blur(var(--blurAmount));
+}
+
+#typeArea, #chapterSection, #notesTextarea, #imageNoteDisplay, .modalContent,
+.alertModalContent, #typeAreaVisuals {
+    border: var(--borderSize) solid var(--outline);
+}
+
+#upperNavbar, #lowerNavbar, #chapterSidebar, #notesSidebar, #quickAccessSidebar, 
+button, .modalContent, input, .progressBar, ::-webkit-scrollbar-thumb {    
+    transition: 0.25s cubic-bezier(0.2, 0.6, 0.07, 1);
+}
+
+button, input, select, .numberInput, textarea, .imageNoteDisplay, 
+#typeAreaVisuals, .chapter, #chapterSection, .slider, 
+.slider::-webkit-slider-thumb, ::-webkit-scrollbar-thumb,
+::-webkit-scrollbar, .alertModalContent, .modalContent {
+    border-radius: 5px;
+}
+
+button, .numberInput, input, select, .chapter, .slider,
+::-webkit-scrollbar, .alertModalContent {
     cursor: pointer;
-    background-color: rgba(var(--secondary), var(--secondaryOpacity));
 }
 
-.colorInput {
-    margin-bottom: 1px; /* Override any default margins */
-    display: inline-block; /* Optional: Align with other inline elements */
-    vertical-align: middle; /* Optional: Align vertically with text */
-    
+button:hover, .chapter:hover, ::-webkit-scrollbar-thumb:hover, input:hover,
+select:hover, .numberInput:hover  {
+    background-color: var(--secondaryHover);
 }
 
-#full {
-    flex-direction: column;
-    flex-grow: 1;
+.chapterDeleteButton, #progressBarData, #typeAreaDiv, .navbarButton, 
+.chapterNewButton {
     display: flex;
-    align-items: center; 
-    justify-content: center; 
-    padding: 0px 0px 80px 0px;
+    justify-content: center;
+    align-items: center;
 }
 
 
-/* BUTTONS */
+#notesTextarea, #typeArea, #typeAreaVisuals, .divs, .divs1, .leftChapterDiv,
+#upperNavbar, #lowerNavbar, .modal, #alertModal, .progressBarContainer,
+#chapterSection, .chapter {
+    width: 100%;
+}
+
+
 
 button {
-    border-radius: 5px;
     background: none;
     border: none;
-    margin: 0px; 
-    padding: 3px 6px;
-    font-size: var(--buttonFontSize);
+    font-size: var(--fontSize);
 }
 
-button:hover {
-    background-color: var(--secondaryHover);
-    cursor: pointer;
-}
 
-button:disabled {
-    background-color:rgba(0, 0, 0, 0.5);
-    color: rgba(255, 255, 255, 0.5);
-    cursor: not-allowed;
-}
 
 .outlineButton, .numberInput, select, .colorInput {
-    border-radius: 5px;
-    
-    background-color: rgba(var(--secondary), var(--secondaryOpacity));
-    
-    border: var(--borderSize) solid var(--outline);
+    background-color: var(--secondary);
+    border: none;
     padding: 3px 6px;
-    font-size: var(--buttonFontSize);
-}
-
-.navbarButton, .outlineButton {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    font-size: var(--fontSize);
 }
 
 
-.navbar {
-    z-index: 2;
+.verticalButton {
+    margin: 2.5px 0;
+    padding: 0 !important;
+    height: 30px;
+    width: 30px;
 }
-#upperNavbar, #lowerNavbar {
-    background-color: var(--bgColor);
-    margin: 0px;
-    border: 0px;
+
+.navbarButton {
+    padding: 3px 6px;
+    margin-right: 5px;
+}
+
+
+.leftNavbar, .rightNavbar {
     display: flex;
-    flex-wrap: wrap;
-    padding: 5px;
+    flex-direction: row;
 }
 
 #upperNavbar {
+    height: 40px;
+    /* the above is added in JS. The value is taken from this. */
+    /* This is applied to lowerNavbar, upperNavbar, and quickAccessBar */
+}
+
+#upperNavbar, #lowerNavbar {
+    padding: 0 5px;
+}
+
+#upperNavbarDiv {
     justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
+
+#upperNavbar {
     border-bottom: var(--borderSize) solid var(--outline);
 }
 #lowerNavbar {
-    /*
-    padding: 5px 7px 5px 7px;
-    */
-
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
     border-top: var(--borderSize) solid var(--outline);
 }
-/*
-#lowerNavbarDiv {
-    background: rgba(var(--secondary));
-    border-radius: 5px;
-}
-*/
 
-#lowerNavbarDiv {
+
+#lowerNavbarDiv, #upperNavbarDiv {
     display: flex;
 }
 #fileDiv {
@@ -400,149 +388,76 @@ button:disabled {
 }
 .file {
     margin-left: 5px;
-}
-#quickAccess {
-    right: 0;
-    padding: 10px;
-    margin: 0px;
-    border: 0px;
-    display: flex;
-    flex-wrap: wrap;
+    font-weight: 500;
 }
 
-#quickAccessContain {
-    padding: 5px;
-    background: var(--bgColor);
-    border: var(--borderSize) solid var(--outline);
-    border-radius: 5px;
-    display: flex;
-    
-}
-
-
-
-.unselectable, button, .navbar, #lowerNavbar {
-    -webkit-user-select: none; /* Chrome, Safari, and Opera */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-}
-/* Modal  */
 
 .modal, #alertModal {
-    width: 100%;
-    height: 100%;
     z-index: 100;
-    display: none;
-}
-
-.modal {
     display: none;
     position: fixed;
     overflow: auto;
-    background-color: rgba(var(--darkOrLight), 0.5);
-    -webkit-backdrop-filter: blur(var(--blurAmount)); 
-    backdrop-filter: blur(var(--blurAmount));
+}
+
+.modal {
     padding-top: 100px;
 }
 
 
 #alertModal {
-    position: fixed;
     padding-top: 10px;
-    overflow: auto;
     cursor: not-allowed;
 }
 
 .modalContent, .alertModalContent {
     padding: 20px;
+    box-shadow: 0px 10px 40px 0px #0000002d;
     margin: auto;
-    border: var(--borderSize) solid var(--outline);
+    background-color: var(--dark);
+    width: 80%; 
+    height: auto;
+    overflow-y: auto;
 }
 
 .modalContent {
-    margin: auto;
-    width: 80%; 
     max-width: 600px; 
-    height: auto;
     max-height: 80%;
-    border-radius: 5px;
-    overflow-y: auto;
-    background-color: rgba(var(--darkOrLight), 0.9);
-    box-shadow: 0px 10px 40px 0px #0000005d;
 }
 
 .alertModalContent {
-    cursor: pointer;
-    width: 80%; 
+    font-weight: 900;
     max-width: 300px; 
-    height: auto;
     max-height: 60%;
-    border-radius: 5px;
-    overflow-y: auto;
-    background-color: var(--bgColor);
-    box-shadow: 0px 10px 20px 0px #0000007d;
 }
 
-/* PROGRESS BAR */
-
 .progressBarContainer {
-    position: relative;
-    margin-top: 10px;
-    max-width: calc(var(--typeAreaWidth));
-    width: 100%;
-    height: 10px;
-    min-height: 10px;
-    border: var(--borderSize) solid var(--outline);
+    height: 5px;
+    min-height: 5px;
     
-    background-color: var(--bgColor);
-    border-radius: 5px;
-    display: flex;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .progressBar {
-    height: 100%;
-    background-color: var(--outline);
+    background-color: var(--secondary);
     width: 0%;
-    transition: width 0.5s ease-out;
-    position: relative;
     z-index: 1;
 }
 
-.tickMark {
-    position: absolute;
-    height: 10px;
-    width: 0px;
-    background-color: var(--outline);
-}
 
 .vLine {
-    height: 20px;
-    width: 0px;
-    border-left: 1.5px dotted var(--outline); 
     display: inline-block;
     vertical-align: middle;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0 10px;
     top: -2px;
 }
 
 .hLine {
-    height: 0;
-    width: 100%;
-    border-top: 1.5px dotted var(--outline); 
     display: inline-block;
     vertical-align: middle;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0;
 }
 
-hr {
-    border: 1px solid var(--outline);
-}
 
-/* FONTS */
 
 @font-face {
     font-family: "Redacted";
@@ -550,95 +465,117 @@ hr {
 }
 
 @font-face {
-    font-family: "Redacted2";
-    src: url("../assets/fonts/redacted2.ttf") format('truetype');
+    font-family: "Gabarito";
+    src: url("../assets/fonts/gabarito.ttf") format('truetype');
 }
-
 @font-face {
-    font-family: "Runes1";
-    src: url("../assets/fonts/runes1.ttf") format('truetype');
+    font-family: "Inter";
+    src: url("../assets/fonts/inter.ttf") format('truetype');
 }
-
 @font-face {
-    font-family: "Runes2";
-    src: url("../assets/fonts/runes2.ttf") format('truetype');
+    font-family: "Noto";
+    src: url("../assets/fonts/noto.ttf") format('truetype');
 }
-
 @font-face {
-    font-family: "Runes3";
-    src: url("../assets/fonts/runes3.ttf") format('truetype');
+    font-family: "Merriweather";
+    src: url("../assets/fonts/merriweather.ttf") format('truetype');
 }
-
 @font-face {
-    font-family: "Scribble";
-    src: url("../assets/fonts/scribble.ttf") format('truetype');
+    font-family: "Merriweather Sans";
+    src: url("../assets/fonts/merriweatherSans.ttf") format('truetype');
+}
+@font-face {
+    font-family: "Dyslexic";
+    src: url("../assets/fonts/dyslexic.otf") format('truetype');
 }
 
-
-/* SCROLLBAR */
 ::-webkit-scrollbar {
     width: 10px;
-    border-radius: 5px;
-    cursor: pointer !important;
 }
 
 ::-webkit-scrollbar-track {
     background: none;
 }
- 
+
 ::-webkit-scrollbar-thumb {
     background-color: var(--outline);
-    border-radius: 5px;
     min-height: 50px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--outlineHover); 
-}
-
-
-/* SLIDER */
 
 .slider {
     appearance: none;
     -webkit-appearance: none;
     width: 200px;
     height: 10px;
-    background: rgba(var(--secondary));
-    border: 0px;
-    /* This is added in Javascript!
-    border: var(--borderSize) solid var(--outline);
-    */
-    border-radius: 5px;
-    cursor: pointer;
+    background: var(--secondary);
+    border: none;
 }
-  
-  
+
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 30px;
-    height: 10px;
-    background: var(--outline);
-    border-radius: 5px;
-}
-  
-.slider::-moz-range-thumb {
-    width: 30px;
-    height: 10px;
-    background: var(--outline);
-    border-radius: 5px;
 }
 
 
-kbd {
-    border-radius: 2px;
-    padding: 2px;
-    border: 1px solid rgba(var(--fontColor), 1);
+.slider::-webkit-slider-thumb{
+    width: 30px;
+    height: 10px;
+    background: var(--outline);
 }
+
+
 
 
 .innerDetails {
-    margin-left: 20px; /* or use padding-left if you prefer */
+    margin-left: 20px;
 }
 
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+        url('../assets/fonts/googleIcons.woff2') format('woff2'),
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' -25,
+    'opsz' 24;
+    font-size: 20px;
+    
+    display: inline-block;
+    vertical-align: middle;
+    text-transform: none;
+}
+
+.quickAccess {
+    font-size: 20px;
+}
+
+.small {
+    font-size: 16px;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20;
+}
+
+
+#particleCanvas {
+    position: absolute;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 1;
+}
+
+
+select option, select optgroup {
+    background-color: rgba(var(--darkOrLight)); /* Use your elBg variable here */
+    color: rgb(var(--fontColor)); /* Use your fontColor for text */
+  }

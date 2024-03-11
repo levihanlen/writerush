@@ -84,14 +84,14 @@ wordGoalInput.addEventListener('input', function () {
 
 const timeGoalInput = document.querySelector("#timeGoalInput")
 timeGoalInput.addEventListener('input', function () {
-    v.timeGoal = timeGoalInput.value;
+    v.timeGoal = parseInt(timeGoalInput.value);
     updateData();
 });
 
 
 const excludeInput = document.querySelector("#excludeInput")
 excludeInput.addEventListener('input', function () {
-    v.exclude = excludeInput.value;
+    v.exclude = parseInt(excludeInput.value);
     v.files[v.currentFileIndex].exclude = v.exclude;
     firstLoad = true;
     v.goalReached = true;

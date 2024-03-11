@@ -1,3 +1,0 @@
-Place images files in here. Rename them. Then in WriteRush, type that name in the settings menu.
-
-There is no size limit for these files, yay! 

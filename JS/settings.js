@@ -22,7 +22,7 @@ fontFamilyInput.addEventListener('change', () => {
     textArea.style.fontFamily = v.fontFamily;
 });
 
-fontSizeInput.addEventListener('input', function () {
+fontSizeInput.addEventListener('input', () => {
     v.fontSize = fontSizeInput.value;
     if (v.fontSize > 200) {
         v.fontSize = 200;
@@ -30,9 +30,23 @@ fontSizeInput.addEventListener('input', function () {
     textArea.style.fontSize = v.fontSize + 'px';
 });
 
+
+const lineHeightInput = document.querySelector("#lineHeightInput");
+lineHeightInput.value = v.lineHeight;
+textArea.style.lineHeight = v.lineHeight + 'em';
+lineHeightInput.addEventListener('input', () => {
+    v.lineHeight = lineHeightInput.value;
+    v.lineHeight = Math.min(Math.max(0.1, v.lineHeight), 10);
+    textArea.style.lineHeight = v.lineHeight + 'em';
+});
+
+lineHeightInput.addEventListener('change', () => {
+    lineHeightInput.value = v.lineHeight;
+});
+
 addToGoalInput.value = v.addToGoal;
 addToGoalInput.addEventListener('change', function () {
-    v.addToGoal = addToGoalInput.value;
+    v.addToGoal = parseInt(addToGoalInput.value);
 });
 
 excludeDefaultCheckbox.checked = v.excludeDefault;
@@ -65,14 +79,27 @@ progressBarColorInput.addEventListener('click',() => {
     closeModal("settingsModal");
 });
 progressBarColorInput.addEventListener('change', () => {
+
     v.progressBarColor = progressBarColorInput.value;
+    /*
+    const hexColor = progressBarColorInput.value;
+    const rgbColor = hexToRGB(hexColor);
+
+    root.style.setProperty('--fontColor', rgbColor);
     
-    
-    console.log(v.progressBarColor);
+    */
     progressBarColorInput.textContent = v.progressBarColor;
     progressBarColorInputLabel.textContent = v.progressBarColor;
     openModal("settingsModal");
 });
+
+function hexToRGB(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    return `${r},${g},${b}`;
+}
 
 function adjustColor(hex, amount=90) {
     // Convert hex to RGB
@@ -102,24 +129,6 @@ function adjustColor(hex, amount=90) {
 
 
 
-/*
-const hideBlurButton = document.querySelector('#hideBlurButton');
-hideBlurButton.addEventListener('click', function () {
-    const modal = document.querySelector('.modal');
-    const modalContent = document.querySelector('.modalContent');
-    modal.style.backgroundColor = "rgba(var(--darkOrLight), 0)";
-    modalContent.style.backgroundColor = "rgba(var(--darkOrLight), 0)";
-
-    console.log(modal.style.backgroundColor);
-    setTimeout(() => {
-        modal.style.backgroundColor = 'rgba(var(--darkOrLight), 0.5)';
-        modal.style.backdropFilter = "blur(var(--blurAmount))";
-        modal.style.webkitBackdropFilter = "blur(var(--blurAmount))";
-        modalContent.style.backgroundColor = "rgba(var(--darkOrLight), 0.9)";
-
-    }, 10000);
-})
-*/
 
 const fastSoundsCheckbox = document.querySelector('#fastSoundsCheckbox');
 fastSoundsCheckbox.checked = v.fastSounds;
@@ -179,60 +188,25 @@ checkbox.addEventListener('change', function () {
 function checkIfNightMode() {
 
     v.nightMode = checkbox.checked;
-    /*
-    if (checkbox.checked) {
-        v.nightMode = true;
-    } else {
-        v.nightMode = false;
-    }
-    */
 }
 function nightModeChange() {
     if (v.nightMode == true) {
-        root.style.setProperty('--bgColor', '#010101');
-        root.style.setProperty('--secondary', '27, 32, 34');
-        root.style.setProperty('--outline', '#2f3539');
+        root.style.setProperty('--bgColor', 'rgb(27, 32, 34)');
+
+        
         root.style.setProperty('--fontColor', '255, 255, 255');
-        root.style.setProperty('--modalShadowColor', '#ffffff75');
-        root.style.setProperty('--secondaryHover', '#313639');
-        root.style.setProperty('--outlineHover', '#454d53');
-        root.style.setProperty('--darkOrLight', '1, 1, 1');
-        /*
-        document.querySelector('#fullscreenButton').innerHTML = `
-        <svg height="1em" width="1em" version="1.1" viewBox="6 4 23 23">
-            <path fill="white" d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"></path>
-            <path fill="white" d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"></path>
-            <path fill="white" d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"></path>
-            <path fill="white" d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"></path>
-        </svg>
-    `
-    */
+        root.style.setProperty('--darkOrLight', '0, 0, 0');
     } else {
-        root.style.setProperty('--bgColor', '#FAFAFA');
-        root.style.setProperty('--secondary', '229, 229, 229');
-        root.style.setProperty('--outline', '#B0B0B0');
-        root.style.setProperty('--fontColor', '1, 1, 1');
-        root.style.setProperty('--modalShadowColor', '#00000033');
-        root.style.setProperty('--secondaryHover', '#D0D0D0');
-        root.style.setProperty('--outlineHover', '#A0A0A0');
-        root.style.setProperty('--darkOrLight', '256, 256, 256');
-        /*
-        document.querySelector('#fullscreenButton').innerHTML = `
-    <svg height="1em" width="1em" version="1.1" viewBox="6 4 23 23">
-        <path fill="black" d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"></path>
-        <path fill="black" d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"></path>
-        <path fill="black" d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"></path>
-        <path fill="black" d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"></path>
-    </svg>
-    `
-    */
+        root.style.setProperty('--bgColor', 'rgb(224, 229, 231)');
+        root.style.setProperty('--fontColor', '0, 0, 0');
+        root.style.setProperty('--darkOrLight', '255, 255, 255');
     }
 
 }
 
 const resetProgressBarColorButton = document.querySelector('#resetProgressBarColorButton');
 resetProgressBarColorButton.addEventListener('click', function () {
-    v.progressBarColor = 'var(--outline)';
+    v.progressBarColor = 'rgba(var(--fontColor), 0.1)';
     progressBarColorInputLabel.textContent = "Default";
 })
 
@@ -263,6 +237,20 @@ v.typingSound = typingSounds.value;
 v.typingSoundPath = document.getElementById(v.typingSound).src;
 
 
+
+
+
+
+const typingConfettiTypeInput = document.querySelector('#typingConfettiTypeInput');
+typingConfettiTypeInput.value = v.confettiType;
+typingConfettiTypeInput.addEventListener('change', () => {
+    v.confettiType = parseInt(typingConfettiTypeInput.value);
+});
+
+
+
+
+
 let isBgImage = false;
 
 const imageInput = document.querySelector('#imageInput');
@@ -271,12 +259,6 @@ const imageInput = document.querySelector('#imageInput');
 
 
 
-
-if (window.indexedDB) {
-    document.querySelector('#sizeError').textContent = '';
-} else {
-    document.querySelector('#sizeError').textContent = 'Your browser does not support indexedDB. Background images will not persist between sessions.';
-}
 
 const imageInputLabel = document.querySelector("#imageInputLabel");
 
@@ -328,23 +310,3 @@ function clearImages() {
     
 }
 
-
-/*
-document.querySelector("#progressBarData").style.display = "block";
-*//*
-const resetAllButton = document.querySelector("#resetAllButton");
-resetAllButton.addEventListener("click", () => {
-
-    if(confirm("Are you sure you want to reset all data?")) {
-        if(confirm("This will delete all data. Are you sure you want to do this?")) {
-            preventSave = true;
-            v = null;
-            localStorage.clear();
-
-            location.reload();
-            location.reload();
-        }
-    }
-});
-
-*/

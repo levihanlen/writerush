@@ -3,107 +3,109 @@ let v = {};
 
 
 let hue = 0;
+let preventSave = false;
 const typeArea = document.querySelector("#typeArea");
 
-const progressBarText = document.querySelector("#progressBarText");
-const progressBar = document.querySelector("#progressBar");
-const timeBar = document.querySelector("#timeBar");
 
 
-let preventSave = false;
 
-let db;
-const dbName = "WriteRushDB";
-const storeName = "settings";
-const openRequest = indexedDB.open(dbName, 2);
+let dbAllowed = true;
 
-openRequest.onupgradeneeded = (e) => {
-    db = e.target.result;
-    if (!db.objectStoreNames.contains(storeName)) {
-        db.createObjectStore(storeName, { keyPath: "id" });
-    }
-};
+if (dbAllowed) {
+    
+    let db;
+    const dbName = "WriteRushDB";
+    const storeName = "settings";
+    const openRequest = indexedDB.open(dbName, 2);
 
-openRequest.onsuccess = (e) => {
-    db = e.target.result;
-    load();
-};
-
-openRequest.onerror = (e) => {
-    console.error("Error opening IndexedDB:", e);
-};
-
-
-function load() {
-    const tx = db.transaction(storeName, "readonly");
-    const store = tx.objectStore(storeName);
-    const getRequest = store.get("saveV3.8");
-
-    getRequest.onsuccess = (e) => {
-        if (e.target.result) {
-            v = e.target.result.data; 
-        } else {
-            setV();
+    openRequest.onupgradeneeded = (e) => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: "id" });
         }
-        loadOtherScripts();
-
     };
 
-    getRequest.onerror = (e) => {
-        console.error("Error fetching data:", e);
+    openRequest.onsuccess = (e) => {
+        db = e.target.result;
+        load();
     };
-}
 
-let previousV = JSON.stringify(v);  // Initially set it to the string representation of v
+    openRequest.onerror = (e) => {
+        console.error("Error opening IndexedDB:", e);
+    };
 
-function save() {
-    if (JSON.stringify(v) !== previousV) {
-        const tx = db.transaction(storeName, "readwrite");
+
+    function load() {
+        const tx = db.transaction(storeName, "readonly");
         const store = tx.objectStore(storeName);
-        store.put({ id: "saveV3.8", data: v });
-        previousV = JSON.stringify(v);
-    }
-}
+        const getRequest = store.get("saveV3.10");
 
-function interval() {
-    if (!preventSave) {
+        getRequest.onsuccess = (e) => {
+            if (e.target.result) {
+                v = e.target.result.data; 
+            } else {
+                setV();
+            }
+            loadOtherScripts();
+
+        };
+
+        getRequest.onerror = (e) => {
+            console.error("Error fetching data:", e);
+        };
+    }
+
+    let previousV = JSON.stringify(v);  // Initially set it to the string representation of v
+
+    function save() {
+        if (JSON.stringify(v) !== previousV) {
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+            store.put({ id: "saveV3.10", data: v });
+            previousV = JSON.stringify(v);
+        }
+    }
+
+    function interval() {
+        if (preventSave) {
+            return;
+        }
         save();
     }
+    setInterval(interval, 5000);
+    function clearAllData() {
+        const tx = db.transaction(storeName, 'readwrite');
+        const store = tx.objectStore(storeName);
+        const clearRequest = store.clear();
+
+        indexedDB.deleteDatabase(dbName);
+
+        clearRequest.onsuccess = (e) => {
+            console.log("Success");
+        };
+
+        clearRequest.onerror = (e) => {
+            console.error("Failure: ", e);
+        };
+    }
+    
+    
+} else {
+    setV();
+    loadOtherScripts();
 }
-setInterval(interval, 5000);
-function clearAllData() {
-    const tx = db.transaction(storeName, 'readwrite');
-    const store = tx.objectStore(storeName);
-    const clearRequest = store.clear();
 
-    indexedDB.deleteDatabase(dbName);
-
-    clearRequest.onsuccess = (e) => {
-        console.log("Success");
-    };
-
-    clearRequest.onerror = (e) => {
-        console.error("Failure: ", e);
-    };
-}
 
 
 
 
 function loadOtherScripts() {
-    console.log(v);
-    // localStorage.clear();
-    
-    console.log("first open?:" + v.firstOpen);
-    
     v.text = v.files[v.currentFileIndex].chapters[0].text;
     v.notesText = v.files[v.currentFileIndex].notesText;
 
     loadScript('JS/settings.js');
-    loadScript('JS/getCaretCoordinates.js');
-    loadScript('JS/confetti.browser.js');
-    loadScript('JS/base.js');
     loadScript('JS/data.js');
+    loadScript('JS/base.js');
 }
 
 
@@ -130,7 +132,7 @@ function setV() {
         rainbowStreak: false,
         exclude: 0,
         excludeDefault: true,
-        addToGoal: 100, // the amount added to the word goal
+        addToGoal: 100,
         fastSounds: false,
         currentWritingSessionTime: 0,
         dailyWritingSessionTime: 0,
@@ -152,9 +154,6 @@ function setV() {
                     id: 1,
                     name: "Chapter 1",
                     text: `Thanks for downloading WriteRush! 😁
-
-If you are updating WriteRush, please go into Settings > Other > Reset Settings. This will ensure the new update functions correctly!
-
 Type here ...`
     
                 },
@@ -173,7 +172,6 @@ Type here ...`
                     name: "Untitled",
                 }],
             },
-            // ... more files
         ],
         currentFileIndex: 0,
         streakCompletionTime: 30000,
@@ -203,7 +201,9 @@ Type here ...`,
                 image: null,
             },
         ],
-        firstOpen: false, // for now
+        firstOpen: false,
         backgroundImage: null,
+        lineHeight: 1.5,
+        confettiType: 1,
     };
 }
