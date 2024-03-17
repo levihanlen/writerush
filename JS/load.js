@@ -12,34 +12,16 @@ function isMobileDevice() {
     (navigator.maxTouchPoints && navigator.maxTouchPoints > 1)
   );
 }
+let dbAllowed = hasIndexedDBSupport();
 
 if (isMobileDevice()) {
-  console.log("This is likely a mobile device.");
-} else {
-  console.log("This is likely a desktop device.");
+  dbAllowed = false;
 }
-
-let dbAllowed = hasIndexedDBSupport();
 
 function hasIndexedDBSupport() {
   return "indexedDB" in window;
 }
-if (hasIndexedDBSupport()) {
-  console.log("IndexedDB is supported in this browser.");
-  // Proceed with IndexedDB operations
-} else {
-  console.log("IndexedDB is not supported in this browser.");
-  // Provide an alternative solution or disable certain features
-}
-// dbAllowed = false;
-
 let dataIsLoaded = false;
-
-setTimeout(() => {
-  setInterval(() => {
-    console.log(JSON.stringify(v));
-  }, 1000);
-}, 1000);
 
 if (dbAllowed) {
   let db;
@@ -64,29 +46,20 @@ if (dbAllowed) {
   };
 
   function load() {
-    console.log("InLOAD");
     const tx = db.transaction(storeName, "readonly");
     const store = tx.objectStore(storeName);
     const getRequest = store.get("saveV3.10");
-    console.log("tx", tx);
-    console.log("store", store);
-    console.log("getRequest", getRequest);
-
     getRequest.onsuccess = (e) => {
-      console.log("success fetching data");
       if (e.target.result) {
         dataIsLoaded = true;
-        console.log("gotResults");
         v = e.target.result.data;
       } else {
-        console.log("no results");
         setV();
       }
       loadOtherScripts();
     };
 
     getRequest.onerror = (e) => {
-      console.log("error fetching data");
       console.error("Error fetching data:", e);
     };
   }
@@ -94,7 +67,6 @@ if (dbAllowed) {
   let previousV = JSON.stringify(v); // Initially set it to the string representation of v
 
   function save() {
-    console.log("save function");
     if (JSON.stringify(v) !== previousV) {
       const tx = db.transaction(storeName, "readwrite");
       const store = tx.objectStore(storeName);
@@ -142,7 +114,6 @@ function loadOtherScripts() {
 }
 
 function setV() {
-  console.log("inSetV");
   v = {
     text: `Loading file ...`,
     notesText: `Loading file ...`,
