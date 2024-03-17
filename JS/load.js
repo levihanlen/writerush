@@ -4,6 +4,21 @@ let hue = 0;
 let preventSave = false;
 const typeArea = document.querySelector("#typeArea");
 
+function isMobileDevice() {
+  return (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 1)
+  );
+}
+
+if (isMobileDevice()) {
+  console.log("This is likely a mobile device.");
+} else {
+  console.log("This is likely a desktop device.");
+}
+
 let dbAllowed = hasIndexedDBSupport();
 
 function hasIndexedDBSupport() {
