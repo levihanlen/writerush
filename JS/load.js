@@ -30,7 +30,7 @@ Modernizr.on("indexeddb", function (result) {
 
 setTimeout(() => {
   setInterval(() => {
-    console.log(v);
+    console.log(JSON.stringify(v));
   }, 1000);
 }, 1000);
 
