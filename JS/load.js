@@ -51,6 +51,9 @@ if (dbAllowed) {
   function load() {
     console.log("InLOAD");
     const tx = db.transaction(storeName, "readonly");
+    tx.onerror = (event) => {
+      console.error("Transaction error:", event.target.error);
+    };
     const store = tx.objectStore(storeName);
     const getRequest = store.get("saveV3.10");
 
