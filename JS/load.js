@@ -18,6 +18,16 @@ if (hasIndexedDBSupport()) {
 }
 // dbAllowed = false;
 
+Modernizr.on("indexeddb", function (result) {
+  if (result) {
+    console.log("has DB");
+    // supported
+  } else {
+    console.log("NO DB");
+    // not-supported
+  }
+});
+
 setTimeout(() => {
   setInterval(() => {
     console.log(v);
