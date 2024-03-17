@@ -16,17 +16,7 @@ if (hasIndexedDBSupport()) {
   console.log("IndexedDB is not supported in this browser.");
   // Provide an alternative solution or disable certain features
 }
-// dbAllowed = false;
-
-Modernizr.on("indexeddb", function (result) {
-  if (result) {
-    console.log("has DB");
-    // supported
-  } else {
-    console.log("NO DB");
-    // not-supported
-  }
-});
+dbAllowed = false;
 
 setTimeout(() => {
   setInterval(() => {
