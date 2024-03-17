@@ -18,6 +18,8 @@ if (hasIndexedDBSupport()) {
 }
 // dbAllowed = false;
 
+let dataIsLoaded = false;
+
 setTimeout(() => {
   setInterval(() => {
     console.log(JSON.stringify(v));
@@ -55,6 +57,7 @@ if (dbAllowed) {
     getRequest.onsuccess = (e) => {
       console.log("success fetching data");
       if (e.target.result) {
+        dataIsLoaded = true;
         console.log("gotResults");
         v = e.target.result.data;
       } else {
@@ -86,7 +89,9 @@ if (dbAllowed) {
     if (preventSave) {
       return;
     }
-    save();
+    if (dataIsLoaded) {
+      save();
+    }
   }
   setInterval(interval, 5000);
   function clearAllData() {
