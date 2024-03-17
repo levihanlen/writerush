@@ -65,6 +65,7 @@ if (dbAllowed) {
     };
 
     getRequest.onerror = (e) => {
+      console.log("error fetching data");
       console.error("Error fetching data:", e);
     };
   }
