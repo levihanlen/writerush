@@ -16,7 +16,7 @@ if (hasIndexedDBSupport()) {
   console.log("IndexedDB is not supported in this browser.");
   // Provide an alternative solution or disable certain features
 }
-dbAllowed = false;
+// dbAllowed = false;
 
 setTimeout(() => {
   setInterval(() => {
@@ -47,14 +47,18 @@ if (dbAllowed) {
   };
 
   function load() {
+    console.log("InLOAD");
     const tx = db.transaction(storeName, "readonly");
     const store = tx.objectStore(storeName);
     const getRequest = store.get("saveV3.10");
 
     getRequest.onsuccess = (e) => {
+      console.log("success fetching data");
       if (e.target.result) {
+        console.log("gotResults");
         v = e.target.result.data;
       } else {
+        console.log("no results");
         setV();
       }
       loadOtherScripts();
@@ -68,6 +72,7 @@ if (dbAllowed) {
   let previousV = JSON.stringify(v); // Initially set it to the string representation of v
 
   function save() {
+    console.log("save function");
     if (JSON.stringify(v) !== previousV) {
       const tx = db.transaction(storeName, "readwrite");
       const store = tx.objectStore(storeName);
@@ -113,6 +118,7 @@ function loadOtherScripts() {
 }
 
 function setV() {
+  console.log("inSetV");
   v = {
     text: `Loading file ...`,
     notesText: `Loading file ...`,
