@@ -16,7 +16,7 @@ if (hasIndexedDBSupport()) {
   console.log("IndexedDB is not supported in this browser.");
   // Provide an alternative solution or disable certain features
 }
-dbAllowed = false;
+// dbAllowed = false;
 
 setTimeout(() => {
   setInterval(() => {
