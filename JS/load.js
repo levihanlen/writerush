@@ -105,6 +105,9 @@ if (dbAllowed) {
 }
 
 function loadOtherScripts() {
+  if (v.currentFileIndex > v.files.length - 1) {
+    v.currentFileIndex = 0;
+  }
   v.text = v.files[v.currentFileIndex].chapters[0].text;
   v.notesText = v.files[v.currentFileIndex].notesText;
 

@@ -1,4 +1,3 @@
-
 // Global Vars
 // Global Vars
 // Global Vars
@@ -11,13 +10,11 @@ let yC;
 let textRedacted = false;
 let previousWordCount = Infinity;
 
-
 const upperNavbar = document.querySelector("#upperNavbar");
 const lowerNavbar = document.querySelector("#lowerNavbar");
 
 const upperNavbarDiv = document.querySelector("#upperNavbarDiv");
 const lowerNavbarDiv = document.querySelector("#lowerNavbarDiv");
-
 
 const chapterSidebar = document.querySelector("#chapterSidebar");
 const chapterSection = document.querySelector("#chapterSection");
@@ -28,9 +25,7 @@ const quickAccessDiv = document.querySelector("#quickAccessDiv");
 const typeAreaDiv = document.querySelector("#typeAreaDiv");
 const typeAreaVisuals = document.querySelector("#typeAreaVisuals");
 
-
 const notesTextarea = document.querySelector("#notesTextarea");
-
 
 const progressBarText = document.querySelector("#progressBarText");
 const progressBar = document.querySelector("#progressBar");
@@ -39,22 +34,20 @@ const timeBar = document.querySelector("#timeBar");
 const progressBarContainer = document.querySelector("#progressBarContainer");
 
 const redactButton = document.querySelector("#redactButton");
-const fullscreenButton = document.querySelector('#fullscreenButton');
+const fullscreenButton = document.querySelector("#fullscreenButton");
 
-const celebrateSound = document.querySelector('#celebrate');
+const celebrateSound = document.querySelector("#celebrate");
 
 const imageNote = document.querySelector("#imageNote");
 const imageNoteInput = document.querySelector("#imageNoteInput");
 const imageNoteButton = document.querySelector("#imageNoteButton");
 
-
 let timerRunning = false;
-let timeElapsed = 0; 
+let timeElapsed = 0;
 let timeLeft = v.timeGoal * 1000 * 60;
 const msRefresh = 200;
 
-const pauseButton = document.querySelector('#pauseButton');
-
+const pauseButton = document.querySelector("#pauseButton");
 
 v.currentWritingSessionTime = 0;
 let typedCharacter = false;
@@ -64,26 +57,24 @@ let rainbow = false;
 
 let notesOpen = false;
 const imageNoteDisplay = document.querySelector("#imageNoteDisplay");
-const notesSidebar = document.querySelector("#notesSidebar")
-
+const notesSidebar = document.querySelector("#notesSidebar");
 
 let isDragging = false;
-let lastX, lastY;  // Last position of the cursor
+let lastX, lastY; // Last position of the cursor
 
-const noteImage = document.querySelector('.imageNoteDisplay img');
+const noteImage = document.querySelector(".imageNoteDisplay img");
 const textNoteButton = document.querySelector("#textNoteButton");
-const notesSectionDiv = document.querySelector('#notesSectionDiv');
-
+const notesSectionDiv = document.querySelector("#notesSectionDiv");
 
 let editingChapterName = false;
 const newChapterButton = document.querySelector("#newChapterButton");
-const chapterSectionDiv = document.querySelector('#chapterSectionDiv');
+const chapterSectionDiv = document.querySelector("#chapterSectionDiv");
 
 const newFileButton = document.createElement("button");
 const fileDiv = document.querySelector("#fileDiv");
 
-const fileNameInput = document.querySelector('#fileNameInput');
-const saveFileNameButton = document.querySelector('#saveFileNameButton');
+const fileNameInput = document.querySelector("#fileNameInput");
+const saveFileNameButton = document.querySelector("#saveFileNameButton");
 
 let editingNoteName = false;
 
@@ -94,9 +85,6 @@ v.goalReached = true;
 let firstLoad = true;
 updateProgressBar();
 
-
-
-
 // Event Listeners
 // Event Listeners
 // Event Listeners
@@ -106,160 +94,159 @@ updateProgressBar();
 // Event Listeners
 // Event Listeners
 // Event Listeners
-
 
 notesTextarea.addEventListener("input", () => {
-    v.notesText = notesTextarea.value;
-    v.notes[v.currentNoteIndex].text = notesTextarea.value;
+  v.notesText = notesTextarea.value;
+  v.notes[v.currentNoteIndex].text = notesTextarea.value;
 });
 
-
-typeArea.addEventListener("input", () => { 
-    if (typeArea.value.length < v.text.length && v.text.startsWith(typeArea.value)) {
-        inTypeAreaInput();
-        return;
-    }
-    function inTypeAreaInput() {
-        v.text = typeArea.value;
-        v.files[v.currentFileIndex].chapters[v.currentChapterIndex].text = v.text;
-        wordCount = countWords(v.text);
-        if (v.exclude > wordCount) {
-            v.exclude = wordCount;
-            v.files[v.currentFileIndex].exclude = v.exclude;
-        }
-        updateProgressBar();
-        typedCharacter = true;
-        checkIfStreak();
-    }
+typeArea.addEventListener("input", () => {
+  if (
+    typeArea.value.length < v.text.length &&
+    v.text.startsWith(typeArea.value)
+  ) {
     inTypeAreaInput();
-    playSound();
-    updateCaretPos();
-    typingConfetti();
-    shakeScreen(v.screenShakeIntensity);
+    return;
+  }
+  function inTypeAreaInput() {
+    v.text = typeArea.value;
+    v.files[v.currentFileIndex].chapters[v.currentChapterIndex].text = v.text;
+    wordCount = countWords(v.text);
+    if (v.exclude > wordCount) {
+      v.exclude = wordCount;
+      v.files[v.currentFileIndex].exclude = v.exclude;
+    }
+    updateProgressBar();
+    typedCharacter = true;
+    checkIfStreak();
+  }
+  inTypeAreaInput();
+  playSound();
+  updateCaretPos();
+  typingConfetti();
+  shakeScreen(v.screenShakeIntensity);
 });
-
 
 redactButton.addEventListener("click", () => {
-    textRedacted = !textRedacted;
-    typeArea.style.fontFamily = textRedacted ? "Redacted" : v.fontFamily;
-})
+  textRedacted = !textRedacted;
+  typeArea.style.fontFamily = textRedacted ? "Redacted" : v.fontFamily;
+});
 
 quickAccessSidebar.addEventListener("click", () => {
-    const caretLoc = typeArea.selectionStart;
-    typeArea.focus();
-    typeArea.selectionStart = caretLoc;
-    typeArea.selectionEnd = caretLoc;
-})
+  const caretLoc = typeArea.selectionStart;
+  typeArea.focus();
+  typeArea.selectionStart = caretLoc;
+  typeArea.selectionEnd = caretLoc;
+});
 
-pauseButton.addEventListener('click', () => {
-    timerRunning = !timerRunning;
-    pauseButton.innerHTML = timerRunning ? 
-    `<span class="material-icons quickAccess">pause_circle</span>` 
+pauseButton.addEventListener("click", () => {
+  timerRunning = !timerRunning;
+  pauseButton.innerHTML = timerRunning
+    ? `<span class="material-icons quickAccess">pause_circle</span>`
     : `<span class="material-icons quickAccess">play_circle</span>`;
 });
-document.querySelector('#stopButton').addEventListener('click', () => {
-    timerRunning = false;
-    timeElapsed = 0;
-    timeLeft = v.timeGoal;
-    pauseButton.innerHTML = `<span class="material-icons quickAccess">play_circle</span>`;
-    timeBar.style.width = "0%";
+document.querySelector("#stopButton").addEventListener("click", () => {
+  timerRunning = false;
+  timeElapsed = 0;
+  timeLeft = v.timeGoal;
+  pauseButton.innerHTML = `<span class="material-icons quickAccess">play_circle</span>`;
+  timeBar.style.width = "0%";
 });
 
-
-imageNoteDisplay.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    isDragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
+imageNoteDisplay.addEventListener("mousedown", (e) => {
+  e.preventDefault();
+  isDragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
 });
 
-document.addEventListener('mouseup', () => {
-    isDragging = false;
+document.addEventListener("mouseup", () => {
+  isDragging = false;
 });
 
-document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    
-    const dx = e.clientX - lastX;  // change in X
-    const dy = e.clientY - lastY;  // change in Y
-    
-    noteImage.style.left = (noteImage.offsetLeft + dx) + "px";
-    noteImage.style.top = (noteImage.offsetTop + dy) + "px";
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
 
-    lastX = e.clientX;
-    lastY = e.clientY;
+  const dx = e.clientX - lastX; // change in X
+  const dy = e.clientY - lastY; // change in Y
+
+  noteImage.style.left = noteImage.offsetLeft + dx + "px";
+  noteImage.style.top = noteImage.offsetTop + dy + "px";
+
+  lastX = e.clientX;
+  lastY = e.clientY;
 });
 
-imageNoteDisplay.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const MIN_SCALE = 0.1;
-    const MAX_SCALE = 30;
-    const ZOOM_SPEED = 0.01;  
-    
-    const transform = getComputedStyle(noteImage).transform;
-    const currentScaleMatch = transform.match(/matrix\((.*)\)/);
-    let currentScale = currentScaleMatch ? parseFloat(currentScaleMatch[1].split(', ')[3]) : 1;
-    let newScale = currentScale + (ZOOM_SPEED * -e.deltaY);
-    newScale = Math.max(MIN_SCALE, newScale);
-    newScale = Math.min(MAX_SCALE, newScale);
+imageNoteDisplay.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const MIN_SCALE = 0.1;
+  const MAX_SCALE = 30;
+  const ZOOM_SPEED = 0.01;
 
-    noteImage.style.transform = `scale(${newScale})`;
+  const transform = getComputedStyle(noteImage).transform;
+  const currentScaleMatch = transform.match(/matrix\((.*)\)/);
+  let currentScale = currentScaleMatch
+    ? parseFloat(currentScaleMatch[1].split(", ")[3])
+    : 1;
+  let newScale = currentScale + ZOOM_SPEED * -e.deltaY;
+  newScale = Math.max(MIN_SCALE, newScale);
+  newScale = Math.min(MAX_SCALE, newScale);
+
+  noteImage.style.transform = `scale(${newScale})`;
 });
 
-
-window.addEventListener('wheel', (e) => {
+window.addEventListener(
+  "wheel",
+  (e) => {
     if (e.ctrlKey) {
-        e.preventDefault();
+      e.preventDefault();
     }
-}, { passive: false });
-
+  },
+  { passive: false }
+);
 
 imageNoteButton.addEventListener("click", () => {
-    imageNoteInput.click();
-})
+  imageNoteInput.click();
+});
 imageNoteInput.addEventListener("change", (e) => {
-    if (imageNoteInput.files.length === 0) {
-        return;
-    }
+  if (imageNoteInput.files.length === 0) {
+    return;
+  }
 
-    const reader = new FileReader();
-    reader.onload = e => {
-        const newNoteTemp = {
-            id: Date.now().toString(),
-            name: "Image Note",
-            text: "You should not be able to see this text",
-            type: "image",
-            image: e.target.result,
-        }
-        v.notes.push(newNoteTemp);
-        v.currentNoteIndex = v.notes.length - 1;
-        updateNotesList();
-        openNote(v.currentNoteIndex);
-        imageNote.src = e.target.result;
-        
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const newNoteTemp = {
+      id: Date.now().toString(),
+      name: "Image Note",
+      text: "You should not be able to see this text",
+      type: "image",
+      image: e.target.result,
     };
-    reader.readAsDataURL(imageNoteInput.files[0]);
-})
-
+    v.notes.push(newNoteTemp);
+    v.currentNoteIndex = v.notes.length - 1;
+    updateNotesList();
+    openNote(v.currentNoteIndex);
+    imageNote.src = e.target.result;
+  };
+  reader.readAsDataURL(imageNoteInput.files[0]);
+});
 
 textNoteButton.addEventListener("click", () => {
-    newNote();
-})
-
+  newNote();
+});
 
 newChapterButton.addEventListener("click", () => {
-    newChapter();
+  newChapter();
 });
 
-saveFileNameButton.addEventListener('click', () => {
-    if (fileNameInput.value.length > 0) {
-        v.files[v.currentFileIndex].name = fileNameInput.value;
-        refreshFileButtons();
-    } else {
-        alert("Please enter a file name.");
-    }
+saveFileNameButton.addEventListener("click", () => {
+  if (fileNameInput.value.length > 0) {
+    v.files[v.currentFileIndex].name = fileNameInput.value;
+    refreshFileButtons();
+  } else {
+    alert("Please enter a file name.");
+  }
 });
-
 
 // Helper Functions
 // Helper Functions
@@ -268,18 +255,16 @@ saveFileNameButton.addEventListener('click', () => {
 // Helper Functions
 
 function countWords(str) {
-    if (str.length !== 0) {
-        // Remove all special characters but keep whitespaces, alphanumeric characters, and digits
-        // \p{L} matches any kind of letter from any language
-        // \d matches any digit from 0 to 9
-        const cleanedStr = str.replace(/[^\p{L}\d\s]/gu, '').replace(/\s+/g, ' ');
-        return cleanedStr.trim().split(' ').filter(Boolean).length;
-    } else {
-        return 0;
-    }
+  if (str.length !== 0) {
+    // Remove all special characters but keep whitespaces, alphanumeric characters, and digits
+    // \p{L} matches any kind of letter from any language
+    // \d matches any digit from 0 to 9
+    const cleanedStr = str.replace(/[^\p{L}\d\s]/gu, "").replace(/\s+/g, " ");
+    return cleanedStr.trim().split(" ").filter(Boolean).length;
+  } else {
+    return 0;
+  }
 }
-
-
 
 // UI Functions
 // UI Functions
@@ -288,36 +273,36 @@ function countWords(str) {
 // UI Functions
 
 function openModal(modalId) {
-    isModalOpen = true;
-    const modal = document.getElementById(modalId);
-    modal.style.display = "block";
+  isModalOpen = true;
+  const modal = document.getElementById(modalId);
+  modal.style.display = "block";
 }
 
 const modals = document.getElementsByClassName("modal");
 window.onclick = (e) => {
-    for (let i = 0; i < modals.length; i++) {
-        if (e.target == modals[i]) {
-            closeModal(i);
-        }
+  for (let i = 0; i < modals.length; i++) {
+    if (e.target == modals[i]) {
+      closeModal(i);
     }
-    let alertModal = document.querySelector("#alertModal");
-    if (e.target !== alertModal) {
-        alertModal.style.display = "none";
-    }
-}
+  }
+  let alertModal = document.querySelector("#alertModal");
+  if (e.target !== alertModal) {
+    alertModal.style.display = "none";
+  }
+};
 
 function closeModal(i) {
-    modals[i].style.display = "none";
-    isModalOpen = false;
+  modals[i].style.display = "none";
+  isModalOpen = false;
 }
 
 const alertModalElement = document.querySelector("#alertModal");
 function alertModal(text) {
-    alertModalElement.style.display = "block";
-    document.querySelector("#alertModalText").innerHTML = text;
-    setTimeout(() => {
-        alertModalElement.style.display = "none";
-    }, 3000);
+  alertModalElement.style.display = "block";
+  document.querySelector("#alertModalText").innerHTML = text;
+  setTimeout(() => {
+    alertModalElement.style.display = "none";
+  }, 3000);
 }
 
 const upperNavbarStyle = getComputedStyle(upperNavbar);
@@ -338,244 +323,242 @@ let quickAccessOpen = false;
 let chapterSidebarOpen = false;
 
 document.addEventListener("mousemove", (e) => {
-    if (isModalOpen) {
-        return;
+  if (isModalOpen) {
+    return;
+  }
+  const chapterSidebarWidth = parseInt(0.2 * window.innerWidth);
+  if (e.clientY <= typeAreaDivPadding / 2) {
+    if (!quickAccessOpen && !chapterSidebarOpen) {
+      upperNavbarOpen = true;
+      upperNavbar.style.height = `${upperHeight}px`;
+      upperNavbarDiv.style.display = "flex";
     }
-    const chapterSidebarWidth = (parseInt(0.2 * window.innerWidth));
-    if (e.clientY <= (typeAreaDivPadding / 2)) {
-        if (!quickAccessOpen && !chapterSidebarOpen) {
-            upperNavbarOpen = true;
-            upperNavbar.style.height = `${upperHeight}px`;
-            upperNavbarDiv.style.display = "flex";
-        }
-    } else if (e.clientY >= (upperHeight + typeAreaDivPadding * 2)){
-        upperNavbarOpen = false;
-        upperNavbar.style.height = "0";
-        upperNavbarDiv.style.display = "none";
+  } else if (e.clientY >= upperHeight + typeAreaDivPadding * 2) {
+    upperNavbarOpen = false;
+    upperNavbar.style.height = "0";
+    upperNavbarDiv.style.display = "none";
+  }
+  if (e.clientY >= window.innerHeight - typeAreaDivPadding / 2) {
+    if (!chapterSidebarOpen) {
+      lowerNavbarOpen = true;
+      lowerNavbar.style.height = `${upperHeight}px`;
+      lowerNavbarDiv.style.display = "flex";
     }
-    if (e.clientY >= (window.innerHeight - (typeAreaDivPadding / 2))) {
-        if (!chapterSidebarOpen) {
-            lowerNavbarOpen = true;
-            lowerNavbar.style.height = `${upperHeight}px`;
-            lowerNavbarDiv.style.display = "flex";
-        }
-    } else if (e.clientY <= (window.innerHeight - (lowerHeight + typeAreaDivPadding * 2))){
-        lowerNavbarOpen = false;
-        lowerNavbar.style.height = "0";
-        lowerNavbarDiv.style.display = "none";
+  } else if (
+    e.clientY <=
+    window.innerHeight - (lowerHeight + typeAreaDivPadding * 2)
+  ) {
+    lowerNavbarOpen = false;
+    lowerNavbar.style.height = "0";
+    lowerNavbarDiv.style.display = "none";
+  }
+  if (e.clientX >= window.innerWidth - typeAreaDivPadding / 2) {
+    if (!upperNavbarOpen) {
+      quickAccessOpen = true;
+      quickAccessSidebar.style.width = `${upperHeight}px`;
+      quickAccessDiv.style.display = "flex";
     }
-    if (e.clientX >= (window.innerWidth - (typeAreaDivPadding / 2))) {
-        if (!upperNavbarOpen) {
-            quickAccessOpen = true;
-            quickAccessSidebar.style.width = `${upperHeight}px`;
-            quickAccessDiv.style.display = "flex";
-        }
-    } else if (e.clientX <= (window.innerWidth - (quickAccessWidth + typeAreaDivPadding * 2))){
-        quickAccessOpen = false;
-        quickAccessSidebar.style.width = "0";
-        quickAccessDiv.style.display = "none";
-    }
+  } else if (
+    e.clientX <=
+    window.innerWidth - (quickAccessWidth + typeAreaDivPadding * 2)
+  ) {
+    quickAccessOpen = false;
+    quickAccessSidebar.style.width = "0";
+    quickAccessDiv.style.display = "none";
+  }
 
-    if (e.clientX <= (typeAreaDivPadding / 2)) {
-        if (!upperNavbarOpen && !lowerNavbarOpen && e.clientY > (upperHeight * 1.5)) {
-
-            chapterSidebarOpen = true;
-            chapterSidebar.style.width = "20%";
-            chapterSection.style.display = "flex";
-        };
-        
-    } else if (e.clientX >= (chapterSidebarWidth + typeAreaDivPadding * 2)) {
-        chapterSidebarOpen = false;
-        chapterSidebar.style.width = "0";
-        chapterSection.style.display = "none";
-
+  if (e.clientX <= typeAreaDivPadding / 2) {
+    if (!upperNavbarOpen && !lowerNavbarOpen && e.clientY > upperHeight * 1.5) {
+      chapterSidebarOpen = true;
+      chapterSidebar.style.width = "20%";
+      chapterSection.style.display = "flex";
     }
-})
+  } else if (e.clientX >= chapterSidebarWidth + typeAreaDivPadding * 2) {
+    chapterSidebarOpen = false;
+    chapterSidebar.style.width = "0";
+    chapterSection.style.display = "none";
+  }
+});
 
 function updateProgressBar() {
-    let progress = ((wordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
-    v.exclude = Math.min(v.exclude, wordCount);
-    progressBarText.innerHTML = `${Math.round(progress)}%
+  let progress = ((wordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
+  v.exclude = Math.min(v.exclude, wordCount);
+  progressBarText.innerHTML = `${Math.round(progress)}%
     <div class="vLine"></div>
     ${wordCount}/${v.wordGoal}
     <div class="vLine"></div>
     ${wordCount - v.wordGoal}`;
 
-    progressBar.style.width = progress + "%";
+  progressBar.style.width = progress + "%";
 
-    const progressBarColor = v.rainbowProgressBar ? `hsl(${hue}, ${progress}%, 50%)` : v.progressBarColor;
-    progressBar.style.backgroundColor = progressBarColor;
-    timeBar.style.backgroundColor = progressBarColor;
-    progressBarConfetti(progress);
+  const progressBarColor = v.rainbowProgressBar
+    ? `hsl(${hue}, ${progress}%, 50%)`
+    : v.progressBarColor;
+  progressBar.style.backgroundColor = progressBarColor;
+  timeBar.style.backgroundColor = progressBarColor;
+  progressBarConfetti(progress);
 }
-
 
 function progressBarConfetti(progress) {
+  let currentIncrement = Math.floor(progress / 10) * 10;
 
-    let currentIncrement = Math.floor(progress / 10) * 10;
-    
-    let previousProgress = ((previousWordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
-    let previousIncrement = Math.floor(previousProgress / 10) * 10;
+  let previousProgress =
+    ((previousWordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
+  let previousIncrement = Math.floor(previousProgress / 10) * 10;
 
-    let difference = currentIncrement - previousIncrement;
+  let difference = currentIncrement - previousIncrement;
 
-    const progressBarRect = progressBarContainer.getBoundingClientRect();
-    if (difference === 0) {
-        return;
-    } else {
-        if (currentIncrement > 100) {
-            return;
-        }
-        for (let i = 0; i < (difference / 10); i++) {
-            incrementConfetti(currentIncrement);
-        }
+  const progressBarRect = progressBarContainer.getBoundingClientRect();
+  if (difference === 0) {
+    return;
+  } else {
+    if (currentIncrement > 100) {
+      return;
     }
-
-
-    // Goal reached condition
-    if (progress >= 100 && v.goalReached !== true) {
-        fireworks();
-        fireworksSound();
-        v.goalReached = true;
-    } else if (progress < 100) {
-        v.goalReached = false;
+    for (let i = 0; i < difference / 10; i++) {
+      if (i > 10) {
+        i = 9;
+      }
+      incrementConfetti(currentIncrement);
     }
-    
-    
-    function incrementConfetti(i) {
-        confetti({
-            particleCount: 200,
-            startVelocity: 40,
-            spread: 60,
-            origin: { x: (progressBarRect.left + (progressBarRect.width * (i / 100)) + window.scrollX) / window.innerWidth, y: (progressBarRect.top + window.scrollY ) / window.innerHeight }
-        });
-        
-        incrementsReached.push(currentIncrement); // Mark this increment as reached
+  }
 
-    }
+  // Goal reached condition
+  if (progress >= 100 && v.goalReached !== true) {
+    fireworks();
+    fireworksSound();
+    v.goalReached = true;
+  } else if (progress < 100) {
+    v.goalReached = false;
+  }
 
-    previousWordCount = wordCount;
+  function incrementConfetti(i) {
+    confetti({
+      particleCount: 200,
+      startVelocity: 40,
+      spread: 60,
+      origin: {
+        x:
+          (progressBarRect.left +
+            progressBarRect.width * (i / 100) +
+            window.scrollX) /
+          window.innerWidth,
+        y: (progressBarRect.top + window.scrollY) / window.innerHeight,
+      },
+    });
+
+    incrementsReached.push(currentIncrement); // Mark this increment as reached
+  }
+
+  previousWordCount = wordCount;
 }
 
+/*
+function progressBarConfetti(progress) {
+  let currentIncrement = Math.floor(progress / 10) * 10;
+
+  let previousProgress =
+    ((previousWordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
+  let previousIncrement = Math.floor(previousProgress / 10) * 10;
+
+  let difference = currentIncrement - previousIncrement;
+
+  const progressBarRect = progressBarContainer.getBoundingClientRect();
+  if (difference === 0) {
+    return;
+  } else {
+    if (currentIncrement > 100) {
+      return;
+    }
+    for (let i = 0; i < difference / 10; i++) {
+      incrementConfetti(currentIncrement);
+    }
+  }
+
+  // Goal reached condition
+  if (progress >= 100 && v.goalReached !== true) {
+    fireworks();
+    fireworksSound();
+    v.goalReached = true;
+  } else if (progress < 100) {
+    v.goalReached = false;
+  }
+
+  function incrementConfetti(i) {
+    confetti({
+      particleCount: 200,
+      startVelocity: 40,
+      spread: 60,
+      origin: {
+        x:
+          (progressBarRect.left +
+            progressBarRect.width * (i / 100) +
+            window.scrollX) /
+          window.innerWidth,
+        y: (progressBarRect.top + window.scrollY) / window.innerHeight,
+      },
+    });
+
+    incrementsReached.push(currentIncrement); // Mark this increment as reached
+  }
+
+  previousWordCount = wordCount;
+}
+*/
 
 function fireworks() {
-    const duration = 8 * 1000;
-    const animationEnd = Date.now() + duration;
+  const duration = 8 * 1000;
+  const animationEnd = Date.now() + duration;
 
-    const interval = setInterval(() => {
-        if (animationEnd - Date.now() <= 0) {
-            return clearInterval(interval);
-        }
-        confetti({
-            startVelocity: 30, 
-            spread: 360, 
-            ticks: 60, 
-            zIndex: 0, 
-            particleCount: 150,
-            origin: {
-                x: Math.random(),
-                y: Math.random(),
-            },
-        })
-    }, 250);
+  const interval = setInterval(() => {
+    if (animationEnd - Date.now() <= 0) {
+      return clearInterval(interval);
+    }
+    confetti({
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 0,
+      particleCount: 150,
+      origin: {
+        x: Math.random(),
+        y: Math.random(),
+      },
+    });
+  }, 250);
 }
-
 
 function rainbowStreak() {
-    timeSinceLast += msRefresh;
-    continuousTypingTime += msRefresh;
+  timeSinceLast += msRefresh;
+  continuousTypingTime += msRefresh;
 
-    if (typedCharacter) {
-        timeSinceLast = 0;
-        typedCharacter = false;
-    }
+  if (typedCharacter) {
+    timeSinceLast = 0;
+    typedCharacter = false;
+  }
 
-    rainbow = continuousTypingTime > 1000;
+  rainbow = continuousTypingTime > 1000;
 
-    if (timeSinceLast > 5000) {
-        rainbow = false;
-        continuousTypingTime = 0;
-    } else {
-        v.currentWritingSessionTime += msRefresh;
-        v.dailyWritingSessionTime += msRefresh;
-    }
-    if (continuousTypingTime > v.longestWritingStreak) {
-        v.longestWritingStreak = continuousTypingTime;
-    }
+  if (timeSinceLast > 5000) {
+    rainbow = false;
+    continuousTypingTime = 0;
+  } else {
+    v.currentWritingSessionTime += msRefresh;
+    v.dailyWritingSessionTime += msRefresh;
+  }
+  if (continuousTypingTime > v.longestWritingStreak) {
+    v.longestWritingStreak = continuousTypingTime;
+  }
 
-    if (v.rainbowStreak) {
-        const saturation = rainbow ? '100%' : `${continuousTypingTime / 10}%`;
-        const lightness = v.nightMode ? '75%' : '35%';
-        typeArea.style.color = `hsl(${hue}, ${saturation}, ${lightness})`;
-    } else {
-        typeArea.style.color = `rgba(var(--fontColor), 1)`;
-    }
+  if (v.rainbowStreak) {
+    const saturation = rainbow ? "100%" : `${continuousTypingTime / 10}%`;
+    const lightness = v.nightMode ? "75%" : "35%";
+    typeArea.style.color = `hsl(${hue}, ${saturation}, ${lightness})`;
+  } else {
+    typeArea.style.color = `rgba(var(--fontColor), 1)`;
+  }
 }
 
-
-const motivationalMessages = [
-    "You're here! Time to conquer that blank page.",
-    "Welcome back! Ready to write something amazing today?",
-    "The words are waiting. Let's get them down!",
-    "Fuel up on creativity. It's time to write!",
-    "Your words are waiting. Dive in now!",
-    "Hey there, wordsmith! Ready to craft something incredible?",
-    "The page is your playground. Have fun with it!",
-    "You've got ideas. WriteRush is the platform. Let's make magic happen!",
-    "Time to write! Unleash your creativity today.",
-    "Hey, superstar! Ready to shine on the page today?",
-    "Grab your favorite drink, get comfortable, and let's write something awesome!",
-    "Every word is progress. Let's make a ton of progress today!",
-    "You're back! Your writing adventure continues now.",
-    "Ready, set, write! The world needs your words.",
-    "Buckle up! It's going to be a great writing day.",
-    "Your words can change the world. Start writing now!",
-    "Writing's a journey, and you're the hero. Onward!",
-    "Welcome to WriteRush! Where your writing dreams come alive.",
-    "Who's ready to write? You are! Let's go!",
-    "Today's writing goals are no match for you. Let's crush them!",
-    "Unlock your creativity. It's time to write something spectacular!",
-    "Put on your creative cap! It's time to write!",
-    "Welcome back, champion! Let's knock out some amazing writing today.",
-    "Your words have power. Use them to create something beautiful now.",
-    "Ready to create? Your writing adventure starts here!",
-    "Your thoughts, your words, your time. Make the most of it today!",
-    "Ready to write? The page is calling your name!",
-    "Let's make today's writing session the best one yet!",
-    "You + Words = Magic. Let's make it happen now!",
-    "Let's turn today's ideas into tomorrow's masterpieces!",
-    "The blank page is a canvas. Paint it with your words!",
-    "You've got the power to write something extraordinary. Let's do it!",
-    "Write like no one's watching. Express yourself!",
-    "Your writing journey begins with a single word. Start now!",
-    "Time to write and shine! You've got this!",
-    "Embrace the joy of writing. Create something beautiful today!",
-    "Your creativity knows no bounds. Show the world what you've got!",
-    "One word at a time. You'll get there. Start now!",
-    "No dream is too big. Write yours into existence today!",
-    "The words are your tools. Build something amazing!",
-    "Get comfy, grab a snack, and let's write!",
-    "Every word you write is a step towards greatness. Keep going!",
-    "Unleash your imagination. The world is ready for your story!",
-    "Welcome back! Let's turn thoughts into text.",
-    "Today's a great day to write something incredible. Let's get started!",
-    "Feeling creative? The page is waiting. Dive in!",
-    "Write your way to awesomeness! You've got everything you need.",
-    "Today's words will become tomorrow's legacy. Write on!",
-    "Let's turn ideas into ink. Your writing journey starts now!",
-    "Be bold, be brave, be you! Your words matter.",
-    "Ready to explore your creativity? Your writing adventure awaits!",
-    "The world is ready for your words. Let's make history!",
-    "You're the author of your destiny. Write a fantastic chapter today!",
-    "Think it, write it, love it! Your creativity is unstoppable!",
-    "No limits, no boundaries. Just pure creativity. Write on!",
-    "You've got a universe in your mind. Share it with the world!",
-    "Welcome to your writing haven. Let's create something memorable!",
-    "Dream big. Write bigger. You've got this!",
-    "Your words, your world. Make it extraordinary!"
-];
-
-
 // Main App Logic
 // Main App Logic
 // Main App Logic
@@ -586,44 +569,49 @@ const motivationalMessages = [
 // Main App Logic
 // Main App Logic
 // Main App Logic
-
 
 function checkIfStreak() {
-    if (v.dailyWritingSessionTime > v.streakCompletionTime && v.doneTodaysStreak == false) {
-        v.dailyStreak += 1;
-        v.doneTodaysStreak = true;
-        alertModal("Your streak increased!<br>🎉🎉🎉<br>Your streak is now: " + v.dailyStreak + "!");
-    }
+  if (
+    v.dailyWritingSessionTime > v.streakCompletionTime &&
+    v.doneTodaysStreak == false
+  ) {
+    v.dailyStreak += 1;
+    v.doneTodaysStreak = true;
+    alertModal(
+      "Your streak increased!<br>🎉🎉🎉<br>Your streak is now: " +
+        v.dailyStreak +
+        "!"
+    );
+  }
 }
 
 let fastSound = new Audio(v.typingSoundPath);
 function playSound() {
-    let sound;
-    if (v.fastSounds) {
-        sound = fastSound; 
-    } else {
-        sound = new Audio(v.typingSoundPath); 
-    }
-    sound.currentTime = 0;
-    sound.playbackRate = Math.random() * 2 + 0.4;
-    sound.play();
+  let sound;
+  if (v.fastSounds) {
+    sound = fastSound;
+  } else {
+    sound = new Audio(v.typingSoundPath);
+  }
+  sound.currentTime = 0;
+  sound.playbackRate = Math.random() * 2 + 0.4;
+  sound.play();
 }
 
 function shakeScreen(intensity) {
-    const directionX = Math.random() > 0.5 ? 1 : -1;
-    const directionY = Math.random() > 0.5 ? 1 : -1;
-    typeAreaDiv.style.left = `${intensity * directionX}px`;
-    typeAreaDiv.style.top = `${intensity * directionY}px`;
-    setTimeout(() => {
-        typeAreaDiv.style.top = 0;
-        typeAreaDiv.style.left = 0;
-    }, 100);
+  const directionX = Math.random() > 0.5 ? 1 : -1;
+  const directionY = Math.random() > 0.5 ? 1 : -1;
+  typeAreaDiv.style.left = `${intensity * directionX}px`;
+  typeAreaDiv.style.top = `${intensity * directionY}px`;
+  setTimeout(() => {
+    typeAreaDiv.style.top = 0;
+    typeAreaDiv.style.left = 0;
+  }, 100);
 }
 
-
 function exportChapter() {
-    let pageCount = Math.round(v.text.length / 15) / 100;
-    let textToSave = `==============================================
+  let pageCount = Math.round(v.text.length / 15) / 100;
+  let textToSave = `==============================================
     ${v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name}
 ==============================================
 
@@ -635,56 +623,59 @@ ${v.text}
 
 ----------------------------------------------
 Thanks for using WriteRush!`;
-    let textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
-    let textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-    let fileNameToSaveAs = v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name;
+  let textToSaveAsBlob = new Blob([textToSave], { type: "text/plain" });
+  let textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+  let fileNameToSaveAs =
+    v.files[v.currentFileIndex].chapters[v.currentChapterIndex].name;
 
-    let downloadLink = document.createElement("a");
-    downloadLink.download = fileNameToSaveAs;
-    downloadLink.href = textToSaveAsURL;
-    downloadLink.style.display = "none";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+  let downloadLink = document.createElement("a");
+  downloadLink.download = fileNameToSaveAs;
+  downloadLink.href = textToSaveAsURL;
+  downloadLink.style.display = "none";
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
 }
 
 function exportFile() {
-    let fullWordCount = 0;
-    let fullPageCount;
-    for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
-        fullWordCount += countWords(v.files[v.currentFileIndex].chapters[i].text);
-        fullPageCount = Math.round(v.files[v.currentFileIndex].chapters[i].text.length / 15) / 100;
-    }
-    let textToSave = `==============================================
+  let fullWordCount = 0;
+  let fullPageCount;
+  for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
+    fullWordCount += countWords(v.files[v.currentFileIndex].chapters[i].text);
+    fullPageCount =
+      Math.round(v.files[v.currentFileIndex].chapters[i].text.length / 15) /
+      100;
+  }
+  let textToSave = `==============================================
 ${v.files[v.currentFileIndex].name}
 ==============================================
 
 ----------------------------------------------
 ${fullWordCount} words, ${fullPageCount} pages.
-----------------------------------------------`
+----------------------------------------------`;
 
-    for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
-        textToSave += `\n\n==============================================
+  for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
+    textToSave += `\n\n==============================================
 ${v.files[v.currentFileIndex].chapters[i].name}
-==============================================`
-        textToSave += `\n\n${v.files[v.currentFileIndex].chapters[i].text}` 
-    }
-    textToSave +=`\n\n
+==============================================`;
+    textToSave += `\n\n${v.files[v.currentFileIndex].chapters[i].text}`;
+  }
+  textToSave += `\n\n
 ----------------------------------------------
 Thanks for using WriteRush!
 
 `;
-    let textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
-    let textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-    let fileNameToSaveAs = v.files[v.currentFileIndex].name;
+  let textToSaveAsBlob = new Blob([textToSave], { type: "text/plain" });
+  let textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+  let fileNameToSaveAs = v.files[v.currentFileIndex].name;
 
-    let downloadLink = document.createElement("a");
-    downloadLink.download = fileNameToSaveAs;
-    downloadLink.href = textToSaveAsURL;
-    downloadLink.style.display = "none";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+  let downloadLink = document.createElement("a");
+  downloadLink.download = fileNameToSaveAs;
+  downloadLink.href = textToSaveAsURL;
+  downloadLink.style.display = "none";
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
 }
 /*
 let rect = document.createElement('div');
@@ -695,812 +686,848 @@ rect.style.height = getComputedStyle(typeArea).getPropertyValue('font-size');
 rect.style.width = '1px';
 */
 function updateCaretPos() {
-    const navbarHeight = document.querySelector('#upperNavbar').offsetHeight;
-    const coordinates = getCaretCoordinates(typeArea, typeArea.selectionEnd, { debug: false });
-    const notesOffset = ((parseInt(notesSidebar.style.width) / 100) * window.innerWidth);
-    const chapterOffset = parseFloat(getComputedStyle(chapterSidebar).width);
-    yC = typeArea.offsetTop - typeArea.scrollTop + coordinates.top + typeAreaVisuals.offsetTop + navbarHeight;
-    xC = typeArea.offsetTop - typeArea.scrollLeft + coordinates.left + notesOffset + typeAreaVisuals.offsetLeft + chapterOffset;
+  const navbarHeight = document.querySelector("#upperNavbar").offsetHeight;
+  const coordinates = getCaretCoordinates(typeArea, typeArea.selectionEnd, {
+    debug: false,
+  });
+  const notesOffset =
+    (parseInt(notesSidebar.style.width) / 100) * window.innerWidth;
+  const chapterOffset = parseFloat(getComputedStyle(chapterSidebar).width);
+  yC =
+    typeArea.offsetTop -
+    typeArea.scrollTop +
+    coordinates.top +
+    typeAreaVisuals.offsetTop +
+    navbarHeight;
+  xC =
+    typeArea.offsetTop -
+    typeArea.scrollLeft +
+    coordinates.left +
+    notesOffset +
+    typeAreaVisuals.offsetLeft +
+    chapterOffset;
 
-    /*
+  /*
     rect.style.top = yC + 'px';
     rect.style.left = xC + 'px';
     */
 }
 
 function typingConfetti() {
-    switch (parseInt(v.confettiType)) {
-        case 0:
-            const number = v.typingConfettiCount * 2;
-            for (let i = 0; i < number; i++) {
-                const particle = getParticle();
-                activateParticle(particle, xC, yC);
-            }
-            if (!isAnimationRunning) {
-                isAnimationRunning = true;
-                requestAnimationFrame(moveParticles);
-            }
-            break;
-        case 1:
-            confetti({
-                particleCount: v.typingConfettiCount,
-                startVelocity: 20,
-                spread: 360,
-                origin: { 
-                    x: xC / window.innerWidth, 
-                    y: yC / window.innerHeight 
-                }
-            });
-            break;
-        case 2:
-            let defaults = {
-                spread: 360,
-                ticks: 50,
-                gravity: 0,
-                decay: 0.94,
-                startVelocity: 15,
-                colors: ['FFE400', 'FFBD00', 'E89400', 'FFCA6C', 'FDFFB8'],
-                origin: { 
-                    x: xC / window.innerWidth,
-                    y: yC / window.innerHeight,
-                }
-            };
-            
-            function shoot() {
-            confetti({
-                ...defaults,
-                particleCount: v.typingConfettiCount,
-                scalar: 1,
-                shapes: ['star']
-            });
-            
-            confetti({
-                ...defaults,
-                particleCount: v.typingConfettiCount * 2,
-                scalar: 0.7,
-                shapes: ['square']
-            });
-            }
-            shoot();
-            break;
-            
-        case 3:
-            let scalar = 2;
-            const emoji = []; 
-            emoji.push(confetti.shapeFromText({ text: '💥', scalar }));
-            emoji.push(confetti.shapeFromText({ text: '😁', scalar }));
-            emoji.push(confetti.shapeFromText({ text: '🤯', scalar }));
-            emoji.push(confetti.shapeFromText({ text: '🏆', scalar }));
+  switch (parseInt(v.confettiType)) {
+    case 0:
+      const number = v.typingConfettiCount * 2;
+      for (let i = 0; i < number; i++) {
+        const particle = getParticle();
+        activateParticle(particle, xC, yC);
+      }
+      if (!isAnimationRunning) {
+        isAnimationRunning = true;
+        requestAnimationFrame(moveParticles);
+      }
+      break;
+    case 1:
+      confetti({
+        particleCount: v.typingConfettiCount,
+        startVelocity: 20,
+        spread: 360,
+        origin: {
+          x: xC / window.innerWidth,
+          y: yC / window.innerHeight,
+        },
+      });
+      break;
+    case 2:
+      let defaults = {
+        spread: 360,
+        ticks: 50,
+        gravity: 0,
+        decay: 0.94,
+        startVelocity: 15,
+        colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+        origin: {
+          x: xC / window.innerWidth,
+          y: yC / window.innerHeight,
+        },
+      };
 
+      function shoot() {
+        confetti({
+          ...defaults,
+          particleCount: v.typingConfettiCount,
+          scalar: 1,
+          shapes: ["star"],
+        });
 
-            function floating() {
+        confetti({
+          ...defaults,
+          particleCount: v.typingConfettiCount * 2,
+          scalar: 0.7,
+          shapes: ["square"],
+        });
+      }
+      shoot();
+      break;
 
-                confetti({
-                    spread: 360,
-                    ticks: 300,
-                    gravity: -1,
-                    decay: 0.96,
-                    startVelocity: 2,
-                    shapes: emoji,
-                    particleCount: v.typingConfettiCount,
-                    flat: true,
-                    scalar: 2,
-                    origin: { 
-                        x: xC / window.innerWidth, 
-                        y: yC / window.innerHeight 
-                    }
-                });
+    case 3:
+      let scalar = 2;
+      const emoji = [];
+      emoji.push(confetti.shapeFromText({ text: "💥", scalar }));
+      emoji.push(confetti.shapeFromText({ text: "😁", scalar }));
+      emoji.push(confetti.shapeFromText({ text: "🤯", scalar }));
+      emoji.push(confetti.shapeFromText({ text: "🏆", scalar }));
 
-            }
+      function floating() {
+        confetti({
+          spread: 360,
+          ticks: 300,
+          gravity: -1,
+          decay: 0.96,
+          startVelocity: 2,
+          shapes: emoji,
+          particleCount: v.typingConfettiCount,
+          flat: true,
+          scalar: 2,
+          origin: {
+            x: xC / window.innerWidth,
+            y: yC / window.innerHeight,
+          },
+        });
+      }
 
-            floating();
-            break;
-        default:
-            confetti({
-                particleCount: v.typingConfettiCount,
-                startVelocity: 20,
-                spread: 360,
-                origin: { 
-                    x: xC / window.innerWidth, 
-                    y: yC / window.innerHeight 
-                }
-            });
-            break;
-            
-    }
+      floating();
+      break;
+    default:
+      confetti({
+        particleCount: v.typingConfettiCount,
+        startVelocity: 20,
+        spread: 360,
+        origin: {
+          x: xC / window.innerWidth,
+          y: yC / window.innerHeight,
+        },
+      });
+      break;
+  }
 }
 
 function fireworksSound() {
-    const sound = new Audio(celebrateSound.src);
-    sound.play();
+  const sound = new Audio(celebrateSound.src);
+  sound.play();
 }
 
 function add500toGoal() {
-    wordCount = countWords(v.text);
-    if (v.wordGoal - wordCount < v.addToGoal) {
-        v.wordGoal = wordCount + v.addToGoal;
-    } else {
-        v.wordGoal += v.addToGoal;
-    }
-    if (v.excludeDefault) {
-        v.exclude = wordCount;
-    }
-    v.files[v.currentFileIndex].wordGoal = v.wordGoal;
-    v.files[v.currentFileIndex].exclude = v.exclude;
-    firstLoad = true; 
-    v.goalReached = true;
-    updateProgressBar();
+  wordCount = countWords(v.text);
+  if (v.wordGoal - wordCount < v.addToGoal) {
+    v.wordGoal = wordCount + v.addToGoal;
+  } else {
+    v.wordGoal += v.addToGoal;
+  }
+  if (v.excludeDefault) {
+    v.exclude = wordCount;
+  }
+  v.files[v.currentFileIndex].wordGoal = v.wordGoal;
+  v.files[v.currentFileIndex].exclude = v.exclude;
+  firstLoad = true;
+  v.goalReached = true;
+  updateProgressBar();
 }
 
-window.addEventListener("keydown", e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        exportFile();
-    }
+window.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+    e.preventDefault();
+    exportFile();
+  }
 });
 
-const requestFullscreen = document.documentElement.requestFullscreen 
-    || document.documentElement.mozRequestFullScreen
-    || document.documentElement.webkitRequestFullscreen
-    || document.documentElement.msRequestFullscreen;
-const exitFullscreen = document.exitFullscreen 
-    || document.mozCancelFullScreen
-    || document.webkitExitFullscreen
-    || document.msExitFullscreen;
+const requestFullscreen =
+  document.documentElement.requestFullscreen ||
+  document.documentElement.mozRequestFullScreen ||
+  document.documentElement.webkitRequestFullscreen ||
+  document.documentElement.msRequestFullscreen;
+const exitFullscreen =
+  document.exitFullscreen ||
+  document.mozCancelFullScreen ||
+  document.webkitExitFullscreen ||
+  document.msExitFullscreen;
 
 function enterFullscreen() {
-    if (requestFullscreen) requestFullscreen.call(document.documentElement);
+  if (requestFullscreen) requestFullscreen.call(document.documentElement);
 }
 function exitFullscreenFunction() {
-    if (exitFullscreen) exitFullscreen.call(document);
+  if (exitFullscreen) exitFullscreen.call(document);
 }
-fullscreenButton.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-        enterFullscreen();
-    } else {
-        exitFullscreenFunction();
-    }
+fullscreenButton.addEventListener("click", () => {
+  if (!document.fullscreenElement) {
+    enterFullscreen();
+  } else {
+    exitFullscreenFunction();
+  }
 });
 
 setInterval(alwaysRun, msRefresh);
 function alwaysRun() {
-    if (preventSave) { 
-        return;
-    }
-    hue += 3;
-    updateProgressBar();
-    updateTimeBar();
-    rainbowStreak();
-    checkIfNewDay();
-    if (!isModalOpen) {
-        v.exclude = Math.min(v.exclude, wordCount);
-    }
+  if (preventSave) {
+    return;
+  }
+  hue += 3;
+  updateProgressBar();
+  updateTimeBar();
+  rainbowStreak();
+  checkIfNewDay();
+  if (!isModalOpen) {
+    v.exclude = Math.min(v.exclude, wordCount);
+  }
 }
 
 function updateTimeBar() {
-    if (!timerRunning) return;
+  if (!timerRunning) return;
 
-    timeElapsed += msRefresh;
-    timeLeft -= msRefresh;
-    const timeProgress = (timeElapsed / (v.timeGoal * 60 * 1000)) * 100;
-    timeBar.style.width = timeProgress + "%";
+  timeElapsed += msRefresh;
+  timeLeft -= msRefresh;
+  const timeProgress = (timeElapsed / (v.timeGoal * 60 * 1000)) * 100;
+  timeBar.style.width = timeProgress + "%";
 }
 
 function checkIfNewDay() {
-    const lastUsedDate = new Date(parseInt(v.lastRecordedTime));
-    const currentDate = new Date();
+  const lastUsedDate = new Date(parseInt(v.lastRecordedTime));
+  const currentDate = new Date();
 
-    // Set to midnight
-    lastUsedDate.setHours(0, 0, 0, 0);
-    currentDate.setHours(0, 0, 0, 0);
+  // Set to midnight
+  lastUsedDate.setHours(0, 0, 0, 0);
+  currentDate.setHours(0, 0, 0, 0);
 
-    const differenceInDays = (currentDate.getTime() - lastUsedDate.getTime()) / (1000 * 3600 * 24);
-    if (differenceInDays === 1) {
-        resetDailyThings();
-        if (v.doneTodaysStreak == false) {
-            v.dailyStreak = 0;
-        }
-        v.doneTodaysStreak = false;
-    } else if (differenceInDays > 1) {
-
-        resetDailyThings();
-        v.dailyStreak = 0;
-        alertModal("You lost your streak! 😭 Your streak is now " + v.dailyStreak);
-        v.doneTodaysStreak = false;
-    } 
-    // another else for same day
-    function resetDailyThings() {
-        v.dailyWritingSessionTime = 0;
-        v.longestWritingStreak = 0;
+  const differenceInDays =
+    (currentDate.getTime() - lastUsedDate.getTime()) / (1000 * 3600 * 24);
+  if (differenceInDays === 1) {
+    resetDailyThings();
+    if (v.doneTodaysStreak == false) {
+      v.dailyStreak = 0;
     }
-    v.lastRecordedTime = Date.now();
+    v.doneTodaysStreak = false;
+  } else if (differenceInDays > 1) {
+    resetDailyThings();
+    v.dailyStreak = 0;
+    alertModal("You lost your streak! 😭 Your streak is now " + v.dailyStreak);
+    v.doneTodaysStreak = false;
+  }
+  // another else for same day
+  function resetDailyThings() {
+    v.dailyWritingSessionTime = 0;
+    v.longestWritingStreak = 0;
+  }
+  v.lastRecordedTime = Date.now();
 }
 
 function openNoteSidebar() {
-    if (!notesOpen) {
-        notesSidebar.style.width = "0";
-        notesSidebar.style.border = "0";
-        notesTextarea.style.display = "none";
+  if (!notesOpen) {
+    notesSidebar.style.width = "0";
+    notesSidebar.style.border = "0";
+    notesTextarea.style.display = "none";
+    imageNoteDisplay.style.display = "none";
+  } else {
+    notesSidebar.style.width = "30%";
+
+    switch (v.notes[v.currentNoteIndex].type) {
+      case "text":
+        notesTextarea.style.display = "flex";
         imageNoteDisplay.style.display = "none";
-    } else {
-        notesSidebar.style.width = "30%";
-        
-        switch (v.notes[v.currentNoteIndex].type) {
-            case "text":
-                notesTextarea.style.display = "flex";
-                imageNoteDisplay.style.display = "none";
-                break;
-            case "image":
-                notesTextarea.style.display = "none";
-                imageNoteDisplay.style.display = "flex";
-                imageNote.src = v.notes[v.currentNoteIndex].image;
-                break;
-            default:
-                notesTextarea.style.display = "flex";
-                imageNoteDisplay.style.display = "none";
-                break;
-        }
+        break;
+      case "image":
+        notesTextarea.style.display = "none";
+        imageNoteDisplay.style.display = "flex";
+        imageNote.src = v.notes[v.currentNoteIndex].image;
+        break;
+      default:
+        notesTextarea.style.display = "flex";
+        imageNoteDisplay.style.display = "none";
+        break;
     }
+  }
 }
 
 function syllableCount(input) {
-    function countSyllables(word) {
-        word = word.toLowerCase();
-        if (word.length <= 3) return 1;
-        word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
-        word = word.replace(/^y/, '');
-        let match = word.match(/[aeiouy]{1,2}/g);
-        return match ? match.length : 0;
-    }
+  function countSyllables(word) {
+    word = word.toLowerCase();
+    if (word.length <= 3) return 1;
+    word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "");
+    word = word.replace(/^y/, "");
+    let match = word.match(/[aeiouy]{1,2}/g);
+    return match ? match.length : 0;
+  }
 
-    return input.split(/\s+/).reduce((count, word) => count + countSyllables(word), 0);
+  return input
+    .split(/\s+/)
+    .reduce((count, word) => count + countSyllables(word), 0);
 }
 
 function syllablesPerWord(input) {
-    return syllableCount(input) / countWords(input);
+  return syllableCount(input) / countWords(input);
 }
 
 function wordsPerSentence(text) {
-    return countWords(text) / countSentences(text);
+  return countWords(text) / countSentences(text);
 }
 function countSentences(text) {
-    const lines = text.split(/\n+/);
-    let sentenceCount = 0;
-    lines.forEach(line => {
-        line = line.replace(/\s+/g, ' ').replace(/[.!?]{2,}/g, '.');
-        let sentences = line.split(/[.!?]/);
-        sentences = sentences.filter(sentence => sentence.trim() !== '');
-        sentenceCount += sentences.length;
-    });
-    
-    return sentenceCount;
+  const lines = text.split(/\n+/);
+  let sentenceCount = 0;
+  lines.forEach((line) => {
+    line = line.replace(/\s+/g, " ").replace(/[.!?]{2,}/g, ".");
+    let sentences = line.split(/[.!?]/);
+    sentences = sentences.filter((sentence) => sentence.trim() !== "");
+    sentenceCount += sentences.length;
+  });
+
+  return sentenceCount;
 }
 
-
 function countCharactersNoSpaces(input) {
-    return input.replace(/\s+/g, '').length;
+  return input.replace(/\s+/g, "").length;
 }
 
 function fkra(input) {
-    return (0.39 * wordsPerSentence(input)) + (11.8 * syllablesPerWord(input)) - 15.59;
+  return (
+    0.39 * wordsPerSentence(input) + 11.8 * syllablesPerWord(input) - 15.59
+  );
 }
 function cli(input) {
-    // L is the average number of letters per 100 words. 
-    // S is the average number of sentences per 100 words.
-    let l = ((countCharactersNoSpaces(input) / (countWords(input) / 100)) / 1)
-    let s = ((countSentences(input) / (countWords(input) / 100)) / 1)
-    return (0.0588 * l) - (0.296 * s) - 15.8;
+  // L is the average number of letters per 100 words.
+  // S is the average number of sentences per 100 words.
+  let l = countCharactersNoSpaces(input) / (countWords(input) / 100) / 1;
+  let s = countSentences(input) / (countWords(input) / 100) / 1;
+  return 0.0588 * l - 0.296 * s - 15.8;
 }
 
 function ari(input) {
-    return (4.71 * (countCharactersNoSpaces(input) / countWords(input)) + (0.5 * (countWords(input) / countSentences(input))) - 21.43);
+  return (
+    4.71 * (countCharactersNoSpaces(input) / countWords(input)) +
+    0.5 * (countWords(input) / countSentences(input)) -
+    21.43
+  );
 }
 
 function readability(input) {
-    return Math.max(((fkra(input) + cli(input) + ari(input)) / 3), 0);
+  return Math.max((fkra(input) + cli(input) + ari(input)) / 3, 0);
 }
 
-
-
 function updateNotesList() {
-    notesSectionDiv.innerHTML = "";
+  notesSectionDiv.innerHTML = "";
 
-    for (let i = 0; i < v.notes.length; i++) {
-        const chapter = document.createElement("div");
-        chapter.classList.add("chapter");
-        
-        chapter.setAttribute('data-id', v.notes[i].id.toString());
+  for (let i = 0; i < v.notes.length; i++) {
+    const chapter = document.createElement("div");
+    chapter.classList.add("chapter");
 
-        const leftChapterDiv = document.createElement("div");
-        const chapterHashtag = document.createElement("p");
-        let symbol;
-        switch (v.notes[i].type) {
-            case "text": 
-                symbol = `<span class="material-icons small">text_snippet</span>`;
-                break;
-            case "image":
-                symbol = `<span class="material-icons small">image</span>`;
-                break;
-            default:
-                symbol = "?";
-                break;
-        }
-        
-        leftChapterDiv.classList.add("leftChapterDiv");
-        chapterHashtag.innerHTML = symbol;
-        chapterHashtag.classList.add("small");
-        leftChapterDiv.appendChild(chapterHashtag);
-        const chapterP = document.createElement("p");
-        chapterP.classList.add("chapterP");
-        chapterP.innerHTML = v.notes[i].name;
-        //chapterP.contentEditable = "true";
-        chapterP.spellcheck = false;
-        leftChapterDiv.appendChild(chapterP);
-        chapter.appendChild(leftChapterDiv);
-        const chapterDeleteButton = document.createElement("button");
-        chapterDeleteButton.classList.add("chapterDeleteButton", "small");
-        chapterDeleteButton.innerHTML = `<span class="material-icons small">delete</span>`;
-        const chapterRenameButton = document.createElement("button");
-        chapterRenameButton.classList.add("chapterDeleteButton", "small");
-        chapterRenameButton.innerHTML = `<span class="material-icons small">edit</span>`;
-        chapter.appendChild(chapterRenameButton);
-        chapter.appendChild(chapterDeleteButton);
+    chapter.setAttribute("data-id", v.notes[i].id.toString());
 
-
-        if (i == v.currentNoteIndex) {
-            chapter.style.backgroundColor = "rgba(var(--fontColor), 0.1)"
-        } else {
-            chapterP.style.textDecoration = "none";
-            chapter.style.backgroundColor = "none"
-        }
-        chapter.addEventListener("click", () => {
-            if (v.currentNoteIndex == i) {
-                notesOpen = false;
-                v.currentNoteIndex = null;
-                openNoteSidebar();
-                updateNotesList();
-                return;
-            }
-            notesOpen = true;
-            v.currentNoteIndex = i;
-            openNote(v.currentNoteIndex)
-            
-        })
-
-        chapterP.addEventListener('input', () => {
-            let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, ' ');
-            v.notes[i].name = chapterTitle;
-        });
-
-        chapterRenameButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            chapterP.contentEditable = "true";  // Enable editing on double-click
-            chapterP.focus();  // Focus on the element for instant editing
-        });
-
-        chapterP.addEventListener('focus', () => {
-            editingNoteName = true;
-            selectTextContent(chapterP);
-            chapterP.classList.remove('noSelect');
-            chapterP.classList.add('editable');
-            leftChapterDiv.classList.add('editable');
-        });
-
-        chapterP.addEventListener('blur', () => {
-            editingNoteName = false;
-            window.getSelection().removeAllRanges();
-            chapterP.contentEditable = "false";
-            
-            chapterP.classList.add('noSelect');
-            if (chapterP.textContent == 0) {
-                v.notes[i].name = "None";
-            }
-            chapterP.classList.remove('editable');
-            leftChapterDiv.classList.remove('editable');
-            chapterP.scrollLeft = 0;
-            leftChapterDiv.scrollLeft = 0;
-            updateNotesList();
-        });
-
-        chapterP.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();  // Prevents the default action of creating a new line
-                let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, ' ');  // Clean up any accidental newlines
-                v.notes[i].name = chapterTitle;
-                chapterP.blur();  // This will trigger your 'blur' event listener to finalize the changes
-            }
-        });
-
-        chapterDeleteButton.addEventListener("click", (e) => {
-            e.stopPropagation();  // This stops the event from bubbling up
-            deleteNote(i);
-            
-        })
-
-        notesSectionDiv.appendChild(chapter);
+    const leftChapterDiv = document.createElement("div");
+    const chapterHashtag = document.createElement("p");
+    let symbol;
+    switch (v.notes[i].type) {
+      case "text":
+        symbol = `<span class="material-icons small">text_snippet</span>`;
+        break;
+      case "image":
+        symbol = `<span class="material-icons small">image</span>`;
+        break;
+      default:
+        symbol = "?";
+        break;
     }
+
+    leftChapterDiv.classList.add("leftChapterDiv");
+    chapterHashtag.innerHTML = symbol;
+    chapterHashtag.classList.add("small");
+    leftChapterDiv.appendChild(chapterHashtag);
+    const chapterP = document.createElement("p");
+    chapterP.classList.add("chapterP");
+    chapterP.innerHTML = v.notes[i].name;
+    //chapterP.contentEditable = "true";
+    chapterP.spellcheck = false;
+    leftChapterDiv.appendChild(chapterP);
+    chapter.appendChild(leftChapterDiv);
+    const chapterDeleteButton = document.createElement("button");
+    chapterDeleteButton.classList.add("chapterDeleteButton", "small");
+    chapterDeleteButton.innerHTML = `<span class="material-icons small">delete</span>`;
+    const chapterRenameButton = document.createElement("button");
+    chapterRenameButton.classList.add("chapterDeleteButton", "small");
+    chapterRenameButton.innerHTML = `<span class="material-icons small">edit</span>`;
+    chapter.appendChild(chapterRenameButton);
+    chapter.appendChild(chapterDeleteButton);
+
+    if (i == v.currentNoteIndex) {
+      chapter.style.backgroundColor = "rgba(var(--fontColor), 0.1)";
+    } else {
+      chapterP.style.textDecoration = "none";
+      chapter.style.backgroundColor = "none";
+    }
+    chapter.addEventListener("click", () => {
+      if (v.currentNoteIndex == i) {
+        notesOpen = false;
+        v.currentNoteIndex = null;
+        openNoteSidebar();
+        updateNotesList();
+        return;
+      }
+      notesOpen = true;
+      v.currentNoteIndex = i;
+      openNote(v.currentNoteIndex);
+    });
+
+    chapterP.addEventListener("input", () => {
+      let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, " ");
+      v.notes[i].name = chapterTitle;
+    });
+
+    chapterRenameButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      chapterP.contentEditable = "true"; // Enable editing on double-click
+      chapterP.focus(); // Focus on the element for instant editing
+    });
+
+    chapterP.addEventListener("focus", () => {
+      editingNoteName = true;
+      selectTextContent(chapterP);
+      chapterP.classList.remove("noSelect");
+      chapterP.classList.add("editable");
+      leftChapterDiv.classList.add("editable");
+    });
+
+    chapterP.addEventListener("blur", () => {
+      editingNoteName = false;
+      window.getSelection().removeAllRanges();
+      chapterP.contentEditable = "false";
+
+      chapterP.classList.add("noSelect");
+      if (chapterP.textContent == 0) {
+        v.notes[i].name = "None";
+      }
+      chapterP.classList.remove("editable");
+      leftChapterDiv.classList.remove("editable");
+      chapterP.scrollLeft = 0;
+      leftChapterDiv.scrollLeft = 0;
+      updateNotesList();
+    });
+
+    chapterP.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevents the default action of creating a new line
+        let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, " "); // Clean up any accidental newlines
+        v.notes[i].name = chapterTitle;
+        chapterP.blur(); // This will trigger your 'blur' event listener to finalize the changes
+      }
+    });
+
+    chapterDeleteButton.addEventListener("click", (e) => {
+      e.stopPropagation(); // This stops the event from bubbling up
+      deleteNote(i);
+    });
+
+    notesSectionDiv.appendChild(chapter);
+  }
 }
 
 function openNote(noteIndex) {
-    if (v.currentNoteIndex == null) {
-        notesOpen = false;
-        updateNotesList();
-        openNoteSidebar();
-        return;
-    }
-    notesOpen = true;
-    openNoteSidebar();
-    lastSelectedNote = noteIndex;
-    v.notesText = v.notes[noteIndex].text;
-    if (notesOpen) {
-
-        switch (v.notes[noteIndex].type) {
-            case "text":
-                notesTextarea.style.display = "flex";
-                imageNoteDisplay.style.display = "none";
-                break;
-            case "image":
-                notesTextarea.style.display = "none";
-                imageNoteDisplay.style.display = "flex";
-                imageNote.src = v.notes[v.currentNoteIndex].image;
-                break;
-            default:
-                notesTextarea.style.display = "flex";
-                imageNoteDisplay.style.display = "none";
-                break;
-        }
-    }
-    notesTextarea.value = v.notesText;
+  if (v.currentNoteIndex == null) {
+    notesOpen = false;
     updateNotesList();
+    openNoteSidebar();
+    return;
+  }
+  notesOpen = true;
+  openNoteSidebar();
+  lastSelectedNote = noteIndex;
+  v.notesText = v.notes[noteIndex].text;
+  if (notesOpen) {
+    switch (v.notes[noteIndex].type) {
+      case "text":
+        notesTextarea.style.display = "flex";
+        imageNoteDisplay.style.display = "none";
+        break;
+      case "image":
+        notesTextarea.style.display = "none";
+        imageNoteDisplay.style.display = "flex";
+        imageNote.src = v.notes[v.currentNoteIndex].image;
+        break;
+      default:
+        notesTextarea.style.display = "flex";
+        imageNoteDisplay.style.display = "none";
+        break;
+    }
+  }
+  notesTextarea.value = v.notesText;
+  updateNotesList();
 }
 
-
 function deleteNote(i) {
-    if (confirm("Are you sure you want to delete this note?: " + v.notes[i].name)) {
-        v.notes.splice(i, 1);
-        v.currentNoteIndex = 0;
-        if (v.notes.length == 0) {
-            newNote();
-        }
-        openNote(0);
-        updateNotesList();
+  if (
+    confirm("Are you sure you want to delete this note?: " + v.notes[i].name)
+  ) {
+    v.notes.splice(i, 1);
+    v.currentNoteIndex = 0;
+    if (v.notes.length == 0) {
+      newNote();
     }
+    openNote(0);
+    updateNotesList();
+  }
 }
 
 function newNote() {
-    const newNoteTemp = {
-        id: Date.now().toString(),
-        name: "Text Note",
-        text: "This is a text note! Type here ...",
-        type: "text",
-    }
-    v.notes.push(newNoteTemp);
-    v.currentNoteIndex = v.notes.length - 1;
-    updateNotesList();
-    openNote(v.currentNoteIndex);
+  const newNoteTemp = {
+    id: Date.now().toString(),
+    name: "Text Note",
+    text: "This is a text note! Type here ...",
+    type: "text",
+  };
+  v.notes.push(newNoteTemp);
+  v.currentNoteIndex = v.notes.length - 1;
+  updateNotesList();
+  openNote(v.currentNoteIndex);
 }
 
-
 const noteDragula = dragula([document.querySelector("#notesSectionDiv")], {
-    moves: function (el, container, handle) {
-        return !editingNoteName; 
-    }
+  moves: function (el, container, handle) {
+    return !editingNoteName;
+  },
 });
 
-noteDragula.on('drop', () => {
-    reorderNotes();
+noteDragula.on("drop", () => {
+  reorderNotes();
 });
 
 function reorderNotes() {
-    const newOrderNotes = [];
-    let currentNoteID;
+  const newOrderNotes = [];
+  let currentNoteID;
 
-    if (v.currentNoteIndex !== null) {
-        currentNoteID = v.notes[v.currentNoteIndex].id.toString();
-    }
+  if (v.currentNoteIndex !== null) {
+    currentNoteID = v.notes[v.currentNoteIndex].id.toString();
+  }
 
-    const children = notesSectionDiv.children;
-    for (let i = 0; i < children.length; i++) {
-        const noteID = children[i].getAttribute('data-id');
+  const children = notesSectionDiv.children;
+  for (let i = 0; i < children.length; i++) {
+    const noteID = children[i].getAttribute("data-id");
 
-        const matchedNote = v.notes.find(note => note.id.toString() === noteID);
-        if (matchedNote) {
-            newOrderNotes.push(matchedNote);
-        }
+    const matchedNote = v.notes.find((note) => note.id.toString() === noteID);
+    if (matchedNote) {
+      newOrderNotes.push(matchedNote);
     }
-    v.notes = newOrderNotes;
-    
-    if (v.currentNoteIndex !== null) {
-        v.currentNoteIndex = newOrderNotes.findIndex(note => note.id.toString() == currentNoteID);
-    }
-    updateNotesList();
-    openNote(v.currentNoteIndex);
+  }
+  v.notes = newOrderNotes;
+
+  if (v.currentNoteIndex !== null) {
+    v.currentNoteIndex = newOrderNotes.findIndex(
+      (note) => note.id.toString() == currentNoteID
+    );
+  }
+  updateNotesList();
+  openNote(v.currentNoteIndex);
 }
 
-
 function updateChapterList() {
-    chapterSectionDiv.innerHTML = "";
+  chapterSectionDiv.innerHTML = "";
+  if (v.currentFileIndex > v.files.length - 1) {
+    v.currentFileIndex = 0;
+  }
+  for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
+    const chapter = document.createElement("div");
+    chapter.classList.add("chapter");
+    chapter.setAttribute(
+      "data-id",
+      v.files[v.currentFileIndex].chapters[i].id.toString()
+    );
 
-    for (let i = 0; i < v.files[v.currentFileIndex].chapters.length; i++) {
-        const chapter = document.createElement("div");
-        chapter.classList.add("chapter");
-        chapter.setAttribute('data-id', v.files[v.currentFileIndex].chapters[i].id.toString());
+    const leftChapterDiv = document.createElement("div");
+    leftChapterDiv.classList.add("leftChapterDiv");
+    const chapterHashtag = document.createElement("p");
+    chapterHashtag.innerHTML = `<span class="material-icons small">menu_book</span>`;
+    leftChapterDiv.appendChild(chapterHashtag);
+    const chapterP = document.createElement("p");
+    chapterP.classList.add("chapterP");
+    chapterP.innerHTML = v.files[v.currentFileIndex].chapters[i].name;
+    //chapterP.contentEditable = "true";
+    chapterP.spellcheck = false;
+    leftChapterDiv.appendChild(chapterP);
+    chapter.appendChild(leftChapterDiv);
+    const chapterDeleteButton = document.createElement("button");
+    chapterDeleteButton.classList.add("chapterDeleteButton");
+    chapterDeleteButton.innerHTML = `<span class="material-icons small">delete</span>`;
+    const chapterRenameButton = document.createElement("button");
+    chapterRenameButton.classList.add("chapterDeleteButton");
+    chapterRenameButton.innerHTML = `<span class="material-icons small">edit</span>`;
+    chapter.appendChild(chapterRenameButton);
+    chapter.appendChild(chapterDeleteButton);
 
-        const leftChapterDiv = document.createElement("div");
-        leftChapterDiv.classList.add("leftChapterDiv");
-        const chapterHashtag = document.createElement("p");
-        chapterHashtag.innerHTML = `<span class="material-icons small">menu_book</span>`;
-        leftChapterDiv.appendChild(chapterHashtag);
-        const chapterP = document.createElement("p");
-        chapterP.classList.add("chapterP");
-        chapterP.innerHTML = v.files[v.currentFileIndex].chapters[i].name;
-        //chapterP.contentEditable = "true";
-        chapterP.spellcheck = false;
-        leftChapterDiv.appendChild(chapterP);
-        chapter.appendChild(leftChapterDiv);
-        const chapterDeleteButton = document.createElement("button");
-        chapterDeleteButton.classList.add("chapterDeleteButton");
-        chapterDeleteButton.innerHTML = `<span class="material-icons small">delete</span>`;
-        const chapterRenameButton = document.createElement("button");
-        chapterRenameButton.classList.add("chapterDeleteButton");
-        chapterRenameButton.innerHTML = `<span class="material-icons small">edit</span>`;
-        chapter.appendChild(chapterRenameButton);
-        chapter.appendChild(chapterDeleteButton);
+    chapter.addEventListener("click", () => {
+      if (v.currentChapterIndex == i) {
+        return;
+      }
+      v.currentChapterIndex = i;
+      openChapter(v.currentChapterIndex);
+    });
 
+    chapterP.addEventListener("input", () => {
+      let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, " ");
+      v.files[v.currentFileIndex].chapters[i].name = chapterTitle;
+    });
 
-        chapter.addEventListener("click", () => {
-            if (v.currentChapterIndex == i) {
-                return;
-            }
-            v.currentChapterIndex = i;
-            openChapter(v.currentChapterIndex)
-            
-        })
+    chapterRenameButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      chapterP.contentEditable = "true"; // Enable editing on double-click
+      chapterP.focus(); // Focus on the element for instant editing
+    });
+    chapterP.addEventListener("focus", () => {
+      selectTextContent(chapterP);
+      editingChapterName = true;
+      chapterP.classList.remove("noSelect");
+      chapterP.classList.add("editable");
+      leftChapterDiv.classList.add("editable");
+    });
 
-        chapterP.addEventListener('input', () => {
-            let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, ' ');
-            v.files[v.currentFileIndex].chapters[i].name = chapterTitle;
-        });
+    chapterP.addEventListener("blur", () => {
+      window.getSelection().removeAllRanges();
+      chapterP.contentEditable = "false";
+      editingChapterName = false;
 
-        chapterRenameButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            chapterP.contentEditable = "true";  // Enable editing on double-click
-            chapterP.focus();  // Focus on the element for instant editing
-        });
-        chapterP.addEventListener('focus', () => {
-            selectTextContent(chapterP);
-            editingChapterName = true;
-            chapterP.classList.remove('noSelect');
-            chapterP.classList.add('editable');
-            leftChapterDiv.classList.add('editable');
-        });
+      chapterP.classList.add("noSelect");
+      if (chapterP.textContent == 0) {
+        v.files[v.currentFileIndex].chapters[i].name = "None";
+      }
+      chapterP.classList.remove("editable");
+      leftChapterDiv.classList.remove("editable");
+      chapterP.scrollLeft = 0;
+      leftChapterDiv.scrollLeft = 0;
+      updateChapterList();
+    });
 
-        chapterP.addEventListener('blur', () => {
-            window.getSelection().removeAllRanges();
-            chapterP.contentEditable = "false";
-            editingChapterName = false;
-            
-            chapterP.classList.add('noSelect');
-            if (chapterP.textContent == 0) {
-                v.files[v.currentFileIndex].chapters[i].name = "None";
-            }
-            chapterP.classList.remove('editable');
-            leftChapterDiv.classList.remove('editable');
-            chapterP.scrollLeft = 0;
-            leftChapterDiv.scrollLeft = 0;
-            updateChapterList();
-        });
+    chapterP.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevents the default action of creating a new line
+        let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, " "); // Clean up any accidental newlines
+        v.files[v.currentFileIndex].chapters[i].name = chapterTitle;
+        chapterP.blur(); // This will trigger your 'blur' event listener to finalize the changes
+      }
+    });
 
-        chapterP.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();  // Prevents the default action of creating a new line
-                let chapterTitle = chapterP.innerText.replace(/[\r\n]+/g, ' ');  // Clean up any accidental newlines
-                v.files[v.currentFileIndex].chapters[i].name = chapterTitle;
-                chapterP.blur();  // This will trigger your 'blur' event listener to finalize the changes
-            }
-        });
+    chapterDeleteButton.addEventListener("click", (e) => {
+      e.stopPropagation(); // This stops the event from bubbling up
+      deleteChapter(i);
+    });
 
-        chapterDeleteButton.addEventListener("click", (e) => {
-            e.stopPropagation();  // This stops the event from bubbling up
-            deleteChapter(i);
-            
-        })
-        
-        if (i == v.currentChapterIndex) {
-            chapter.style.backgroundColor = "rgba(var(--fontColor), 0.1)"
-        } else {
-            chapterP.style.textDecoration = "none";
-            chapter.style.backgroundColor = "none"
-        }
-        
-        chapterSectionDiv.appendChild(chapter);
+    if (i == v.currentChapterIndex) {
+      chapter.style.backgroundColor = "rgba(var(--fontColor), 0.1)";
+    } else {
+      chapterP.style.textDecoration = "none";
+      chapter.style.backgroundColor = "none";
     }
+
+    chapterSectionDiv.appendChild(chapter);
+  }
 }
 
 function selectTextContent(targetNode) {
-    let range = document.createRange(); // Create a range object
-    range.selectNodeContents(targetNode); 
-    let selection = window.getSelection(); 
-    selection.removeAllRanges(); 
-    selection.addRange(range); 
+  let range = document.createRange(); // Create a range object
+  range.selectNodeContents(targetNode);
+  let selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
 
-
 function openChapter(chpIndex) {
-    v.text = v.files[v.currentFileIndex].chapters[chpIndex].text;
-    const textArea = document.querySelector("#typeArea");
-    textArea.value = v.text;
-    updateChapterList();
+  v.text = v.files[v.currentFileIndex].chapters[chpIndex].text;
+  const textArea = document.querySelector("#typeArea");
+  textArea.value = v.text;
+  updateChapterList();
 }
 
 function deleteChapter(i) {
-    if (confirm("Are you sure you want to delete this chapter?: " + v.files[v.currentFileIndex].chapters[i].name)) {
-        v.files[v.currentFileIndex].chapters.splice(i, 1);
-        v.currentChapterIndex = 0;
-        if (v.files[v.currentFileIndex].chapters.length == 0) {
-            newChapter();
-        }
-        openChapter(0);
-        updateChapterList();
+  if (
+    confirm(
+      "Are you sure you want to delete this chapter?: " +
+        v.files[v.currentFileIndex].chapters[i].name
+    )
+  ) {
+    v.files[v.currentFileIndex].chapters.splice(i, 1);
+    v.currentChapterIndex = 0;
+    if (v.files[v.currentFileIndex].chapters.length == 0) {
+      newChapter();
     }
+    openChapter(0);
+    updateChapterList();
+  }
 }
 
 function newChapter() {
-    const newChapTemp = {
-        id: Date.now().toString(),
-        name: "New Chapter",
-        text: "This is a new chapter! Type here ..."
-    }
-    v.files[v.currentFileIndex].chapters.push(newChapTemp);
-    v.currentChapterIndex = v.files[v.currentFileIndex].chapters.length - 1;
-    updateChapterList();
-    openChapter(v.currentChapterIndex);
+  const newChapTemp = {
+    id: Date.now().toString(),
+    name: "New Chapter",
+    text: "This is a new chapter! Type here ...",
+  };
+  v.files[v.currentFileIndex].chapters.push(newChapTemp);
+  v.currentChapterIndex = v.files[v.currentFileIndex].chapters.length - 1;
+  updateChapterList();
+  openChapter(v.currentChapterIndex);
 }
 
 const chapterDragula = dragula([document.querySelector("#chapterSectionDiv")], {
-    moves: function (el, container, handle) {
-        return !editingChapterName; 
-    }
+  moves: function (el, container, handle) {
+    return !editingChapterName;
+  },
 });
 
-chapterDragula.on('drop', () => {
-    reorderChapters();
+chapterDragula.on("drop", () => {
+  reorderChapters();
 });
 
 function reorderChapters() {
-    const newOrderChapters = [];
-    const currentChapterID = v.files[v.currentFileIndex].chapters[v.currentChapterIndex].id.toString();
+  const newOrderChapters = [];
+  const currentChapterID =
+    v.files[v.currentFileIndex].chapters[v.currentChapterIndex].id.toString();
 
-    const children = chapterSectionDiv.children;
-    for (let i = 0; i < children.length; i++) {
-        const chapterID = children[i].getAttribute('data-id');
+  const children = chapterSectionDiv.children;
+  for (let i = 0; i < children.length; i++) {
+    const chapterID = children[i].getAttribute("data-id");
 
-        const matchedChapter = v.files[v.currentFileIndex].chapters.find(chap => chap.id.toString() === chapterID);
-        if (matchedChapter) {
-            newOrderChapters.push(matchedChapter);
-        }
+    const matchedChapter = v.files[v.currentFileIndex].chapters.find(
+      (chap) => chap.id.toString() === chapterID
+    );
+    if (matchedChapter) {
+      newOrderChapters.push(matchedChapter);
     }
-    v.files[v.currentFileIndex].chapters = newOrderChapters;
-    v.currentChapterIndex = newOrderChapters.findIndex(chap => chap.id.toString() === currentChapterID);
+  }
+  v.files[v.currentFileIndex].chapters = newOrderChapters;
+  v.currentChapterIndex = newOrderChapters.findIndex(
+    (chap) => chap.id.toString() === currentChapterID
+  );
 
-    updateChapterList();
+  updateChapterList();
 }
 
 const fileDragula = dragula([document.querySelector("#fileDiv")], {
-    direction: 'horizontal'
+  direction: "horizontal",
 });
 
 fileDragula.on("drop", () => {
-    reorderFiles();
-})
+  reorderFiles();
+});
 
 function reorderFiles() {
-    const newOrderFiles = [];
-    const currentFileID = v.files[v.currentFileIndex].id.toString();
+  const newOrderFiles = [];
+  const currentFileID = v.files[v.currentFileIndex].id.toString();
 
-    const children = fileDiv.children;
-    for (let i = 0; i < children.length; i++) {
-        const fileID = children[i].getAttribute('data-id');
+  const children = fileDiv.children;
+  for (let i = 0; i < children.length; i++) {
+    const fileID = children[i].getAttribute("data-id");
 
-        const matchedFile = v.files.find(file => file.id.toString() === fileID);
-        if (matchedFile) {
-            newOrderFiles.push(matchedFile);
-        }
+    const matchedFile = v.files.find((file) => file.id.toString() === fileID);
+    if (matchedFile) {
+      newOrderFiles.push(matchedFile);
     }
-    v.files = newOrderFiles;
-    v.currentFileIndex = newOrderFiles.findIndex(file => file.id.toString() === currentFileID);
-    updateFileButtons();
+  }
+  v.files = newOrderFiles;
+  v.currentFileIndex = newOrderFiles.findIndex(
+    (file) => file.id.toString() === currentFileID
+  );
+  updateFileButtons();
 }
 
 function updateFileButtons() {
-    updateChapterList();
-    lowerNavbarDiv.innerHTML = "";
-    fileDiv.innerHTML = "";
+  updateChapterList();
+  lowerNavbarDiv.innerHTML = "";
+  fileDiv.innerHTML = "";
 
-    newFileButton.classList.add("outlineButton");
-    newFileButton.id = "newFileButton";
-    newFileButton.innerHTML = `<span class="material-icons small">add</span>`;
-    newFileButton.addEventListener("click", newFile);
-    lowerNavbarDiv.appendChild(newFileButton);
+  newFileButton.classList.add("outlineButton");
+  newFileButton.id = "newFileButton";
+  newFileButton.innerHTML = `<span class="material-icons small">add</span>`;
+  newFileButton.addEventListener("click", newFile);
+  lowerNavbarDiv.appendChild(newFileButton);
 
-    for (let i = 0; i < v.files.length; i++) {
-        const button = document.createElement("button");
-        button.classList.add("navbarButton");
-        button.classList.add("file");
-        button.setAttribute('data-id', v.files[i].id.toString());
-        button.textContent = v.files[i].name;
-        fileDiv.appendChild(button);
-        lowerNavbarDiv.appendChild(fileDiv);
-        button.addEventListener("click", () => {
-            v.currentFileIndex = i;
-            openFile(i);
-        });
-        
-        if (i == v.currentFileIndex) {
-            button.style.backgroundColor = "rgba(var(--fontColor), 0.1)"
-            //button.style.color = "var(--fontColor)";
-        } else {
-            button.style.textDecoration = "none";
-            button.style.backgroundColor = "none";
-            //button.style.color = "gray";
-        }
+  for (let i = 0; i < v.files.length; i++) {
+    const button = document.createElement("button");
+    button.classList.add("navbarButton");
+    button.classList.add("file");
+    button.setAttribute("data-id", v.files[i].id.toString());
+    button.textContent = v.files[i].name;
+    fileDiv.appendChild(button);
+    lowerNavbarDiv.appendChild(fileDiv);
+    button.addEventListener("click", () => {
+      v.currentFileIndex = i;
+      openFile(i);
+    });
+
+    if (i == v.currentFileIndex) {
+      button.style.backgroundColor = "rgba(var(--fontColor), 0.1)";
+      //button.style.color = "var(--fontColor)";
+    } else {
+      button.style.textDecoration = "none";
+      button.style.backgroundColor = "none";
+      //button.style.color = "gray";
     }
+  }
 }
 
 function refreshFileButtons() {
-    updateFileButtons();
+  updateFileButtons();
 }
 
 function newFile() {
-    const newFile = {
+  const newFile = {
+    id: Date.now().toString(),
+    name: "Untitled",
+    exclude: 0,
+    wordGoal: 50,
+    chapters: [
+      {
         id: Date.now().toString(),
-        name: 'Untitled',
-        exclude: 0,
-        wordGoal: 50,
-        chapters: [{
-            id: Date.now().toString(),
-            name: "Untitled",
-            text: 'New file!\n\nType here ...',
-        }],
-        
-        notesText: 'New file!\n\nType here ...',
-    };
-    v.files.push(newFile);
-    openFile(v.files.length - 1);
-    refreshFileButtons();
+        name: "Untitled",
+        text: "New file!\n\nType here ...",
+      },
+    ],
+
+    notesText: "New file!\n\nType here ...",
+  };
+  v.files.push(newFile);
+  openFile(v.files.length - 1);
+  refreshFileButtons();
 }
 
 function openFile(i) {
-    if (v.files.length == 0) {
-        newFile();
-    }
-    v.currentChapterIndex = 0;
-    v.text = v.files[i].chapters[v.currentChapterIndex].text;
-    // v.notesText = v.files[i].notesText;
-    v.exclude = v.files[i].exclude;
-    v.wordGoal = v.files[i].wordGoal;
-    const textArea = document.querySelector("#typeArea");
-    textArea.value = v.text;
-    notesTextarea.value = v.notesText;
-    v.currentFileIndex = i;
-    refreshFileButtons();
-    firstLoad = true;
-    v.goalReached = true;
-    wordCount = countWords(v.text);
-    updateProgressBar();
+  if (v.files.length == 0) {
+    newFile();
+    return;
+  }
+  v.currentChapterIndex = 0;
+  v.text = v.files[i].chapters[v.currentChapterIndex].text;
+  // v.notesText = v.files[i].notesText;
+  v.exclude = v.files[i].exclude;
+  v.wordGoal = v.files[i].wordGoal;
+  const textArea = document.querySelector("#typeArea");
+  textArea.value = v.text;
+  notesTextarea.value = v.notesText;
+  v.currentFileIndex = i;
+  refreshFileButtons();
+  firstLoad = true;
+  v.goalReached = true;
+  wordCount = countWords(v.text);
+  updateProgressBar();
 }
 
 function openFileModal() {
-    fileNameInput.value = v.files[v.currentFileIndex].name;
+  fileNameInput.value = v.files[v.currentFileIndex].name;
 }
 
 function deleteFile(i) {
-    if (confirm("Are you sure you want to delete this file?: " + v.files[i].name)) {
-        v.files.splice(i, 1);
-        refreshFileButtons();
-        openFile(0);
+  if (
+    confirm("Are you sure you want to delete this file?: " + v.files[i].name)
+  ) {
+    if (v.files.length === 1) {
+      newFile();
     }
-    openFileModal();
+    v.files.splice(i, 1);
+
+    refreshFileButtons();
+    openFile(0);
+  }
+  openFileModal();
 }
 
 // Run on Startup
@@ -1513,22 +1540,12 @@ function deleteFile(i) {
 // Run on Startup
 
 checkIfNewDay();
-document.querySelector("#writeForSeconds").textContent = `Write for ${Math.round(v.streakCompletionTime / 1000)} seconds to increase your streak!`
-document.querySelector('#dailyStreakDisplay').textContent = `Streak: ${v.dailyStreak}`;
-document.querySelector("#startModalText").innerHTML = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-document.querySelector("#doneStreakDisplay").textContent = v.doneTodaysStreak ? "(Today's streak done! 😄)" : "(Finish today's streak! ⌨️)"
-
-openModal('startModal');
-
+// openModal('startModal');
 
 openNote(v.currentNoteIndex);
 openChapter(v.currentChapterIndex);
 refreshFileButtons();
 openFile(v.currentFileIndex);
-
-
-
-
 
 // WIP CODE   WIP CODE
 // WIP CODE   WIP CODE
@@ -1616,90 +1633,93 @@ canvas.height = window.innerHeight;
 
 */
 
-
-
-
-
 const particleVel = 4;
 let isAnimationRunning = false;
 let particles = [];
 let activeParticles = [];
 
 const canvas = document.querySelector("#particleCanvas");
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-
 function getParticle() {
-    return particles.pop() || createParticle();
+  return particles.pop() || createParticle();
 }
 
 function activateParticle(particle, x, y) {
-    particle.timeLeft = Math.random() * 6000 + 2000;
-    
-    particle.x = x;
-    particle.y = y;
-    particle.color = `hsla(${Math.floor(Math.random() * 6) * 60}, 95%, 50%, 1)`;
-    const randRadians = Math.random() * 2 * Math.PI;
+  particle.timeLeft = Math.random() * 6000 + 2000;
 
-    particle.dirX = particleVel * Math.cos(randRadians) * (Math.random() * 5 - 2.5)/* * Math.round(Math.random() * 5 + 5) */ + (Math.random() * 2 ) - 1;
-    particle.dirY = particleVel * Math.sin(randRadians) * (Math.random() * 5 - 2.5)/* * Math.round(Math.random() * 5 + 5) */ + (Math.random() * 2 ) - 1;
-    activeParticles.push(particle);
+  particle.x = x;
+  particle.y = y;
+  particle.color = `hsla(${Math.floor(Math.random() * 6) * 60}, 95%, 50%, 1)`;
+  const randRadians = Math.random() * 2 * Math.PI;
+
+  particle.dirX =
+    particleVel *
+      Math.cos(randRadians) *
+      (Math.random() * 5 - 2.5) /* * Math.round(Math.random() * 5 + 5) */ +
+    Math.random() * 2 -
+    1;
+  particle.dirY =
+    particleVel *
+      Math.sin(randRadians) *
+      (Math.random() * 5 - 2.5) /* * Math.round(Math.random() * 5 + 5) */ +
+    Math.random() * 2 -
+    1;
+  activeParticles.push(particle);
 }
 
 function moveParticles() {
-        
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas for every frame
-    let i = activeParticles.length;
-    while (i--) {
-        const particle = activeParticles[i];
-        particle.timeLeft -= 50;
-        
-        // Draw the particle
-        ctx.beginPath();
-        ctx.fillStyle = particle.color;
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas for every frame
+  let i = activeParticles.length;
+  while (i--) {
+    const particle = activeParticles[i];
+    particle.timeLeft -= 50;
 
-        ctx.arc(particle.x, particle.y, 4, 0, Math.PI * 2);
-        ctx.fill();
+    // Draw the particle
+    ctx.beginPath();
+    ctx.fillStyle = particle.color;
 
-        particle.x += particle.dirX;
-        particle.y += particle.dirY;
-        particle.dirY += 0.2; // Gravity or similar effect
-        if (particle.x >= window.innerWidth) {
-            particles.push(particle);
-            activeParticles.splice(i, 1);
-            continue;
-        }
-        if (particle.y > window.innerHeight) {
-            particles.push(particle);
-            activeParticles.splice(i, 1);
-            continue;
-            
-        }
+    ctx.arc(particle.x, particle.y, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    particle.x += particle.dirX;
+    particle.y += particle.dirY;
+    particle.dirY += 0.2; // Gravity or similar effect
+    if (particle.x >= window.innerWidth) {
+      particles.push(particle);
+      activeParticles.splice(i, 1);
+      continue;
     }
-    if (activeParticles.length >= 0) {
-        requestAnimationFrame(moveParticles);
-    } else {
-        isAnimationRunning = false;
+    if (particle.y > window.innerHeight) {
+      particles.push(particle);
+      activeParticles.splice(i, 1);
+      continue;
     }
+  }
+  if (activeParticles.length >= 0) {
+    requestAnimationFrame(moveParticles);
+  } else {
+    isAnimationRunning = false;
+  }
 }
 
 function createParticle() {
-    return { 
-        x: xC / canvas.width, 
-        y: yC / canvas.height, 
-        timeLeft: 10, 
-        dirX: 0, 
-        dirY: 0, 
-        /*
+  return {
+    x: xC / canvas.width,
+    y: yC / canvas.height,
+    timeLeft: 10,
+    dirX: 0,
+    dirY: 0,
+    /*
         vel: Math.random() * 5 ,
         */
-        color: `black`,
-    };
+    color: `black`,
+  };
 }
 
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 });
