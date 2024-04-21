@@ -22,7 +22,6 @@ if (isMobileDevice()) {
 function hasIndexedDBSupport() {
   return "indexedDB" in window;
 }
-let dataIsLoaded = false;
 
 console.log(dbAllowed);
 if (dbAllowed) {
@@ -53,8 +52,6 @@ if (dbAllowed) {
     const getRequest = store.get("saveV3.10");
     getRequest.onsuccess = (e) => {
       if (e.target.result) {
-        dataIsLoaded = true;
-
         console.log("DONE");
         v = e.target.result.data;
       } else {
@@ -85,10 +82,7 @@ if (dbAllowed) {
       console.log("NOSAVE");
       return;
     }
-    if (dataIsLoaded) {
-      console.log("SAVE");
-      save();
-    }
+    save();
   }
 
   console.log("here");
