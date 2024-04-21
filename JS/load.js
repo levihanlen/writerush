@@ -108,6 +108,7 @@ if (dbAllowed) {
 }
 
 function loadOtherScripts() {
+  checks();
   if (v.currentFileIndex > v.files.length - 1) {
     v.currentFileIndex = 0;
   }
@@ -123,13 +124,14 @@ function setV() {
   v = {
     text: `Loading file ...`,
     notesText: `Loading file ...`,
+    autoHide: false,
     wordGoal: 50,
     screenShakeIntensity: 0,
     typingConfettiCount: 2,
     goalReached: false,
     fontSize: 16,
     fontFamily: "Times New Roman, serif",
-    nightMode: false,
+    nightMode: true,
 
     typingSound: "clickSound1",
     typingSoundPath: {
@@ -218,4 +220,10 @@ Type here ...`,
     lineHeight: 1.5,
     confettiType: 1,
   };
+}
+
+function checks() {
+  if (v.autoHide === undefined) {
+    v.autoHide = false;
+  }
 }

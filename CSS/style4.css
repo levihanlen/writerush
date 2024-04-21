@@ -1,581 +1,645 @@
-
 * {
-    font-family: Gabarito, Segoe UI, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    font-weight: 10;
-    font-size: var(--fontSize);
-    color: rgba(var(--fontColor), 1); 
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    box-sizing: border-box;
-    outline: none;
-    position: relative;
-    left: 0;
-    top: 0;
+  font-family: Gabarito, Segoe UI, -apple-system, BlinkMacSystemFont, Roboto,
+    sans-serif;
+  font-weight: 10;
+  font-size: var(--fontSize);
+  color: rgba(var(--fontColor), 1);
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+  outline: none;
+  position: relative;
+
+  left: 0;
+  top: 0;
 }
 
 :root {
-    --borderSize: 1px;
-    --fontSize: 14px;
-    --blurAmount: 24px;
+  --borderSize: 1px;
+  --fontSize: 14px;
+  --blurAmount: 24px;
 
-    --bgColor: rgb(27, 32, 34); 
-    --fontColor: 255, 255, 255;
-    --darkOrLight: 0, 0, 0;
+  --bgColor: rgb(27, 32, 34);
+  --fontColor: 255, 255, 255;
+  --darkOrLight: 0, 0, 0;
 
-    /* reactive vars */
-    --secondaryHover: rgba(var(--fontColor), 0.05);
-    --secondary: rgba(var(--fontColor), 0.1);
-    --outline: rgba(var(--fontColor), 0.15);
-    --dark: rgb(var(--darkOrLight));
+  /* reactive vars */
+  --secondaryHover: rgba(var(--fontColor), 0.05);
+  --secondary: rgba(var(--fontColor), 0.1);
+  --outline: rgba(var(--fontColor), 0.15);
+  --dark: rgb(var(--darkOrLight));
 
-    --elBg: rgba(var(--darkOrLight), 0.75);
-
+  --elBg: rgba(var(--darkOrLight), 0.75);
 }
 
-body, html {
-    height: 100%;
-    overflow: hidden;
+body,
+html {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-    /*
+  /*
     background: rgb(
     calc((var(--darkBase) * 0.9) + (var(--rBase) * 0.2)),
     calc((var(--darkBase) * 0.9) + (var(--gBase) * 0.2)),
     calc((var(--darkBase) * 0.9) + (var(--bBase) * 0.2)));
     */
-    background: var(--bgColor);
-    background-size: cover; 
-    background-repeat: no-repeat; 
-    background-position: center;
+  background: var(--bgColor);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 h1 {
-    font-size: 2em;
+  font-size: 2em;
 }
 h3 {
-    font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 .mainContainer {
-    display: flex;
-    flex-direction: column;
-    max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
 }
 
-.container, .content {
-    display: flex;
-    flex-grow: 1; 
-    margin: 0;
+.container,
+.content {
+  display: flex;
+  flex-grow: 1;
+  margin: 0;
 }
 
 .container {
-    height: 0;
+  height: 0;
 }
 
 #notesSidebar {
-    width: 30%;
+  width: 30%;
 }
 
 .chapterNewButton {
-    width: 30px;
-    height: 30px;
-    padding: 0 !important;
+  width: 30px;
+  height: 30px;
+  padding: 0 !important;
 }
 
 #newNoteDiv {
-    display: inline-flex;
-    flex-direction: row;
-    background-color: var(--secondary);
-    border-radius: 5px;
-    width: auto;
-    align-items: flex-start;
-    max-width: 90px;
-    margin-bottom: 5px;
-    
+  display: inline-flex;
+  flex-direction: row;
+  background-color: var(--secondary);
+  border-radius: 5px;
+  width: auto;
+  align-items: flex-start;
+  max-width: 90px;
+  margin-bottom: 5px;
 }
 
 .chapterDeleteButton {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    margin-right: 2.5px;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  margin-right: 2.5px;
 }
 
-
-
-
 #chapterSidebar {
-    width: 20%;
+  width: 20%;
 }
 
 .chapterSectionDiv {
-    flex-grow: 1;
-    overflow-y: auto;
-    max-height: 50%;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 50%;
 }
 #chapterSection {
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items:normal;
-    padding: 5px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: normal;
+  padding: 5px;
 }
 
 .chapter {
-    background-color: none;
-    height: 25px;
-    display: flex;
-    flex-direction: row;
-    justify-content:space-between;
-    align-items: center;
+  background-color: none;
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
-
 .chapterP {
-    display: inline-block;
-    width: calc(100% - 25px); 
+  display: inline-block;
+  width: calc(100% - 25px);
 }
 
 .leftChapterDiv {
-    display: flex;
-    flex-direction: row;
-    justify-content:space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chapter p {
-    display: inline-block;
-    font-size: 14px;
-    margin-left: 5px;
-    
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    user-select: text;
-    
+  display: inline-block;
+  font-size: 14px;
+  margin-left: 5px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: text;
 }
-.chapter p.editable, .chapter div.editable {
-    white-space: nowrap;
-    overflow-x: none;
-    text-overflow: clip;
-    
+.chapter p.editable,
+.chapter div.editable {
+  white-space: nowrap;
+  overflow-x: none;
+  text-overflow: clip;
 }
 
 .chapter p:focus {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .chapter div {
-    
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-
 #quickAccessSidebar {
-    width: 50px;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #quickAccessDiv {
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
 }
 
 #quickAccessSidebar {
-    border-left: var(--borderSize) solid var(--outline);
+  border-left: var(--borderSize) solid var(--outline);
 }
 
-.divs, .divs1 {
-    display: flex;
-    flex-direction: column;
+.divs,
+.divs1 {
+  display: flex;
+  flex-direction: column;
 }
-.divs, .normalDiv {
-    padding: 20px 0px 20px 20px;
+.divs,
+.normalDiv {
+  padding: 20px 0px 20px 20px;
 }
 
 #typeAreaDiv {
-    padding: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  height: 100%;
 }
 
 #typeAreaVisuals {
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
+  height: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+#hideAllBtn {
+  margin-left: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .divs1 {
-    padding: 0px;
+  padding: 0px;
 }
-textarea, .imageNoteDisplay {
-    resize: none;
-    background: none;
-    padding: 20px;
-    flex-grow: 1;
-    overflow-y: auto;
-    
+textarea,
+.imageNoteDisplay {
+  resize: none;
+  background: none;
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .imageNoteDisplay {
-    overflow: hidden;
-    cursor: move; 
+  overflow: hidden;
+  cursor: move;
 }
 
 .imageNoteDisplay img {
-    position: absolute;
-    transform-origin: top left;
+  position: absolute;
+  transform-origin: top left;
 }
 
 #progressBarData {
-    width: calc(100%);
-    padding: 5px 0;
+  width: calc(100%);
+  padding: 5px 0;
 }
 
 #typeArea {
-    overflow-y: scroll;
-    border: none !important;
-    background: none !important;
-    background-color: none !important;
-    line-height: 1.5em;
+  overflow-y: scroll;
+  border: none !important;
+  background: none !important;
+  background-color: none !important;
+  line-height: 1.5em;
 }
 
 #notesTextarea {
-    font-size: 15px;
+  font-size: 15px;
 }
 
-input[type="file"], input[type="color"] {
-    display: none;
+input[type="file"],
+input[type="color"] {
+  display: none;
 }
 
-.numberInput, select, .colorInput {
-    width: 200px;
+.numberInput,
+select,
+.colorInput {
+  width: 200px;
 }
 
-.divs, .divs1, textarea, .imageNoteDisplay, #typeAreaVisuals, #chapterSection,
-#chapterSidebar, #chapterDiv, .mainContainer, #upperNavbarDiv, .modal,
-#alertModal, .progressBar, #chapterSidebar {
-    height: 100%;
+.divs,
+.divs1,
+textarea,
+.imageNoteDisplay,
+#typeAreaVisuals,
+#chapterSection,
+#chapterSidebar,
+#chapterDiv,
+.mainContainer,
+#upperNavbarDiv,
+.modal,
+#alertModal,
+.progressBar,
+#chapterSidebar {
+  height: 100%;
 }
 
-#typeAreaVisuals, #notesTextarea, #quickAccessSidebar, #upperNavbar, 
-#lowerNavbar, #chapterSection, #imageNoteDisplay, .modal{
-    background-color: var(--elBg) !important;
-    -webkit-backdrop-filter: blur(var(--blurAmount)); 
-    backdrop-filter: blur(var(--blurAmount));
+#typeAreaVisuals,
+#notesTextarea,
+#quickAccessSidebar,
+#upperNavbar,
+#lowerNavbar,
+#chapterSection,
+#imageNoteDisplay,
+#hideAllBtn,
+.modal {
+  background-color: var(--elBg) !important;
+  -webkit-backdrop-filter: blur(var(--blurAmount));
+  backdrop-filter: blur(var(--blurAmount));
 }
 
-#typeArea, #chapterSection, #notesTextarea, #imageNoteDisplay, .modalContent,
-.alertModalContent, #typeAreaVisuals {
-    border: var(--borderSize) solid var(--outline);
+#typeArea,
+#chapterSection,
+#notesTextarea,
+#imageNoteDisplay,
+.modalContent,
+.alertModalContent,
+#hideAllBtn,
+#typeAreaVisuals {
+  border: var(--borderSize) solid var(--outline);
 }
 
-#upperNavbar, #lowerNavbar, #chapterSidebar, #notesSidebar, #quickAccessSidebar, 
-button, .modalContent, input, .progressBar, ::-webkit-scrollbar-thumb {    
-    transition: 0.25s cubic-bezier(0.2, 0.6, 0.07, 1);
+#upperNavbar,
+#lowerNavbar,
+#chapterSidebar,
+#notesSidebar,
+#quickAccessSidebar,
+button,
+.modalContent,
+input,
+#hideAllBtn,
+.progressBar,
+::-webkit-scrollbar-thumb {
+  transition: 0.25s cubic-bezier(0.2, 0.6, 0.07, 1);
 }
 
-button, input, select, .numberInput, textarea, .imageNoteDisplay, 
-#typeAreaVisuals, .chapter, #chapterSection, .slider, 
-.slider::-webkit-slider-thumb, ::-webkit-scrollbar-thumb,
-::-webkit-scrollbar, .alertModalContent, .modalContent {
-    border-radius: 5px;
+button,
+input,
+select,
+.numberInput,
+textarea,
+.imageNoteDisplay,
+#typeAreaVisuals,
+.chapter,
+#hideAllBtn,
+#chapterSection,
+.slider,
+.slider::-webkit-slider-thumb,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar,
+.alertModalContent,
+.modalContent {
+  border-radius: 5px;
 }
 
-button, .numberInput, input, select, .chapter, .slider,
-::-webkit-scrollbar, .alertModalContent {
-    cursor: pointer;
+button,
+.numberInput,
+input,
+select,
+.chapter,
+.slider,
+::-webkit-scrollbar,
+.alertModalContent {
+  cursor: pointer;
 }
 
-button:hover, .chapter:hover, ::-webkit-scrollbar-thumb:hover, input:hover,
-select:hover, .numberInput:hover  {
-    background-color: var(--secondaryHover);
+button:hover,
+.chapter:hover,
+::-webkit-scrollbar-thumb:hover,
+input:hover,
+select:hover,
+.numberInput:hover {
+  background-color: var(--secondaryHover) !important;
 }
 
-.chapterDeleteButton, #progressBarData, #typeAreaDiv, .navbarButton, 
+.chapterDeleteButton,
+#progressBarData,
+.navbarButton,
 .chapterNewButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
-#notesTextarea, #typeArea, #typeAreaVisuals, .divs, .divs1, .leftChapterDiv,
-#upperNavbar, #lowerNavbar, .modal, #alertModal, .progressBarContainer,
-#chapterSection, .chapter {
-    width: 100%;
+#notesTextarea,
+#typeArea,
+#typeAreaVisuals,
+.divs,
+.divs1,
+.leftChapterDiv,
+#upperNavbar,
+#lowerNavbar,
+.modal,
+#alertModal,
+.progressBarContainer,
+#chapterSection,
+.chapter {
+  width: 100%;
 }
-
-
 
 button {
-    background: none;
-    border: none;
-    font-size: var(--fontSize);
+  background: none;
+  border: none;
+  font-size: var(--fontSize);
 }
 
-
-
-.outlineButton, .numberInput, select, .colorInput {
-    background-color: var(--secondary);
-    border: none;
-    padding: 3px 6px;
-    font-size: var(--fontSize);
+.outlineButton,
+.numberInput,
+select,
+.colorInput {
+  background-color: var(--secondary);
+  border: none;
+  padding: 3px 6px;
+  font-size: var(--fontSize);
 }
 
+.verticalButton,
+#hideAllBtn {
+  padding: 0 !important;
+  height: 30px;
+  width: 30px;
+}
 
 .verticalButton {
-    margin: 2.5px 0;
-    padding: 0 !important;
-    height: 30px;
-    width: 30px;
+  margin: 2.5px 0;
 }
 
 .navbarButton {
-    padding: 3px 6px;
-    margin-right: 5px;
+  padding: 3px 6px;
+  margin-right: 5px;
 }
 
-
-.leftNavbar, .rightNavbar {
-    display: flex;
-    flex-direction: row;
+.leftNavbar,
+.rightNavbar {
+  display: flex;
+  flex-direction: row;
 }
 
 #upperNavbar {
-    height: 40px;
-    /* the above is added in JS. The value is taken from this. */
-    /* This is applied to lowerNavbar, upperNavbar, and quickAccessBar */
+  height: 40px;
+  /* the above is added in JS. The value is taken from this. */
+  /* This is applied to lowerNavbar, upperNavbar, and quickAccessBar */
 }
 
-#upperNavbar, #lowerNavbar {
-    padding: 0 5px;
+#upperNavbar,
+#lowerNavbar {
+  padding: 0 5px;
 }
 
 #upperNavbarDiv {
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
 }
 
 #upperNavbar {
-    border-bottom: var(--borderSize) solid var(--outline);
+  border-bottom: var(--borderSize) solid var(--outline);
 }
 #lowerNavbar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-    border-top: var(--borderSize) solid var(--outline);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  border-top: var(--borderSize) solid var(--outline);
 }
 
-
-#lowerNavbarDiv, #upperNavbarDiv {
-    display: flex;
+#lowerNavbarDiv,
+#upperNavbarDiv {
+  display: flex;
 }
 #fileDiv {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 .file {
-    margin-left: 5px;
-    font-weight: 500;
+  margin-left: 5px;
+  font-weight: 500;
 }
 
-
-.modal, #alertModal {
-    z-index: 100;
-    display: none;
-    position: fixed;
-    overflow: auto;
+.modal,
+#alertModal {
+  z-index: 100;
+  display: none;
+  position: fixed;
+  overflow: auto;
 }
 
 .modal {
-    padding-top: 100px;
+  padding-top: 100px;
 }
-
 
 #alertModal {
-    padding-top: 10px;
-    cursor: not-allowed;
+  padding-top: 10px;
+  cursor: not-allowed;
 }
 
-.modalContent, .alertModalContent {
-    padding: 20px;
-    box-shadow: 0px 10px 40px 0px #0000002d;
-    margin: auto;
-    background-color: var(--dark);
-    width: 80%; 
-    height: auto;
-    overflow-y: auto;
+.modalContent,
+.alertModalContent {
+  padding: 20px;
+  box-shadow: 0px 10px 40px 0px #0000002d;
+  margin: auto;
+  background-color: var(--dark);
+  width: 80%;
+  height: auto;
+  overflow-y: auto;
 }
 
 .modalContent {
-    max-width: 600px; 
-    max-height: 80%;
+  max-width: 600px;
+  max-height: 80%;
 }
 
 .alertModalContent {
-    font-weight: 900;
-    max-width: 300px; 
-    max-height: 60%;
+  font-weight: 900;
+  max-width: 300px;
+  max-height: 60%;
 }
 
 .progressBarContainer {
-    height: 5px;
-    min-height: 5px;
-    
-    overflow: hidden;
+  height: 5px;
+  min-height: 5px;
+
+  overflow: hidden;
 }
 
 .progressBar {
-    background-color: var(--secondary);
-    width: 0%;
-    z-index: 1;
+  background-color: var(--secondary);
+  width: 0%;
+  z-index: 1;
 }
 
-
 .vLine {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 0 10px;
-    top: -2px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+  top: -2px;
 }
 
 .hLine {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 10px 0;
-}
-
-
-
-@font-face {
-    font-family: "Redacted";
-    src: url("../assets/fonts/redacted.ttf") format('truetype');
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 0;
 }
 
 @font-face {
-    font-family: "Gabarito";
-    src: url("../assets/fonts/gabarito.ttf") format('truetype');
+  font-family: "Redacted";
+  src: url("../assets/fonts/redacted.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Gabarito";
+  src: url("../assets/fonts/gabarito.ttf") format("truetype");
 }
 @font-face {
-    font-family: "Inter";
-    src: url("../assets/fonts/inter.ttf") format('truetype');
+  font-family: "Inter";
+  src: url("../assets/fonts/inter.ttf") format("truetype");
 }
 @font-face {
-    font-family: "Noto";
-    src: url("../assets/fonts/noto.ttf") format('truetype');
+  font-family: "Noto";
+  src: url("../assets/fonts/noto.ttf") format("truetype");
 }
 @font-face {
-    font-family: "Merriweather";
-    src: url("../assets/fonts/merriweather.ttf") format('truetype');
+  font-family: "Merriweather";
+  src: url("../assets/fonts/merriweather.ttf") format("truetype");
 }
 @font-face {
-    font-family: "Merriweather Sans";
-    src: url("../assets/fonts/merriweatherSans.ttf") format('truetype');
+  font-family: "Merriweather Sans";
+  src: url("../assets/fonts/merriweatherSans.ttf") format("truetype");
 }
 @font-face {
-    font-family: "Dyslexic";
-    src: url("../assets/fonts/dyslexic.otf") format('truetype');
+  font-family: "Dyslexic";
+  src: url("../assets/fonts/dyslexic.otf") format("truetype");
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: none;
+  background: none;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--outline);
-    min-height: 50px;
+  background-color: var(--outline);
+  min-height: 50px;
 }
 
-
 .slider {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 200px;
-    height: 10px;
-    background: var(--secondary);
-    border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 200px;
+  height: 10px;
+  background: var(--secondary);
+  border: none;
 }
 
 .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-
-.slider::-webkit-slider-thumb{
-    width: 30px;
-    height: 10px;
-    background: var(--outline);
+.slider::-webkit-slider-thumb {
+  width: 30px;
+  height: 10px;
+  background: var(--outline);
 }
-
-
-
 
 .innerDetails {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Material Icons'),
-        url('../assets/fonts/googleIcons.woff2') format('woff2'),
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons"),
+    url("../assets/fonts/googleIcons.woff2") format("woff2");
 }
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' -25,
-    'opsz' 24;
-    font-size: 20px;
-    
-    display: inline-block;
-    vertical-align: middle;
-    text-transform: none;
+  font-family: "Material Icons";
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" -25, "opsz" 24;
+  font-size: 20px;
+
+  display: inline-block;
+  vertical-align: middle;
+  text-transform: none;
 }
 
 .quickAccess {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .small {
-    font-size: 16px;
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 20;
+  font-size: 16px;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
 }
-
 
 #particleCanvas {
-    position: absolute;
-    z-index: 10000;
-    pointer-events: none;
-    opacity: 1;
+  position: absolute;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 1;
 }
 
-
-select option, select optgroup {
-    background-color: rgba(var(--darkOrLight)); /* Use your elBg variable here */
-    color: rgb(var(--fontColor)); /* Use your fontColor for text */
-  }
+select option,
+select optgroup {
+  background-color: rgba(var(--darkOrLight)); /* Use your elBg variable here */
+  color: rgb(var(--fontColor)); /* Use your fontColor for text */
+}

@@ -22,46 +22,46 @@ function updateData() {
   } words in ${v.timeGoal} minutes)`;
   document.querySelector(
     "#wordCountDisplay"
-  ).textContent = `Word Count: ${wordCount}`;
+  ).textContent = `Words: ${wordCount}`;
   document.querySelector(
     "#charCountDisplay"
-  ).textContent = `Character Count (including spaces): ${charCount}`;
+  ).textContent = `Characters (including spaces): ${charCount}`;
   document.querySelector(
     "#charCountNoSpacesDisplay"
-  ).textContent = `Character Count: ${countCharactersNoSpaces(v.text)}`;
+  ).textContent = `Characters: ${countCharactersNoSpaces(v.text)}`;
   document.querySelector(
     "#pageCountDisplay"
-  ).textContent = `Page Count: ${pageCount}`;
+  ).textContent = `Pages: ${pageCount}`;
   document.querySelector(
     "#readablityDisplay"
   ).textContent = `Readability: Grade ${Math.round(readability(v.text))}`;
   document.querySelector(
     "#readingTimeDisplay"
-  ).textContent = `Reading Time: ${Math.floor(
-    wordCount / 200
-  )} minutes, ${Math.floor((wordCount % 200) / (200 / 60))} seconds`;
+  ).textContent = `Reading Time: ${formatAsTime(
+    (wordCount / 200) * 60 * 1000
+  )}`;
   document.querySelector(
     "#sentenceCountDisplay"
-  ).textContent = `Sentence Count: ${countSentences(v.text)}`;
+  ).textContent = `Sentences: ${countSentences(v.text)}`;
 
   document.querySelector(
     "#dailyStreakDataDisplay"
   ).textContent = `Daily Streak: ${v.dailyStreak}`;
   document.querySelector(
     "#longestStreakDisplay"
-  ).textContent = `Longest Writing Session Streak: ${Math.floor(
-    v.longestWritingStreak / 1000 / 60
-  )} minutes, ${Math.floor((v.longestWritingStreak / 1000) % 60)} seconds`;
+  ).textContent = `Longest Writing Session Streak: ${formatAsTime(
+    v.longestWritingStreak
+  )}`;
   document.querySelector(
     "#sessionWritingTimeDisplay"
-  ).textContent = `Session Writing Time: ${Math.floor(
-    v.currentWritingSessionTime / 1000 / 60
-  )} minutes, ${Math.floor((v.currentWritingSessionTime / 1000) % 60)} seconds`;
+  ).textContent = `Session Writing Time: ${formatAsTime(
+    v.currentWritingSessionTime
+  )}`;
   document.querySelector(
     "#dailyWritingTimeDisplay"
-  ).textContent = `Today's Writing Time: ${Math.floor(
-    v.dailyWritingSessionTime / 1000 / 60
-  )} minutes, ${Math.floor((v.dailyWritingSessionTime / 1000) % 60)} seconds`;
+  ).textContent = `Today's Writing Time: ${formatAsTime(
+    v.dailyWritingSessionTime
+  )}`;
 
   function setColor(selector, condition) {
     document.querySelector(selector).style.color = condition
@@ -77,6 +77,18 @@ function updateData() {
   setColor("#belowWph", isWphNegative);
   setColor("#excludeInput", isWphNegative || isExcludeGreater);
   setColor("#wordCountDisplay", isExcludeGreater);
+}
+function formatAsTime(time) {
+  const totalSeconds = Math.floor(time / 1000); // Convert milliseconds to seconds
+  const minutes = Math.floor(totalSeconds / 60); // Find the full minutes
+  const seconds = totalSeconds % 60; // Find the remaining seconds
+
+  // Format minutes and seconds to have two digits
+  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes.toString();
+  const formattedSeconds = seconds < 10 ? "0" + seconds : seconds.toString();
+
+  // Return the formatted time string
+  return formattedMinutes + ":" + formattedSeconds;
 }
 
 document.querySelector("#autoExcludeButton").addEventListener("click", () => {

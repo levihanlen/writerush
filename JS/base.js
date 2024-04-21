@@ -36,6 +36,8 @@ const progressBarContainer = document.querySelector("#progressBarContainer");
 const redactButton = document.querySelector("#redactButton");
 const fullscreenButton = document.querySelector("#fullscreenButton");
 
+const hideAllBtn = document.querySelector("#hideAllBtn");
+
 const celebrateSound = document.querySelector("#celebrate");
 
 const imageNote = document.querySelector("#imageNote");
@@ -94,6 +96,10 @@ updateProgressBar();
 // Event Listeners
 // Event Listeners
 // Event Listeners
+
+hideAllBtn.addEventListener("click", () => {
+  v.autoHide = !v.autoHide;
+});
 
 notesTextarea.addEventListener("input", () => {
   v.notesText = notesTextarea.value;
@@ -326,55 +332,78 @@ document.addEventListener("mousemove", (e) => {
   if (isModalOpen) {
     return;
   }
+
   const chapterSidebarWidth = parseInt(0.2 * window.innerWidth);
   if (e.clientY <= typeAreaDivPadding / 2) {
     if (!quickAccessOpen && !chapterSidebarOpen) {
       upperNavbarOpen = true;
-      upperNavbar.style.height = `${upperHeight}px`;
-      upperNavbarDiv.style.display = "flex";
     }
   } else if (e.clientY >= upperHeight + typeAreaDivPadding * 2) {
     upperNavbarOpen = false;
-    upperNavbar.style.height = "0";
-    upperNavbarDiv.style.display = "none";
   }
   if (e.clientY >= window.innerHeight - typeAreaDivPadding / 2) {
     if (!chapterSidebarOpen) {
       lowerNavbarOpen = true;
-      lowerNavbar.style.height = `${upperHeight}px`;
-      lowerNavbarDiv.style.display = "flex";
     }
   } else if (
     e.clientY <=
     window.innerHeight - (lowerHeight + typeAreaDivPadding * 2)
   ) {
     lowerNavbarOpen = false;
-    lowerNavbar.style.height = "0";
-    lowerNavbarDiv.style.display = "none";
   }
   if (e.clientX >= window.innerWidth - typeAreaDivPadding / 2) {
     if (!upperNavbarOpen) {
       quickAccessOpen = true;
-      quickAccessSidebar.style.width = `${upperHeight}px`;
-      quickAccessDiv.style.display = "flex";
     }
   } else if (
     e.clientX <=
     window.innerWidth - (quickAccessWidth + typeAreaDivPadding * 2)
   ) {
     quickAccessOpen = false;
-    quickAccessSidebar.style.width = "0";
-    quickAccessDiv.style.display = "none";
   }
 
   if (e.clientX <= typeAreaDivPadding / 2) {
     if (!upperNavbarOpen && !lowerNavbarOpen && e.clientY > upperHeight * 1.5) {
       chapterSidebarOpen = true;
-      chapterSidebar.style.width = "20%";
-      chapterSection.style.display = "flex";
     }
   } else if (e.clientX >= chapterSidebarWidth + typeAreaDivPadding * 2) {
     chapterSidebarOpen = false;
+  }
+  if (!v.autoHide) {
+    upperNavbarOpen = true;
+    lowerNavbarOpen = true;
+    quickAccessOpen = true;
+    chapterSidebarOpen = true;
+  }
+
+  if (upperNavbarOpen) {
+    upperNavbar.style.height = `${upperHeight}px`;
+    upperNavbarDiv.style.display = "flex";
+  } else {
+    upperNavbar.style.height = "0";
+    upperNavbarDiv.style.display = "none";
+  }
+
+  if (lowerNavbarOpen) {
+    lowerNavbar.style.height = `${upperHeight}px`;
+    lowerNavbarDiv.style.display = "flex";
+  } else {
+    lowerNavbar.style.height = "0";
+    lowerNavbarDiv.style.display = "none";
+  }
+
+  if (quickAccessOpen) {
+    quickAccessSidebar.style.width = `${upperHeight}px`;
+    quickAccessDiv.style.display = "flex";
+  } else {
+    quickAccessSidebar.style.width = "0";
+    quickAccessDiv.style.display = "none";
+  }
+
+  if (chapterSidebarOpen) {
+    chapterSidebar.style.width = "20%";
+    chapterSection.style.display = "flex";
+  } else {
     chapterSidebar.style.width = "0";
     chapterSection.style.display = "none";
   }

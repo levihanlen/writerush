@@ -126,7 +126,7 @@
             </div>
             <div class="content">
                 <div class="divs1">
-                    <div class="divs" id="typeAreaDiv">
+                    <div id="typeAreaDiv">
                         <div id="typeAreaVisuals">
 
                             <textarea id="typeArea" spellcheck="false"></textarea>
@@ -142,6 +142,8 @@
                                 <p id="progressBarText">Error in Displaying</p>
                             </div>
                         </div>
+                        <div id="hideAllBtn"  title="Toggle auto-hide.">
+                          <span class="material-icons quickAccess">shelf_auto_hide</span></div>
                         
                     </div>
                 </div>
@@ -243,7 +245,7 @@
             <details>
                 <summary><strong>Effects</strong></summary>
                 <br>
-                Typing Confetti Type: 
+                Confetti Type: 
                     <select id="typingConfettiTypeInput">
                         <option value="0">Balls</option>
                         <option value="1">Confetti</option>
@@ -251,7 +253,7 @@
                         <option value="3">Emojis</option>
                     </select>
                 <br><br>
-                Typing Confetti Count: <input class="slider" type="range" id="typingConfettiCountInput" min="0" max="10" value="2">
+                Confetti Amount: <input class="slider" type="range" id="typingConfettiCountInput" min="0" max="10" value="2">
                 <br><br>
                 Screen Shake Intensity: <input class="slider" type="range" id="screenShakeIntensityInput" min="0" max="5" value="1" step="0.5">
                 <br><br>
