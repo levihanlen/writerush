@@ -15,6 +15,7 @@ function isMobileDevice() {
 let dbAllowed = hasIndexedDBSupport();
 
 if (isMobileDevice()) {
+  console.log("MOBILE");
   dbAllowed = false;
 }
 
@@ -23,6 +24,7 @@ function hasIndexedDBSupport() {
 }
 let dataIsLoaded = false;
 
+console.log(dbAllowed);
 if (dbAllowed) {
   let db;
   const dbName = "WriteRushDB";
@@ -52,6 +54,8 @@ if (dbAllowed) {
     getRequest.onsuccess = (e) => {
       if (e.target.result) {
         dataIsLoaded = true;
+
+        console.log("DONE");
         v = e.target.result.data;
       } else {
         setV();
@@ -76,13 +80,18 @@ if (dbAllowed) {
   }
 
   function interval() {
+    console.log("INTERVAL");
     if (preventSave) {
+      console.log("NOSAVE");
       return;
     }
     if (dataIsLoaded) {
+      console.log("SAVE");
       save();
     }
   }
+
+  console.log("here");
   setInterval(interval, 5000);
   function clearAllData() {
     const tx = db.transaction(storeName, "readwrite");
