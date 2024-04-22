@@ -97,8 +97,9 @@ updateProgressBar();
 // Event Listeners
 // Event Listeners
 
-hideAllBtn.addEventListener("click", () => {
+hideAllBtn.addEventListener("click", (e) => {
   v.autoHide = !v.autoHide;
+  updateHideUI(e);
 });
 
 notesTextarea.addEventListener("input", () => {
@@ -329,6 +330,10 @@ let quickAccessOpen = false;
 let chapterSidebarOpen = false;
 
 document.addEventListener("mousemove", (e) => {
+  updateHideUI(e);
+});
+
+function updateHideUI(e) {
   if (isModalOpen) {
     return;
   }
@@ -407,7 +412,7 @@ document.addEventListener("mousemove", (e) => {
     chapterSidebar.style.width = "0";
     chapterSection.style.display = "none";
   }
-});
+}
 
 function updateProgressBar() {
   let progress = ((wordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
