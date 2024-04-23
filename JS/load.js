@@ -216,7 +216,7 @@ Type here ...`,
       },
     ],
     firstOpen: false,
-    backgroundImage: null,
+    backgroundImage: "./assets/images/northern-lights.jpg",
     lineHeight: 1.5,
     confettiType: 1,
   };

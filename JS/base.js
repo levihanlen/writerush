@@ -1096,10 +1096,7 @@ function updateNotesList() {
     }
     chapter.addEventListener("click", () => {
       if (v.currentNoteIndex == i) {
-        notesOpen = false;
-        v.currentNoteIndex = null;
-        openNoteSidebar();
-        updateNotesList();
+        closeNote();
         return;
       }
       notesOpen = true;
@@ -1158,6 +1155,13 @@ function updateNotesList() {
 
     notesSectionDiv.appendChild(chapter);
   }
+}
+
+function closeNote() {
+  notesOpen = false;
+  v.currentNoteIndex = null;
+  openNoteSidebar();
+  updateNotesList();
 }
 
 function openNote(noteIndex) {
@@ -1577,6 +1581,7 @@ checkIfNewDay();
 // openModal('startModal');
 
 openNote(v.currentNoteIndex);
+closeNote();
 openChapter(v.currentChapterIndex);
 refreshFileButtons();
 openFile(v.currentFileIndex);

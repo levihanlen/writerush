@@ -10,6 +10,7 @@
     <!--That DRAGULA is CSS, not JS ^^^-->
 
     <title>WriteRush - Write better, faster, and have fun!</title>
+    <meta name="description" content="Write better, write faster, and have more fun writing with WriteRush - a free writing software.">
     
     <audio id="clickSound1" src="assets/audio/click1.mp3" preload="auto"></audio>
     <audio id="clickSound2" src="assets/audio/click2.mp3" preload="auto"></audio>
@@ -76,7 +77,9 @@
                     </button>
                 </div>
                 <div class="rightNavbar">
-                    <button class="outlineButton" onclick="openModal('aboutModal')">WriteRush</button>
+                  <a href="https://www.writerush.net/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                    <button class="outlineButton">WriteRush</button>
+                  </a>
                 </div>
             </div>
         </div>
@@ -118,7 +121,7 @@
                         <img id="imageNote" draggable="false">
                     </div>
                     
-                    <textarea id="notesTextarea" spellcheck="false"></textarea>
+                    <textarea id="notesTextarea" spellcheck="false" aria-label="Notes typing area"></textarea>
                     
                 </div>
             </div>
@@ -127,7 +130,7 @@
                     <div id="typeAreaDiv">
                         <div id="typeAreaVisuals">
 
-                            <textarea id="typeArea" spellcheck="false"></textarea>
+                            <textarea id="typeArea" spellcheck="false" aria-label="Main typing area"></textarea>
                         
                             <div class="progressBarContainer">
                                 <div id="timeBar" class="progressBar"></div>

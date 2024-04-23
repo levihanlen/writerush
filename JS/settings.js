@@ -268,6 +268,7 @@ imageInput.addEventListener("change", function () {
 
 const loadImage = () => {
   const result = v.backgroundImage;
+  console.log(result);
   if (result) {
     document.body.style.backgroundImage = `url(${result})`;
     imageInputLabel.textContent = "Selected";
