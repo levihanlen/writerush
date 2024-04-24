@@ -544,6 +544,7 @@ select,
 
 @font-face {
   font-family: "Gabarito";
+  font-display: swap;
   src: url("../assets/fonts/gabarito.ttf") format("truetype");
 }
 @font-face {
@@ -604,7 +605,6 @@ select,
   margin-left: 20px;
 }
 
-/*
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
@@ -612,14 +612,15 @@ select,
   src: local("Material Icons"),
     url("../assets/fonts/googleIcons.woff2") format("woff2");
 }
-*/
 
-@font-face {
-  font-family: "Material Icons";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Material Icons"),
-    url("../assets/fonts/googleIcons.woff2") format("woff2");
+.icon {
+  width: 20px; /* Adjust size as necessary */
+  height: 20px; /* Adjust size as necessary */
+  display: inline-block; /* Allows sizing on a non-replaced element */
+}
+
+svg {
+  fill: rgba(var(--fontColor), 1);
 }
 
 .material-icons {
