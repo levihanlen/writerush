@@ -137,7 +137,7 @@ typeArea.addEventListener("input", () => {
   }
   inTypeAreaInput();
   playSound();
-  // updateCaretPos();
+  updateCaretPos();
   typingConfetti();
   shakeScreen(v.screenShakeIntensity);
 });
