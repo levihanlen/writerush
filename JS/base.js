@@ -10,6 +10,9 @@ let yC;
 let textRedacted = false;
 let previousWordCount = Infinity;
 
+let updateWordCountMax = 5;
+let updateWordCountNum = 0;
+
 const upperNavbar = document.querySelector("#upperNavbar");
 const lowerNavbar = document.querySelector("#lowerNavbar");
 
@@ -47,7 +50,7 @@ const imageNoteButton = document.querySelector("#imageNoteButton");
 let timerRunning = false;
 let timeElapsed = 0;
 let timeLeft = v.timeGoal * 1000 * 60;
-const msRefresh = 200;
+const msRefresh = 1000;
 
 const pauseButton = document.querySelector("#pauseButton");
 
@@ -116,9 +119,14 @@ typeArea.addEventListener("input", () => {
     return;
   }
   function inTypeAreaInput() {
+    updateWordCountNum--;
     v.text = typeArea.value;
     v.files[v.currentFileIndex].chapters[v.currentChapterIndex].text = v.text;
-    wordCount = countWords(v.text);
+    if (updateWordCountNum <= 0) {
+      updateWordCountNum = updateWordCountMax;
+
+      wordCount = countWords(v.text);
+    }
     if (v.exclude > wordCount) {
       v.exclude = wordCount;
       v.files[v.currentFileIndex].exclude = v.exclude;
@@ -129,7 +137,7 @@ typeArea.addEventListener("input", () => {
   }
   inTypeAreaInput();
   playSound();
-  updateCaretPos();
+  // updateCaretPos();
   typingConfetti();
   shakeScreen(v.screenShakeIntensity);
 });
@@ -433,6 +441,7 @@ function updateProgressBar() {
   progressBarConfetti(progress);
 }
 
+/*
 function progressBarConfetti(progress) {
   let currentIncrement = Math.floor(progress / 10) * 10;
 
@@ -468,59 +477,7 @@ function progressBarConfetti(progress) {
 
   function incrementConfetti(i) {
     confetti({
-      particleCount: 200,
-      startVelocity: 40,
-      spread: 60,
-      origin: {
-        x:
-          (progressBarRect.left +
-            progressBarRect.width * (i / 100) +
-            window.scrollX) /
-          window.innerWidth,
-        y: (progressBarRect.top + window.scrollY) / window.innerHeight,
-      },
-    });
-
-    incrementsReached.push(currentIncrement); // Mark this increment as reached
-  }
-
-  previousWordCount = wordCount;
-}
-
-/*
-function progressBarConfetti(progress) {
-  let currentIncrement = Math.floor(progress / 10) * 10;
-
-  let previousProgress =
-    ((previousWordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
-  let previousIncrement = Math.floor(previousProgress / 10) * 10;
-
-  let difference = currentIncrement - previousIncrement;
-
-  const progressBarRect = progressBarContainer.getBoundingClientRect();
-  if (difference === 0) {
-    return;
-  } else {
-    if (currentIncrement > 100) {
-      return;
-    }
-    for (let i = 0; i < difference / 10; i++) {
-      incrementConfetti(currentIncrement);
-    }
-  }
-
-  // Goal reached condition
-  if (progress >= 100 && v.goalReached !== true) {
-    fireworks();
-    fireworksSound();
-    v.goalReached = true;
-  } else if (progress < 100) {
-    v.goalReached = false;
-  }
-
-  function incrementConfetti(i) {
-    confetti({
-      particleCount: 200,
+      particleCount: 100,
       startVelocity: 40,
       spread: 60,
       origin: {
@@ -539,6 +496,59 @@ function progressBarConfetti(progress) {
   previousWordCount = wordCount;
 }
 */
+function progressBarConfetti(progress) {
+  // Optimize by calculating these once, outside of any loops
+
+  let currentIncrement = Math.floor(progress / 10) * 10;
+
+  let previousProgress =
+    ((previousWordCount - v.exclude) / (v.wordGoal - v.exclude)) * 100;
+  let previousIncrement = Math.floor(previousProgress / 10) * 10;
+
+  let difference = currentIncrement - previousIncrement;
+
+  if (difference === 0 || currentIncrement > 100) {
+    console.log("RETURN");
+    return;
+  }
+  const progressBarRect = progressBarContainer.getBoundingClientRect();
+  const rectLeft = progressBarRect.left;
+  const rectWidth = progressBarRect.width;
+  const rectTop = progressBarRect.top;
+  const windowInnerWidth = window.innerWidth;
+  const windowScrollY = window.scrollY;
+  const windowScrollX = window.scrollX;
+
+  // Limit the loop to a maximum of 10 increments
+  const maxIterations = Math.min(10, difference / 10);
+  for (let i = 0; i < maxIterations; i++) {
+    incrementConfetti(currentIncrement);
+  }
+
+  // Goal reached condition
+  if (progress >= 100 && v.goalReached !== true) {
+    fireworks();
+    fireworksSound();
+    v.goalReached = true;
+  } else if (progress < 100) {
+    v.goalReached = false;
+  }
+
+  function incrementConfetti(i) {
+    confetti({
+      particleCount: 50,
+      startVelocity: 40,
+      spread: 60,
+      origin: {
+        x:
+          (rectLeft + rectWidth * (i / 100) + windowScrollX) / windowInnerWidth,
+        y: (rectTop + windowScrollY) / window.innerHeight,
+      },
+    });
+  }
+
+  previousWordCount = wordCount;
+}
 
 function fireworks() {
   const duration = 8 * 1000;
@@ -904,6 +914,7 @@ function alwaysRun() {
   if (preventSave) {
     return;
   }
+  wordCount = countWords(v.text);
   hue += 3;
   updateProgressBar();
   updateTimeBar();
@@ -1710,6 +1721,7 @@ function activateParticle(particle, x, y) {
 }
 
 function moveParticles() {
+  if (!confettiType === 0);
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas for every frame
   let i = activeParticles.length;
   while (i--) {
