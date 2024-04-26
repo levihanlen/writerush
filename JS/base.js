@@ -157,14 +157,14 @@ quickAccessSidebar.addEventListener("click", () => {
 pauseButton.addEventListener("click", () => {
   timerRunning = !timerRunning;
   pauseButton.innerHTML = timerRunning
-    ? `<span class="material-icons quickAccess">pause_circle</span>`
-    : `<span class="material-icons quickAccess">play_circle</span>`;
+    ? `<span class="material-icons quickAccess notranslate">pause_circle</span>`
+    : `<span class="material-icons quickAccess notranslate">play_circle</span>`;
 });
 document.querySelector("#stopButton").addEventListener("click", () => {
   timerRunning = false;
   timeElapsed = 0;
   timeLeft = v.timeGoal;
-  pauseButton.innerHTML = `<span class="material-icons quickAccess">play_circle</span>`;
+  pauseButton.innerHTML = `<span class="material-icons quickAccess notranslate">play_circle</span>`;
   timeBar.style.width = "0%";
 });
 
@@ -332,6 +332,8 @@ const quickAccessWidth = parseInt(quickAccessStyle.width);
 const typeAreaDivStyle = getComputedStyle(typeAreaDiv);
 const typeAreaDivPadding = parseInt(typeAreaDivStyle.padding);
 
+const borderStyle = "var(--borderSize) solid var(--outline)";
+
 let upperNavbarOpen = false;
 let lowerNavbarOpen = false;
 let quickAccessOpen = false;
@@ -392,25 +394,31 @@ function updateHideUI(e) {
   if (upperNavbarOpen) {
     upperNavbar.style.height = `${upperHeight}px`;
     upperNavbarDiv.style.display = "flex";
+    upperNavbar.style.borderBottom = borderStyle;
   } else {
     upperNavbar.style.height = "0";
     upperNavbarDiv.style.display = "none";
+    upperNavbar.style.borderBottom = "none";
   }
 
   if (lowerNavbarOpen) {
     lowerNavbar.style.height = `${upperHeight}px`;
     lowerNavbarDiv.style.display = "flex";
+    lowerNavbar.style.borderTop = borderStyle;
   } else {
     lowerNavbar.style.height = "0";
     lowerNavbarDiv.style.display = "none";
+    lowerNavbar.style.borderTop = "none";
   }
 
   if (quickAccessOpen) {
     quickAccessSidebar.style.width = `${upperHeight}px`;
     quickAccessDiv.style.display = "flex";
+    quickAccessSidebar.style.borderLeft = borderStyle;
   } else {
     quickAccessSidebar.style.width = "0";
     quickAccessDiv.style.display = "none";
+    quickAccessSidebar.style.borderLeft = "none";
   }
 
   if (chapterSidebarOpen) {
@@ -508,7 +516,7 @@ function progressBarConfetti(progress) {
   let difference = currentIncrement - previousIncrement;
 
   if (difference === 0 || currentIncrement > 100) {
-    console.log("RETURN");
+    // console.log("RETURN");
     return;
   }
   const progressBarRect = progressBarContainer.getBoundingClientRect();
@@ -1069,10 +1077,10 @@ function updateNotesList() {
     let symbol;
     switch (v.notes[i].type) {
       case "text":
-        symbol = `<span class="material-icons small">text_snippet</span>`;
+        symbol = `<span class="material-icons small notranslate">text_snippet</span>`;
         break;
       case "image":
-        symbol = `<span class="material-icons small">image</span>`;
+        symbol = `<span class="material-icons small notranslate">image</span>`;
         break;
       default:
         symbol = "?";
@@ -1092,10 +1100,10 @@ function updateNotesList() {
     chapter.appendChild(leftChapterDiv);
     const chapterDeleteButton = document.createElement("button");
     chapterDeleteButton.classList.add("chapterDeleteButton", "small");
-    chapterDeleteButton.innerHTML = `<span class="material-icons small">delete</span>`;
+    chapterDeleteButton.innerHTML = `<span class="material-icons small notranslate">delete</span>`;
     const chapterRenameButton = document.createElement("button");
     chapterRenameButton.classList.add("chapterDeleteButton", "small");
-    chapterRenameButton.innerHTML = `<span class="material-icons small">edit</span>`;
+    chapterRenameButton.innerHTML = `<span class="material-icons small notranslate">edit</span>`;
     chapter.appendChild(chapterRenameButton);
     chapter.appendChild(chapterDeleteButton);
 
@@ -1288,7 +1296,7 @@ function updateChapterList() {
     const leftChapterDiv = document.createElement("div");
     leftChapterDiv.classList.add("leftChapterDiv");
     const chapterHashtag = document.createElement("p");
-    chapterHashtag.innerHTML = `<span class="material-icons small">menu_book</span>`;
+    chapterHashtag.innerHTML = `<span class="material-icons small notranslate">menu_book</span>`;
     leftChapterDiv.appendChild(chapterHashtag);
     const chapterP = document.createElement("p");
     chapterP.classList.add("chapterP");
@@ -1299,10 +1307,10 @@ function updateChapterList() {
     chapter.appendChild(leftChapterDiv);
     const chapterDeleteButton = document.createElement("button");
     chapterDeleteButton.classList.add("chapterDeleteButton");
-    chapterDeleteButton.innerHTML = `<span class="material-icons small">delete</span>`;
+    chapterDeleteButton.innerHTML = `<span class="material-icons small notranslate">delete</span>`;
     const chapterRenameButton = document.createElement("button");
     chapterRenameButton.classList.add("chapterDeleteButton");
-    chapterRenameButton.innerHTML = `<span class="material-icons small">edit</span>`;
+    chapterRenameButton.innerHTML = `<span class="material-icons small notranslate">edit</span>`;
     chapter.appendChild(chapterRenameButton);
     chapter.appendChild(chapterDeleteButton);
 
@@ -1486,7 +1494,7 @@ function updateFileButtons() {
 
   newFileButton.classList.add("outlineButton");
   newFileButton.id = "newFileButton";
-  newFileButton.innerHTML = `<span class="material-icons small">add</span>`;
+  newFileButton.innerHTML = `<span class="material-icons small notranslate">add</span>`;
   newFileButton.addEventListener("click", newFile);
   lowerNavbarDiv.appendChild(newFileButton);
 

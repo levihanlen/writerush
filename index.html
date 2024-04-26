@@ -38,13 +38,16 @@
 
 
 
+    <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
 
     
+    <!--
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
     <link rel="manifest" href="favicon/site.webmanifest">
     <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+    -->
 
     <noscript>
         <h1>
@@ -95,13 +98,13 @@
                         -->
                         <div id="newNoteDiv">
                             <button id="newChapterButton" class="chapterNewButton">
-                                <span class="material-icons small">menu_book</span>
+                                <span class="material-icons small notranslate">menu_book</span>
                             </button>
                             <button id="textNoteButton" class="chapterNewButton">
-                                <span class="material-icons small">text_snippet</span>
+                                <span class="material-icons small notranslate">text_snippet</span>
                             </button>
                             <button id="imageNoteButton" class="chapterNewButton">
-                                <span class="material-icons small">image</span>
+                                <span class="material-icons small notranslate">image</span>
                                 <input type="file" class="numberInput" id="imageNoteInput" accept="image/*">
                             </button>
                             
@@ -141,11 +144,11 @@
                                 <div id="progressBar" class="progressBar"></div>
                             </div>
                             <div id="progressBarData">
-                                <p id="progressBarText">Error in Displaying</p>
+                                <p id="progressBarText" class="notranslate">Error in Displaying</p>
                             </div>
                         </div>
                         <div id="hideAllBtn"  title="Toggle auto-hide.">
-                          <span class="material-icons quickAccess">shelf_auto_hide</span></div>
+                          <span class="material-icons quickAccess notranslate">shelf_auto_hide</span></div>
                         
                     </div>
                 </div>
@@ -153,23 +156,23 @@
             <div class="sidebar" id="quickAccessSidebar">
                 <div id="quickAccessDiv">
                     <button class="verticalButton" id="fullscreenButton" title="Toggle fullscreen.">
-                        <span class="material-icons quickAccess">fullscreen</span>
+                        <span class="material-icons quickAccess notranslate">fullscreen</span>
                     </button>
                     <div class="hLine"></div>
                     <button id="addToGoalButton" class="verticalButton" title="Add to the word goal." onclick="add500toGoal()">
-                        <span class="material-icons quickAccess">add</span>
+                        <span class="material-icons quickAccess notranslate">add</span>
                     </button>
                     <div class="hLine"></div>
                     <button class="verticalButton"id="pauseButton" title="Pause/unpause the timer.">
-                        <span class="material-icons quickAccess">play_circle</span>
+                        <span class="material-icons quickAccess notranslate">play_circle</span>
                     </button>
                     <button class="verticalButton"id="stopButton" title="Stop the timer.">
-                        <span class="material-icons quickAccess">stop_circle</span>
+                        <span class="material-icons quickAccess notranslate">stop_circle</span>
                     </button>
                     <div class="hLine"></div>
                     <button class="verticalButton" id="redactButton" title="Redact the text.">
                       
-                        <span class="material-icons quickAccess">format_ink_highlighter</span>
+                        <span class="material-icons quickAccess notranslate">format_ink_highlighter</span>
                         
                         <!--
                         <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M160 0q-33 0-56.5-23.5T80-80q0-33 23.5-56.5T160-160h640q33 0 56.5 23.5T880-80q0 33-23.5 56.5T800 0H160Zm424-480L480-584 320-424l103 104 161-160Zm-47-160 103 103 160-159-104-104-159 160Zm-84-29 216 216-189 190q-24 24-56.5 24T367-263l-5 4q-11 9-24 14t-27 5H189q-14 0-19.5-12t4.5-22l92-91q-24-24-25-57.5t23-57.5l189-189Zm0 0 187-187q24-24 56.5-24t56.5 24l104 103q24 24 24 56.5T857-640L669-453 453-669Z"/></svg>                    </button>
